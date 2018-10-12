@@ -1,7 +1,7 @@
 {
-  "name": "js-stellar-domain",
+  "name": "@stellarbeat/js-stellar-domain",
   "version": "0.1.0",
-  "description": "Domain classes for stellarbeat stellar code",
+  "description": "Domain classes",
   "repository": {
     "type": "git",
     "url": "https://github.com/stellarbeat/js-stellar-domain.git"

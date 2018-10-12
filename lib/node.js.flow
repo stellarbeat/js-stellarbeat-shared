@@ -1,11 +1,11 @@
 // @flow
 const QuorumSet = require('./quorum-set');
-const StellarBase = require('stellar-base');
 
 class Node {
     _ip:string;
     _port:number;
     _publicKey:?string;
+    _name: ?string;
     _ledgerVersion:?string;
     _overlayVersion:?string;
     _overlayMinVersion:?string;
@@ -16,8 +16,8 @@ class Node {
 
     constructor(ip:string, port:number, publicKey:?string = undefined, ledgerVersion:?string = undefined,
                 overlayVersion:?string = undefined, overlayMinVersion:?string = undefined,
-                networkId:?string = undefined, versionStr:?string = undefined, active:?boolean = false,
-                quorumSet:?QuorumSet = null
+                networkId:?string = undefined, versionStr:?string = undefined, active:boolean = false,
+                quorumSet:?QuorumSet = new QuorumSet()
     ) {
         this._ip = ip;
         this._port = port;
@@ -75,6 +75,14 @@ class Node {
         this._publicKey = value;
     }
 
+    get name(): ?string {
+        return this._name;
+    }
+
+    set name(value: string) {
+        this._name = value;
+    }
+
     get ledgerVersion() {
         return this._ledgerVersion;
     }
@@ -129,6 +137,7 @@ class Node {
             ip: this.ip,
             port: this.port,
             publicKey: this.publicKey,
+            name: this.name,
             ledgerVersion: this.ledgerVersion,
             overlayVersion: this.overlayVersion,
             overlayMinVersion: this.overlayMinVersion,

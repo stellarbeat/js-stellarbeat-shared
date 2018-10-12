@@ -3,14 +3,14 @@ const R = require('ramda');
 
 class QuorumSet {
 
-    _hashKey: string;
+    _hashKey: ?string;
     _threshold: number;
     _validators: Array<string>;
     _innerQuorumSets: Array<QuorumSet>;
     _dateDiscovered: Date;
     _dateLastSeen: Date;
 
-    constructor(hashKey: string,
+    constructor(hashKey: ?string = undefined,
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
                 innerQuorumSets: Array<QuorumSet> = [],
@@ -28,7 +28,7 @@ class QuorumSet {
         return this.validators.length > 0 || this.innerQuorumSets.length > 0;
     }
 
-    get hashKey(): string {
+    get hashKey(): ?string {
         return this._hashKey;
     }
 
