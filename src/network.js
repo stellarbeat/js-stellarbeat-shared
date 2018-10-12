@@ -1,4 +1,3 @@
-//@flow
 const Node = require('./node');
 const QuorumSet = require('./quorum-set');
 const QuorumService = require('./quorum-service');
