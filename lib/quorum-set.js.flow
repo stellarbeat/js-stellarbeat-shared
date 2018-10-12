@@ -20,8 +20,6 @@ class QuorumSet {
         this._threshold = threshold;
         this.validators = validators;
         this.innerQuorumSets = innerQuorumSets;
-        this._dateDiscovered = dateDiscovered;
-        this._dateLastSeen = dateLastSeen;
     }
 
     hasValidators() {
@@ -60,22 +58,6 @@ class QuorumSet {
         this._innerQuorumSets = value;
     }
 
-    get dateDiscovered(): Date {
-        return this._dateDiscovered;
-    }
-
-    set dateDiscovered(value: Date): void {
-        this._dateDiscovered = value;
-    }
-
-    get dateLastSeen(): Date {
-        return this._dateLastSeen;
-    }
-
-    set dateLastSeen(value: Date): void {
-        this._dateLastSeen = value
-    }
-
     static getAllValidators(qs:QuorumSet): Array<string> {
         return R.reduce(
             (validators, innerQS) => R.concat(validators, QuorumSet.getAllValidators(innerQS)),
@@ -89,14 +71,12 @@ class QuorumSet {
             hashKey: this.hashKey,
             threshold: this.threshold,
             validators: Array.from(this.validators),
-            innerQuorumSets: Array.from(this.innerQuorumSets),
-            dateDiscovered: this.dateDiscovered,
-            dateLastSeen: this.dateLastSeen,
+            innerQuorumSets: Array.from(this.innerQuorumSets)
         };
     }
 
 
-    static fromJSON(quorumSet: ?Object): ?QuorumSet {
+    static fromJSON(quorumSet: ?Object): QuorumSet {
         if(!quorumSet){
             return new QuorumSet();
         }
@@ -109,9 +89,7 @@ class QuorumSet {
             quorumSet.hashKey,
             quorumSet.threshold,
             quorumSet.validators,
-            innerQuorumSets,
-            quorumSet.dateDiscovered,
-            quorumSet.dateLastSeen
+            innerQuorumSets
         );
     };
 }

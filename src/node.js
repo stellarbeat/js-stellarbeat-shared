@@ -1,34 +1,31 @@
 // @flow
 const QuorumSet = require('./quorum-set');
+const GeoData = require('./node-geo-data');
+const Statistics = require('./node-statistics');
 
 class Node {
     _ip:string;
     _port:number;
     _publicKey:?string;
     _name: ?string;
+    _host: ?string;
     _ledgerVersion:?string;
     _overlayVersion:?string;
     _overlayMinVersion:?string;
     _networkId:?string;
     _versionStr:?string;
-    _quorumSet: ?QuorumSet;
+    _quorumSet: QuorumSet;
     _active: boolean;
+    _geoData: GeoData;
+    _statistics: Statistics;
 
-    constructor(ip:string, port:number, publicKey:?string = undefined, ledgerVersion:?string = undefined,
-                overlayVersion:?string = undefined, overlayMinVersion:?string = undefined,
-                networkId:?string = undefined, versionStr:?string = undefined, active:boolean = false,
-                quorumSet:?QuorumSet = new QuorumSet()
-    ) {
+    constructor(ip:string, port:number, publicKey:?string = undefined, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics()) {
         this._ip = ip;
         this._port = port;
         this._publicKey = publicKey;
-        this._ledgerVersion = ledgerVersion;
-        this._overlayVersion = overlayVersion;
-        this._overlayMinVersion = overlayMinVersion;
-        this._networkId = networkId;
-        this._versionStr = versionStr;
         this._quorumSet = quorumSet;
-        this._active = active;
+        this._geoData = geoData;
+        this._statistics = statistics;
     }
 
     get displayName() {
@@ -83,6 +80,14 @@ class Node {
         this._name = value;
     }
 
+    get host(): ?string {
+        return this._host;
+    }
+
+    set host(value: string) {
+        this._host = value;
+    }
+
     get ledgerVersion() {
         return this._ledgerVersion;
     }
@@ -131,6 +136,21 @@ class Node {
         this._quorumSet = value;
     }
 
+    get geoData(): ?GeoData {
+        return this._geoData;
+    }
+
+    set geoData(value: GeoData) {
+        this._geoData = value;
+    }
+
+    get statistics() {
+        return this._statistics;
+    }
+
+    set statistics(value:Statistics) {
+        this._statistics = value;
+    }
 
     toJSON():Object {
         return {
@@ -144,7 +164,9 @@ class Node {
             networkId: this.networkId,
             versionStr: this.versionStr,
             active: this.active,
-            quorumSet: this.quorumSet
+            quorumSet: this.quorumSet,
+            geoData: this.geoData,
+            statistics: this.statistics
         };
     };
 
@@ -155,13 +177,20 @@ class Node {
         } else
             nodeObject = node;
 
-        return new Node(
-            nodeObject.ip, nodeObject.port, nodeObject.publicKey,
-            nodeObject.ledgerVersion, nodeObject.overlayVersion,
-            nodeObject.overlayMinVersion, nodeObject.networkId, nodeObject.versionStr,
-            nodeObject.active,
-            QuorumSet.fromJSON(nodeObject.quorumSet)
-        );
+        let newNode = new Node(nodeObject.ip, nodeObject.port, nodeObject.publicKey);
+        newNode.ledgerVersion = nodeObject.ledgerVersion;
+        newNode.overlayVersion = nodeObject.overlayVersion;
+        newNode.overlayMinVersion = nodeObject.overlayMinVersion;
+        newNode.networkId = nodeObject.networkId;
+        newNode.versionStr = nodeObject.versionStr;
+        newNode.active = nodeObject.active;
+        newNode.quorumSet = QuorumSet.fromJSON(nodeObject.quorumSet);
+        newNode.geoData = GeoData.fromJSON(nodeObject.geoData);
+        newNode.statistics = Statistics.fromJSON(nodeObject.statistics);
+        newNode.name = nodeObject.name;
+        newNode.host = nodeObject.host;
+
+        return newNode;
     }
 }
 
