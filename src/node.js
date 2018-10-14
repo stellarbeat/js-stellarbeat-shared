@@ -15,7 +15,7 @@ class Node {
     _networkId:?string;
     _versionStr:?string;
     _quorumSet: QuorumSet;
-    _active: boolean;
+    _active: boolean = false;
     _geoData: GeoData;
     _statistics: Statistics;
     _dateDiscovered: ?Date;
