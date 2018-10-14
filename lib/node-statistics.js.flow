@@ -2,8 +2,6 @@
 
 class NodeStatistics {
 
-    _dateDiscovered: ?Date;
-    _dateUpdated: ?Date;
     _activeCounter: number;
 
     constructor(activeCounter: number = 0) {
@@ -19,22 +17,6 @@ class NodeStatistics {
         let rating = this.activeCounter/divider;
 
         return Math.ceil(rating);
-    }
-
-    get dateDiscovered(): ?Date {
-        return this._dateDiscovered;
-    }
-
-    set dateDiscovered(value: Date) {
-        this._dateDiscovered = value;
-    }
-
-    get dateUpdated(): ?Date {
-        return this._dateUpdated;
-    }
-
-    set dateUpdated(value: Date) {
-        this._dateUpdated = value;
     }
 
     get activeCounter(): number {
@@ -60,9 +42,7 @@ class NodeStatistics {
     toJSON():Object {
         return {
             activeCounter: this.activeCounter,
-            activeRating: this.activeRating,
-            dateDiscovered: this.dateDiscovered,
-            dateUpdated: this.dateUpdated
+            activeRating: this.activeRating
         };
     };
 
@@ -79,8 +59,6 @@ class NodeStatistics {
 
         let newNodeStatistics = new NodeStatistics();
         newNodeStatistics.activeCounter = nodeStatisticsObject.activeCounter;
-        newNodeStatistics.dateDiscovered = nodeStatisticsObject.dateDiscovered;
-        newNodeStatistics.dateUpdated = nodeStatisticsObject.dateUpdated;
 
         return newNodeStatistics;
     }

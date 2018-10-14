@@ -18,6 +18,8 @@ class Node {
     _active: boolean;
     _geoData: GeoData;
     _statistics: Statistics;
+    _dateDiscovered: ?Date;
+    _dateUpdated: ?Date;
 
     constructor(ip:string, port:number, publicKey:?string = undefined, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics()) {
         this._ip = ip;
@@ -152,6 +154,22 @@ class Node {
         this._statistics = value;
     }
 
+    get dateDiscovered(): ?Date {
+        return this._dateDiscovered;
+    }
+
+    set dateDiscovered(value: Date) {
+        this._dateDiscovered = value;
+    }
+
+    get dateUpdated(): ?Date {
+        return this._dateUpdated;
+    }
+
+    set dateUpdated(value: Date) {
+        this._dateUpdated = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -166,7 +184,9 @@ class Node {
             active: this.active,
             quorumSet: this.quorumSet,
             geoData: this.geoData,
-            statistics: this.statistics
+            statistics: this.statistics,
+            dateDiscovered: this.dateDiscovered,
+            dateUpdated: this.dateUpdated
         };
     };
 
@@ -189,6 +209,8 @@ class Node {
         newNode.statistics = Statistics.fromJSON(nodeObject.statistics);
         newNode.name = nodeObject.name;
         newNode.host = nodeObject.host;
+        newNode.dateDiscovered = nodeObject.dateDiscovered;
+        newNode.dateUpdated = nodeObject.dateUpdated;
 
         return newNode;
     }

@@ -21,9 +21,9 @@ let nodeJson = '{' +
     '"threshold":2,"validators":["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ","GCGB2S2KGYARPVIA37HYZXVRM2YZUEXA6S33ZU5BUDC6THSB62LZSTYH","GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK"],' +
     '"innerQuorumSets":[]' +
     '},' +
-    '"statistics":{' +
     '"dateDiscovered":"2018-04-28 14:39:01",' +
     '"dateUpdated":"2018-10-12 11:17:39",' +
+    '"statistics":{' +
     '"activeCounter":5' +
     '}' +
     '}';
@@ -54,8 +54,8 @@ node2.geoData.timeZone = undefined;
 node2.geoData.zipCode = undefined;
 node2.versionStr = "v10.0.0";
 node2.statistics.activeCounter = 5;
-node2.statistics.dateDiscovered = "2018-04-28 14:39:01";
-node2.statistics.dateUpdated = "2018-10-12 11:17:39";
+node2.dateDiscovered = "2018-04-28 14:39:01";
+node2.dateUpdated = "2018-10-12 11:17:39";
 node2.quorumSet.hashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
 node2.quorumSet.threshold = 2;
 node2.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ","GCGB2S2KGYARPVIA37HYZXVRM2YZUEXA6S33ZU5BUDC6THSB62LZSTYH","GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK"];
