@@ -15,19 +15,22 @@ class Node {
     _networkId:?string;
     _versionStr:?string;
     _quorumSet: QuorumSet;
-    _active: boolean = false;
+    _active: boolean;
     _geoData: GeoData;
     _statistics: Statistics;
     _dateDiscovered: ?Date;
     _dateUpdated: ?Date;
+    _overLoaded: boolean;
 
-    constructor(ip:string, port:number, publicKey:?string = undefined, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics()) {
+    constructor(ip:string, port:number, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics()) {
         this._ip = ip;
         this._port = port;
         this._publicKey = publicKey;
         this._quorumSet = quorumSet;
         this._geoData = geoData;
         this._statistics = statistics;
+        this.active = active;
+        this.overLoaded = overLoaded;
     }
 
     get displayName() {
@@ -44,6 +47,14 @@ class Node {
 
     set active(value: boolean) {
         this._active = value;
+    }
+
+    get overLoaded(): boolean {
+        return this._overLoaded;
+    }
+
+    set overLoaded(value: boolean) {
+        this._overLoaded = value;
     }
 
     get key() {
@@ -182,6 +193,7 @@ class Node {
             networkId: this.networkId,
             versionStr: this.versionStr,
             active: this.active,
+            overLoaded: this.overLoaded,
             quorumSet: this.quorumSet,
             geoData: this.geoData,
             statistics: this.statistics,
@@ -204,6 +216,7 @@ class Node {
         newNode.networkId = nodeObject.networkId;
         newNode.versionStr = nodeObject.versionStr;
         newNode.active = nodeObject.active;
+        newNode.overLoaded = nodeObject.overLoaded;
         newNode.quorumSet = QuorumSet.fromJSON(nodeObject.quorumSet);
         newNode.geoData = GeoData.fromJSON(nodeObject.geoData);
         newNode.statistics = Statistics.fromJSON(nodeObject.statistics);

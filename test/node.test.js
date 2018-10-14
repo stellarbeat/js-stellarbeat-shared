@@ -16,6 +16,7 @@ let nodeJson = '{' +
     '"port":"11625",' +
     '"versionStr":"v10.0.0",' +
     '"active":true,' +
+    '"overLoaded":false,' +
     '"quorumSet":{' +
     '"hashKey":"dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=",' +
     '"threshold":2,"validators":["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ","GCGB2S2KGYARPVIA37HYZXVRM2YZUEXA6S33ZU5BUDC6THSB62LZSTYH","GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK"],' +
@@ -32,7 +33,7 @@ let node1 = new Node('localhost', '8080');
 node1.publicKey = '123';
 
 test('nodeToJson', () => {
-    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]},\"geoData\":{},\"statistics\":{\"activeCounter\":0,\"activeRating\":0}}");
+    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false,\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]},\"geoData\":{},\"statistics\":{\"activeCounter\":0,\"activeRating\":0}}");
 });
 
 let node2 = new Node("54.221.140.73", "11625", "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
@@ -61,6 +62,7 @@ node2.quorumSet.threshold = 2;
 node2.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ","GCGB2S2KGYARPVIA37HYZXVRM2YZUEXA6S33ZU5BUDC6THSB62LZSTYH","GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK"];
 node2.quorumSet.innerQuorumSets = [];
 node2.active = true;
+node2.overLoaded = false;
 
 test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)

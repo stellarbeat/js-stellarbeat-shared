@@ -3,9 +3,11 @@
 class NodeStatistics {
 
     _activeCounter: number;
+    _overLoadedCounter: number;
 
-    constructor(activeCounter: number = 0) {
+    constructor(activeCounter: number = 0, overLoadedCounter:number = 0) {
         this._activeCounter = activeCounter;
+        this._overLoadedCounter = overLoadedCounter;
     }
 
     static get MAX_ACTIVE_COUNTER() {
@@ -25,6 +27,18 @@ class NodeStatistics {
 
     set activeCounter(value: number) {
         this._activeCounter = value;
+    }
+
+    get overLoadedCounter(): number {
+        return this._overLoadedCounter;
+    }
+
+    set overLoadedCounter(value: number) {
+        this._overLoadedCounter = value;
+    }
+
+    incrementOverLoadedCounter(){
+        this._overLoadedCounter ++; //todo: sliding window
     }
 
     incrementActiveCounter() {
