@@ -1,7 +1,7 @@
 // @flow
 
 class NodeStatistics {
-
+    //todo: store measurement time series for 24h results, monthly results,...?
     _activeCounter: number;
     _overLoadedCounter: number;
 
@@ -17,6 +17,13 @@ class NodeStatistics {
     get activeRating() {
         let divider = NodeStatistics.MAX_ACTIVE_COUNTER / 5; // 5 star ratings
         let rating = this.activeCounter/divider;
+
+        return Math.ceil(rating);
+    }
+
+    get overLoadedRating() {
+        let divider = NodeStatistics.MAX_ACTIVE_COUNTER / 5; // 5 star ratings
+        let rating = this.overLoadedCounter/divider;
 
         return Math.ceil(rating);
     }
@@ -37,8 +44,16 @@ class NodeStatistics {
         this._overLoadedCounter = value;
     }
 
-    incrementOverLoadedCounter(){
-        this._overLoadedCounter ++; //todo: sliding window
+    incrementOverLoadedCounter() {
+        if(this._overLoadedCounter < NodeStatistics.MAX_ACTIVE_COUNTER) { //if crawler runs every 15 minutes, it takes about 3 days to become non active
+            this._overLoadedCounter ++;
+        }
+    }
+
+    decrementOverLoadedCounter() {
+        if(this._overLoadedCounter > 0) {
+            this.overLoadedCounter --;
+        }
     }
 
     incrementActiveCounter() {
