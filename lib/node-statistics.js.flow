@@ -71,6 +71,7 @@ class NodeStatistics {
     toJSON():Object {
         return {
             activeCounter: this.activeCounter,
+            overLoadedCounter: this.overLoadedCounter,
             activeRating: this.activeRating
         };
     };
@@ -88,6 +89,7 @@ class NodeStatistics {
 
         let newNodeStatistics = new NodeStatistics();
         newNodeStatistics.activeCounter = nodeStatisticsObject.activeCounter;
+        newNodeStatistics.overLoadedCounter = nodeStatisticsObject.overLoadedCounter;
 
         return newNodeStatistics;
     }
