@@ -149,7 +149,7 @@ class Node {
         this._quorumSet = value;
     }
 
-    get geoData(): ?GeoData {
+    get geoData(): GeoData {
         return this._geoData;
     }
 
