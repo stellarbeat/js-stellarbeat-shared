@@ -25,15 +25,23 @@ let nodeJson = '{' +
     '"dateDiscovered":"2018-04-28 14:39:01",' +
     '"dateUpdated":"2018-10-12 11:17:39",' +
     '"statistics":{' +
-    '"activeCounter":5' +
+    '"activeCounter":5,' +
+    '"overLoadedCounter":0,' +
+    '"activeInLastCrawl":true,' +
+    '"overLoadedInLastCrawl":false' +
     '}' +
     '}';
 
 let node1 = new Node('localhost', '8080');
 node1.publicKey = '123';
+node1.statistics.activeInLastCrawl = true;
+node1.statistics.overLoadedInLastCrawl = false;
 
 test('nodeToJson', () => {
-    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false,\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]},\"geoData\":{},\"statistics\":{\"activeCounter\":0,\"activeRating\":0}}");
+    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
+        "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
+        "\"geoData\":{}," +
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false}}");
 });
 
 let node2 = new Node("54.221.140.73", "11625", "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
@@ -55,6 +63,8 @@ node2.geoData.timeZone = undefined;
 node2.geoData.zipCode = undefined;
 node2.versionStr = "v10.0.0";
 node2.statistics.activeCounter = 5;
+node2.statistics.activeInLastCrawl = true;
+node2.statistics.overLoadedInLastCrawl = false;
 node2.dateDiscovered = "2018-04-28 14:39:01";
 node2.dateUpdated = "2018-10-12 11:17:39";
 node2.quorumSet.hashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";

@@ -4,10 +4,14 @@ class NodeStatistics {
     //todo: store measurement time series for 24h results, monthly results,...?
     _activeCounter: number;
     _overLoadedCounter: number;
+    _activeInLastCrawl: boolean;
+    _overLoadedInLastCrawl: boolean;
 
     constructor(activeCounter: number = 0, overLoadedCounter:number = 0) {
         this._activeCounter = activeCounter;
         this._overLoadedCounter = overLoadedCounter;
+        this._activeInLastCrawl = false;
+        this._overLoadedInLastCrawl = false;
     }
 
     static get MAX_ACTIVE_COUNTER() {
@@ -44,6 +48,22 @@ class NodeStatistics {
         this._overLoadedCounter = value;
     }
 
+    get activeInLastCrawl() {
+        return this._activeInLastCrawl;
+    }
+
+    set activeInLastCrawl(value:boolean) {
+        this._activeInLastCrawl = value;
+    }
+
+    get overLoadedInLastCrawl() {
+        return this._overLoadedInLastCrawl;
+    }
+
+    set overLoadedInLastCrawl(value:boolean) {
+        this._overLoadedInLastCrawl = value;
+    }
+
     incrementOverLoadedCounter() {
         if(this._overLoadedCounter < NodeStatistics.MAX_ACTIVE_COUNTER) { //if crawler runs every 15 minutes, it takes about 3 days to become non active
             this._overLoadedCounter ++;
@@ -72,7 +92,9 @@ class NodeStatistics {
         return {
             activeCounter: this.activeCounter,
             overLoadedCounter: this.overLoadedCounter,
-            activeRating: this.activeRating
+            activeRating: this.activeRating,
+            activeInLastCrawl: this.activeInLastCrawl,
+            overLoadedInLastCrawl: this.overLoadedInLastCrawl
         };
     };
 
@@ -90,6 +112,10 @@ class NodeStatistics {
         let newNodeStatistics = new NodeStatistics();
         newNodeStatistics.activeCounter = nodeStatisticsObject.activeCounter;
         newNodeStatistics.overLoadedCounter = nodeStatisticsObject.overLoadedCounter;
+        if(nodeStatisticsObject.overLoadedInLastCrawl !== undefined && nodeStatisticsObject.overLoadedInLastCrawl !== null)
+            newNodeStatistics.overLoadedInLastCrawl = nodeStatisticsObject.overLoadedInLastCrawl;
+        if(nodeStatisticsObject.activeInLastCrawl !== undefined && nodeStatisticsObject.activeInLastCrawl !== null)
+            newNodeStatistics.activeInLastCrawl = nodeStatisticsObject.activeInLastCrawl;
 
         return newNodeStatistics;
     }
