@@ -1,7 +1,6 @@
 const Node = require('./node');
 const QuorumSet = require('./quorum-set');
 const QuorumService = require('./quorum-service');
-const flatten = require('lodash/flatten');
 
 class Network {
     _nodes: Array<Node>;
@@ -66,7 +65,7 @@ class Network {
     }
 
     createLinks(){
-        this._links = flatten(this._nodes
+        this._links = this._nodes
             .filter(node => node.active && !this._failingNodes.includes(node))
             .map(node => {
             return QuorumSet.getAllValidators(node.quorumSet)
@@ -83,7 +82,7 @@ class Network {
                     && !this._failingNodes.includes(node)*/
                 };
             })
-        }));
+        }).flat();
     }
 
     isClusterLink(source, target){
