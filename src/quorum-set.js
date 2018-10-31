@@ -1,5 +1,4 @@
 // @flow
-const _ = require('lodash');
 
 class QuorumSet {
 
@@ -57,7 +56,7 @@ class QuorumSet {
 
     static getAllValidators(qs:QuorumSet): Array<string> {
         return qs.innerQuorumSets.reduce(
-            (allValidators, innerQS) => _.concat(allValidators, QuorumSet.getAllValidators(innerQS)),
+            (allValidators, innerQS) => allValidators.concat(QuorumSet.getAllValidators(innerQS)),
             qs.validators
         );
     }
