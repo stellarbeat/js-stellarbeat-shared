@@ -18,8 +18,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "lodash": "^4.17.10",
-    "npm": "^6.1.0",
-    "ramda": "^0.25.0"
+    "npm": "^6.1.0"
   },
   "devDependencies": {
     "flow": "^0.2.3",

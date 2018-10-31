@@ -1,5 +1,5 @@
 // @flow
-const R = require('ramda');
+const _ = require('lodash');
 
 class QuorumSet {
 
@@ -7,15 +7,12 @@ class QuorumSet {
     _threshold: number;
     _validators: Array<string>;
     _innerQuorumSets: Array<QuorumSet>;
-    _dateDiscovered: Date;
-    _dateLastSeen: Date;
 
     constructor(hashKey: ?string = undefined,
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
-                innerQuorumSets: Array<QuorumSet> = [],
-                dateDiscovered: Date = new Date(),
-                dateLastSeen: Date = new Date(),) {
+                innerQuorumSets: Array<QuorumSet> = []
+    ) {
         this._hashKey = hashKey;
         this._threshold = threshold;
         this.validators = validators;
@@ -59,10 +56,9 @@ class QuorumSet {
     }
 
     static getAllValidators(qs:QuorumSet): Array<string> {
-        return R.reduce(
-            (validators, innerQS) => R.concat(validators, QuorumSet.getAllValidators(innerQS)),
-            qs.validators,
-            qs.innerQuorumSets
+        return qs.innerQuorumSets.reduce(
+            (allValidators, innerQS) => _.concat(allValidators, QuorumSet.getAllValidators(innerQS)),
+            qs.validators
         );
     }
 
