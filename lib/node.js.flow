@@ -18,19 +18,21 @@ class Node {
     _active: boolean;
     _geoData: GeoData;
     _statistics: Statistics;
-    _dateDiscovered: ?Date;
-    _dateUpdated: ?Date;
+    _dateDiscovered: Date;
+    _dateUpdated: Date;
     _overLoaded: boolean;
 
-    constructor(ip:string, port:number, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics()) {
+    constructor(ip:string, port:number, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
         this._port = port;
         this._publicKey = publicKey;
         this._quorumSet = quorumSet;
         this._geoData = geoData;
         this._statistics = statistics;
-        this.active = active;
-        this.overLoaded = overLoaded;
+        this._active = active;
+        this._overLoaded = overLoaded;
+        this._dateDiscovered = dateDiscovered;
+        this._dateUpdated = dateUpdated;
     }
 
     get displayName() {
@@ -222,8 +224,8 @@ class Node {
         newNode.statistics = Statistics.fromJSON(nodeObject.statistics);
         newNode.name = nodeObject.name;
         newNode.host = nodeObject.host;
-        newNode.dateDiscovered = nodeObject.dateDiscovered;
-        newNode.dateUpdated = nodeObject.dateUpdated;
+        newNode.dateDiscovered = new Date(nodeObject.dateDiscovered);
+        newNode.dateUpdated = new Date(nodeObject.dateUpdated);
 
         return newNode;
     }

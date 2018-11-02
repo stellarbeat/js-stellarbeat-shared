@@ -15,6 +15,9 @@
   },
   "author": "pieterjan84@github",
   "license": "MIT",
+  "engines": {
+    "node": "11.x"
+  },
   "main": "lib/index.js",
   "dependencies": {
     "npm": "^6.1.0"

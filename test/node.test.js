@@ -36,12 +36,14 @@ let node1 = new Node('localhost', '8080');
 node1.publicKey = '123';
 node1.statistics.activeInLastCrawl = true;
 node1.statistics.overLoadedInLastCrawl = false;
+node1.dateUpdated = "2018-04-28 14:39:01";
+node1.dateDiscovered = "2018-04-28 14:39:02";
 
 test('nodeToJson', () => {
     expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false}}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28 14:39:02\",\"dateUpdated\":\"2018-04-28 14:39:01\"}");
 });
 
 let node2 = new Node("54.221.140.73", "11625", "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
@@ -65,8 +67,8 @@ node2.versionStr = "v10.0.0";
 node2.statistics.activeCounter = 5;
 node2.statistics.activeInLastCrawl = true;
 node2.statistics.overLoadedInLastCrawl = false;
-node2.dateDiscovered = "2018-04-28 14:39:01";
-node2.dateUpdated = "2018-10-12 11:17:39";
+node2.dateDiscovered = new Date("2018-04-28 14:39:01");
+node2.dateUpdated = new Date("2018-10-12 11:17:39");
 node2.quorumSet.hashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
 node2.quorumSet.threshold = 2;
 node2.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ","GCGB2S2KGYARPVIA37HYZXVRM2YZUEXA6S33ZU5BUDC6THSB62LZSTYH","GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK"];

@@ -1,7 +1,6 @@
 const Node = require('./node');
 const QuorumSet = require('./quorum-set');
 const QuorumService = require('./quorum-service');
-const flatten = require('lodash/flatten');
 
 class Network {
     _nodes: Array<Node>;
@@ -47,7 +46,17 @@ class Network {
         //let clusterLeafs = QuorumService.getAllClusterLeafs(clusters, this._publicKeyToNodesMap);
     }
 
+    getLatestCrawlDate(){
+        if(this.nodes.length === 0) {
+            return undefined;
+        }
 
+        return new Date(this.nodes
+            .map(node => node.dateUpdated)
+            .sort(function(a,b){
+                return new Date(b) - new Date(a);
+            })[0]);
+    }
 
     get links(){
         return this._links;

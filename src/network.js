@@ -46,7 +46,17 @@ class Network {
         //let clusterLeafs = QuorumService.getAllClusterLeafs(clusters, this._publicKeyToNodesMap);
     }
 
+    getLatestCrawlDate(){
+        if(this.nodes.length === 0) {
+            return undefined;
+        }
 
+        return new Date(this.nodes
+            .map(node => node.dateUpdated)
+            .sort(function(a,b){
+                return new Date(b) - new Date(a);
+            })[0]);
+    }
 
     get links(){
         return this._links;
