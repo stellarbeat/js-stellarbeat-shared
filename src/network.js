@@ -10,10 +10,12 @@ class Network {
     _failingNodes: Array<Node>;
     _reverseNodeDependencyMap: Map<string, Array<Node>>;
     _clusters: Set<string>;
+    _latestCrawlDate: Date;
 
     constructor(nodes: Array<Node>) {
         this._nodes = nodes;
         this._publicKeyToNodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
+        this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates
         this.createNodesForUnknownValidators();
         this.initializeReverseNodeDependencyMap();
         this.computeFailingNodes();
@@ -47,16 +49,20 @@ class Network {
         //let clusterLeafs = QuorumService.getAllClusterLeafs(clusters, this._publicKeyToNodesMap);
     }
 
-    getLatestCrawlDate(){
+    calculateLatestCrawlDate(){
         if(this.nodes.length === 0) {
             return undefined;
         }
 
-        return this.nodes
+        this._latestCrawlDate = this.nodes
             .map(node => node.dateUpdated)
             .sort(function(a,b){
                 return b - a;
             })[0];
+    }
+
+    get latestCrawlDate(){
+        return this._latestCrawlDate;
     }
 
     get links(){
