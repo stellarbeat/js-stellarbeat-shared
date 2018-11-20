@@ -187,6 +187,7 @@ class Node {
         return {
             ip: this.ip,
             port: this.port,
+            host: this.host,
             publicKey: this.publicKey,
             name: this.name,
             ledgerVersion: this.ledgerVersion,
