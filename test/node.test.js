@@ -79,3 +79,8 @@ node2.overLoaded = false;
 test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)
 });
+
+let node3 = new Node();
+test('testDefaultPort', () => {
+    expect(node3.port).toEqual(11625);
+});

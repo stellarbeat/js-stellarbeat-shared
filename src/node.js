@@ -22,7 +22,7 @@ class Node {
     _dateUpdated: Date;
     _overLoaded: boolean;
 
-    constructor(ip:string, port:number, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
+    constructor(ip:string, port:number = 11625, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
         this._port = port;
         this._publicKey = publicKey;
