@@ -1,9 +1,8 @@
-const Network = require('../lib/network');
-const Node = require('../lib/node');
+import {Node, Network} from '../src';
 
-let node1 = new Node();
+let node1 = new Node('localhost');
 
-let node2 = new Node();
+let node2 = new Node('localhost');
 
 let network = new Network([node1, node2]);
 

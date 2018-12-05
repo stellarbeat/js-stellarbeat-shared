@@ -1,17 +1,14 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Domain classes",
   "repository": {
     "type": "git",
     "url": "https://github.com/stellarbeat/js-stellar-domain.git"
   },
   "scripts": {
-    "flow": "flow",
-    "flow:check": "flow check ./src/",
-    "flow:deps": "flow-typed install",
-    "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty; flow-copy-source src lib",
-    "test": "npm run flow:build; jest"
+    "build": "node_modules/typescript/bin/tsc  --declaration",
+    "test": "jest"
   },
   "author": "pieterjan84@github",
   "license": "MIT",
@@ -19,17 +16,16 @@
     "node": "11.x"
   },
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "dependencies": {
-    "lodash": "^4.17.11",
-    "npm": "^6.1.0"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "flow": "^0.2.3",
-    "flow-bin": "^0.73.0",
-    "flow-copy-source": "^2.0.2",
-    "flow-remove-types": "^1.2.3",
-    "flow-typed": "^2.4.0",
+    "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.12",
     "jest": "^23.6.0",
-    "merge": ">=1.2.1"
+    "merge": ">=1.2.1",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.1"
   }
 }

@@ -1,28 +1,27 @@
-// @flow
-const QuorumSet = require('./quorum-set');
-const GeoData = require('./node-geo-data');
-const Statistics = require('./node-statistics');
+import {NodeGeoData} from "./node-geo-data";
+import {NodeStatistics} from "./node-statistics";
+import {QuorumSet} from "./quorum-set";
 
-class Node {
-    _ip:string;
-    _port:number;
-    _publicKey:?string;
-    _name: ?string;
-    _host: ?string;
-    _ledgerVersion:?string;
-    _overlayVersion:?string;
-    _overlayMinVersion:?string;
-    _networkId:?string;
-    _versionStr:?string;
-    _quorumSet: QuorumSet;
-    _active: boolean;
-    _geoData: GeoData;
-    _statistics: Statistics;
-    _dateDiscovered: Date;
-    _dateUpdated: Date;
-    _overLoaded: boolean;
+export class Node {
+    protected _ip:string;
+    protected _port:number;
+    protected _publicKey?:string;
+    protected _name?:string;
+    protected _host?:string;
+    protected _ledgerVersion?:string;
+    protected _overlayVersion?:string;
+    protected _overlayMinVersion?:string;
+    protected _networkId?:string;
+    protected _versionStr?:string;
+    protected _quorumSet: QuorumSet;
+    protected _active: boolean;
+    protected _geoData: NodeGeoData;
+    protected _statistics: NodeStatistics;
+    protected _dateDiscovered: Date;
+    protected _dateUpdated: Date;
+    protected _overLoaded: boolean;
 
-    constructor(ip:string, port:number = 11625, publicKey:?string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new GeoData(), statistics = new Statistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
+    constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
         this._port = port;
         this._publicKey = publicKey;
@@ -87,7 +86,7 @@ class Node {
         this._publicKey = value;
     }
 
-    get name(): ?string {
+    get name(): string {
         return this._name;
     }
 
@@ -95,7 +94,7 @@ class Node {
         this._name = value;
     }
 
-    get host(): ?string {
+    get host(): string {
         return this._host;
     }
 
@@ -151,11 +150,11 @@ class Node {
         this._quorumSet = value;
     }
 
-    get geoData(): GeoData {
+    get geoData(): NodeGeoData {
         return this._geoData;
     }
 
-    set geoData(value: GeoData) {
+    set geoData(value: NodeGeoData) {
         this._geoData = value;
     }
 
@@ -163,11 +162,11 @@ class Node {
         return this._statistics;
     }
 
-    set statistics(value:Statistics) {
+    set statistics(value: NodeStatistics) {
         this._statistics = value;
     }
 
-    get dateDiscovered(): ?Date {
+    get dateDiscovered(): Date {
         return this._dateDiscovered;
     }
 
@@ -175,7 +174,7 @@ class Node {
         this._dateDiscovered = value;
     }
 
-    get dateUpdated(): ?Date {
+    get dateUpdated(): Date {
         return this._dateUpdated;
     }
 
@@ -207,7 +206,7 @@ class Node {
 
     static fromJSON(node:string|Object):Node {
         let nodeObject;
-        if((typeof node) === 'string') {
+        if(typeof node === 'string') {
             nodeObject = JSON.parse(node);
         } else
             nodeObject = node;
@@ -221,8 +220,8 @@ class Node {
         newNode.active = nodeObject.active;
         newNode.overLoaded = nodeObject.overLoaded;
         newNode.quorumSet = QuorumSet.fromJSON(nodeObject.quorumSet);
-        newNode.geoData = GeoData.fromJSON(nodeObject.geoData);
-        newNode.statistics = Statistics.fromJSON(nodeObject.statistics);
+        newNode.geoData = NodeGeoData.fromJSON(nodeObject.geoData);
+        newNode.statistics = NodeStatistics.fromJSON(nodeObject.statistics);
         newNode.name = nodeObject.name;
         newNode.host = nodeObject.host;
         newNode.dateDiscovered = new Date(nodeObject.dateDiscovered);
@@ -231,5 +230,3 @@ class Node {
         return newNode;
     }
 }
-
-module.exports = Node;

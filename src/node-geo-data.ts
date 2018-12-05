@@ -1,18 +1,16 @@
-// @flow
+export class NodeGeoData {
+    _countryCode?:string;
+    _countryName?:string;
+    _regionCode?:string;
+    _regionName?:string;
+    _city?:string;
+    _zipCode?:string;
+    _timeZone?:string;
+    _latitude?:number;
+    _longitude?:number;
+    _metroCode?:string;
 
-class NodeGeoData {
-    _countryCode:?string;
-    _countryName:?string;
-    _regionCode:?string;
-    _regionName:?string;
-    _city:?string;
-    _zipCode:?string;
-    _timeZone:?string;
-    _latitude:?number;
-    _longitude:?number;
-    _metroCode:?string;
-
-    get countryCode(): ?string {
+    get countryCode():string {
         return this._countryCode;
     }
 
@@ -20,7 +18,7 @@ class NodeGeoData {
         this._countryCode = value;
     }
 
-    get countryName(): ?string {
+    get countryName():string {
         return this._countryName;
     }
 
@@ -28,7 +26,7 @@ class NodeGeoData {
         this._countryName = value;
     }
 
-    get regionCode(): ?string {
+    get regionCode():string {
         return this._regionCode;
     }
 
@@ -36,7 +34,7 @@ class NodeGeoData {
         this._regionCode = value;
     }
 
-    get regionName(): ?string {
+    get regionName():string {
         return this._regionName;
     }
 
@@ -44,7 +42,7 @@ class NodeGeoData {
         this._regionName = value;
     }
 
-    get city(): ?string {
+    get city():string {
         return this._city;
     }
 
@@ -52,7 +50,7 @@ class NodeGeoData {
         this._city = value;
     }
 
-    get zipCode(): ?string {
+    get zipCode():string {
         return this._zipCode;
     }
 
@@ -60,7 +58,7 @@ class NodeGeoData {
         this._zipCode = value;
     }
 
-    get timeZone(): ?string {
+    get timeZone():string {
         return this._timeZone;
     }
 
@@ -68,7 +66,7 @@ class NodeGeoData {
         this._timeZone = value;
     }
 
-    get latitude(): ?number {
+    get latitude():number {
         return this._latitude;
     }
 
@@ -76,7 +74,7 @@ class NodeGeoData {
         this._latitude = value;
     }
 
-    get longitude(): ?number {
+    get longitude():number {
         return this._longitude;
     }
 
@@ -84,7 +82,7 @@ class NodeGeoData {
         this._longitude = value;
     }
 
-    get metroCode(): ?string {
+    get metroCode():string {
         return this._metroCode;
     }
 
@@ -112,7 +110,7 @@ class NodeGeoData {
             return new NodeGeoData();
         }
         let nodeGeoObject;
-        if((typeof nodeGeo) === 'string') {
+        if(typeof nodeGeo === 'string') {
             nodeGeoObject = JSON.parse(nodeGeo);
         } else
             nodeGeoObject = nodeGeo;
@@ -132,5 +130,3 @@ class NodeGeoData {
         return newNodeGeo;
     }
 }
-
-module.exports = NodeGeoData;

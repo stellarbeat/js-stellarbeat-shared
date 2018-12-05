@@ -1,5 +1,4 @@
-const Node = require('./../lib/node.js');
-
+import {Node} from '../src'
 
 let nodeJson = '{' +
     '"publicKey":"GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK",' +
@@ -8,12 +7,12 @@ let nodeJson = '{' +
     '"city":"Ashburn",' +
     '"countryName":"United States", ' +
     '"countryCode": "US", ' +
-    '"latitude":"39.0853",' +
-    '"longitude":"-77.6452"' +
+    '"latitude":39.0853,' +
+    '"longitude":-77.6452' +
     '},' +
     '"host":"core-live-b.stellar.org",' +
     '"ip":"54.221.140.73",' +
-    '"port":"11625",' +
+    '"port":11625,' +
     '"versionStr":"v10.0.0",' +
     '"active":true,' +
     '"overLoaded":false,' +
@@ -32,21 +31,21 @@ let nodeJson = '{' +
     '}' +
     '}';
 
-let node1 = new Node('localhost', '8080');
+let node1 = new Node('localhost', 8080);
 node1.publicKey = '123';
 node1.statistics.activeInLastCrawl = true;
 node1.statistics.overLoadedInLastCrawl = false;
-node1.dateUpdated = "2018-04-28 14:39:01";
-node1.dateDiscovered = "2018-04-28 14:39:02";
+node1.dateUpdated = new Date("2018-04-28 14:39:01");
+node1.dateDiscovered = new Date("2018-04-28 14:39:02");
 
 test('nodeToJson', () => {
-    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":\"8080\",\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
+    expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":8080,\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28 14:39:02\",\"dateUpdated\":\"2018-04-28 14:39:01\"}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\"}");
 });
 
-let node2 = new Node("54.221.140.73", "11625", "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
+let node2 = new Node("54.221.140.73", 11625, "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
 node2.name = "SDF validator 2";
 node2.host = "core-live-b.stellar.org";
 node2.ledgerVersion = undefined;
@@ -56,8 +55,8 @@ node2.overlayVersion = undefined;
 node2.geoData.city = "Ashburn";
 node2.geoData.countryName = "United States";
 node2.geoData.countryCode = "US";
-node2.geoData.latitude = "39.0853";
-node2.geoData.longitude = "-77.6452";
+node2.geoData.latitude = 39.0853;
+node2.geoData.longitude = -77.6452;
 node2.geoData.metroCode = undefined;
 node2.geoData.regionCode = undefined;
 node2.geoData.regionName = undefined;
@@ -80,7 +79,7 @@ test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)
 });
 
-let node3 = new Node();
+let node3 = new Node("localhost");
 test('testDefaultPort', () => {
     expect(node3.port).toEqual(11625);
 });

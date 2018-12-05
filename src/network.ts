@@ -1,16 +1,17 @@
-const Node = require('./node');
-const QuorumSet = require('./quorum-set');
-const QuorumService = require('./quorum-service');
-const _ = require('lodash');
+import {QuorumSet} from "./quorum-set";
+import {Node} from './node';
+import {_} from 'lodash';
+import QuorumService from "./quorum-service";
 
-class Network {
-    _nodes: Array<Node>;
-    _links: Array<Object>; //todo class?
-    _publicKeyToNodesMap: Map<string, Node>;
-    _failingNodes: Array<Node>;
-    _reverseNodeDependencyMap: Map<string, Array<Node>>;
-    _clusters: Set<string>;
-    _latestCrawlDate: Date;
+
+export class Network {
+    protected _nodes: Array<Node>;
+    protected _links: Array<Object>; //todo class?
+    protected _publicKeyToNodesMap: Map<string, Node>;
+    protected _failingNodes: Array<Node>;
+    protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
+    protected _clusters: Array<Set<string>>;
+    protected _latestCrawlDate: Date;
 
     constructor(nodes: Array<Node>) {
         this._nodes = nodes;
@@ -32,7 +33,7 @@ class Network {
         )
     }
 
-    updateNetwork(nodes: ?Array<Node>)
+    updateNetwork(nodes: Array<Node>)
     {
         if(nodes){
             this._nodes = nodes;
@@ -56,8 +57,8 @@ class Network {
 
         this._latestCrawlDate = this.nodes
             .map(node => node.dateUpdated)
-            .sort(function(a,b){
-                return b - a;
+            .sort(function(a: Date,b:Date){
+                return b.valueOf()- a.valueOf();
             })[0];
     }
 
@@ -110,7 +111,7 @@ class Network {
         this._nodes.forEach(node => {
             QuorumSet.getAllValidators(node.quorumSet).forEach(validator => {
                 if (!this._publicKeyToNodesMap.has(validator)) {
-                    let missingNode = new Node();
+                    let missingNode = new Node('unknown');
                     missingNode.publicKey = validator;
                     this.nodes.push(missingNode);
                     this._publicKeyToNodesMap.set(validator, missingNode);
@@ -141,7 +142,6 @@ class Network {
 
 
     computeFailingNodes() {
-        console.log('calculating failed nodes');
         let failingNodes = [];
         let nodesToCheck = this._nodes.filter(node => node.active && node.quorumSet.hasValidators()); //check all active nodes
         while (nodesToCheck.length > 0) {
@@ -194,5 +194,3 @@ class Network {
         return counter >= quorumSet.threshold;
     }
 }
-
-module.exports = Network;

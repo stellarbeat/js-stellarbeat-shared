@@ -1,6 +1,4 @@
-// @flow
-
-class NodeStatistics {
+export class NodeStatistics {
     //todo: store measurement time series for 24h results, monthly results,...?
     _activeCounter: number;
     _overLoadedCounter: number;
@@ -104,7 +102,7 @@ class NodeStatistics {
         }
 
         let nodeStatisticsObject;
-        if((typeof nodeStatistics) === 'string') {
+        if(typeof nodeStatistics === 'string') {
             nodeStatisticsObject = JSON.parse(nodeStatistics);
         } else
             nodeStatisticsObject = nodeStatistics;
@@ -120,5 +118,3 @@ class NodeStatistics {
         return newNodeStatistics;
     }
 }
-
-module.exports = NodeStatistics;

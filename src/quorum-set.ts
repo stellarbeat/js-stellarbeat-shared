@@ -1,13 +1,11 @@
-// @flow
+export class QuorumSet {
 
-class QuorumSet {
+    protected _hashKey?: string;
+    protected _threshold: number;
+    protected _validators: Array<string>;
+    protected _innerQuorumSets: Array<QuorumSet>;
 
-    _hashKey: ?string;
-    _threshold: number;
-    _validators: Array<string>;
-    _innerQuorumSets: Array<QuorumSet>;
-
-    constructor(hashKey: ?string = undefined,
+    constructor(hashKey:string = undefined,
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
                 innerQuorumSets: Array<QuorumSet> = []
@@ -22,11 +20,11 @@ class QuorumSet {
         return this.validators.length > 0 || this.innerQuorumSets.length > 0;
     }
 
-    get hashKey(): ?string {
+    get hashKey(): string {
         return this._hashKey;
     }
 
-    set hashKey(value: string): void {
+    set hashKey(value: string) {
         this._hashKey = value;
     }
 
@@ -34,7 +32,7 @@ class QuorumSet {
         return this._threshold;
     }
 
-    set threshold(value: number): void {
+    set threshold(value: number) {
         this._threshold = value;
     }
 
@@ -50,7 +48,7 @@ class QuorumSet {
         return this._innerQuorumSets;
     }
 
-    set innerQuorumSets(value: Array<QuorumSet>): void {
+    set innerQuorumSets(value: Array<QuorumSet>) {
         this._innerQuorumSets = value;
     }
 
@@ -71,7 +69,7 @@ class QuorumSet {
     }
 
 
-    static fromJSON(quorumSet: ?Object): QuorumSet {
+    static fromJSON(quorumSet: any): QuorumSet {
         if(!quorumSet){
             return new QuorumSet();
         }
@@ -88,5 +86,3 @@ class QuorumSet {
         );
     };
 }
-
-module.exports = QuorumSet;

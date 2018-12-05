@@ -1,11 +1,11 @@
-const Node = require("./node");
-const QuorumSet = require("./quorum-set");
-const _ = require("lodash");
+import {QuorumSet} from "./quorum-set";
+import {_} from "lodash";
+import {Node} from "./node";
 
 let cache = new Map();
 let cacheEnabled = true;
 
-module.exports = {
+export default {
     disableCache: function () {
         cacheEnabled = false;
     },
@@ -283,7 +283,7 @@ module.exports = {
         return bool;
     },
 
-    getPublicKeyToNodeMap(nodes) {
+    getPublicKeyToNodeMap(nodes):Map<string, Node> {
         return new Map(nodes
             .filter(node => node.publicKey)
             .map(node => [node.publicKey, node])
