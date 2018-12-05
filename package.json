@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.12",
+    "@types/lodash": "^4.14.119",
     "jest": "^23.6.0",
     "merge": ">=1.2.1",
     "ts-jest": "^23.10.5",

@@ -1,5 +1,5 @@
 import {QuorumSet} from "./quorum-set";
-import {_} from "lodash";
+import * as _ from "lodash";
 import {Node} from "./node";
 
 let cache = new Map();

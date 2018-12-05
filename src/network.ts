@@ -1,6 +1,6 @@
 import {QuorumSet} from "./quorum-set";
 import {Node} from './node';
-import {_} from 'lodash';
+import * as _ from 'lodash';
 import QuorumService from "./quorum-service";
 
 
