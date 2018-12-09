@@ -6,7 +6,7 @@ import QuorumService from "./quorum-service";
 
 export class Network {
     protected _nodes: Array<Node>;
-    protected _links: Array<Object>; //todo class?
+    protected _links: Array<{id:string, source:Node, target:Node, isClusterLink:boolean}>;
     protected _publicKeyToNodesMap: Map<string, Node>;
     protected _failingNodes: Array<Node>;
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
@@ -33,7 +33,7 @@ export class Network {
         )
     }
 
-    updateNetwork(nodes: Array<Node>)
+    updateNetwork(nodes?: Array<Node>)
     {
         if(nodes){
             this._nodes = nodes;

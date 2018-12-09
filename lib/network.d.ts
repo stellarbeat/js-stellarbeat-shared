@@ -2,7 +2,12 @@ import { QuorumSet } from "./quorum-set";
 import { Node } from './node';
 export declare class Network {
     protected _nodes: Array<Node>;
-    protected _links: Array<Object>;
+    protected _links: Array<{
+        id: string;
+        source: Node;
+        target: Node;
+        isClusterLink: boolean;
+    }>;
     protected _publicKeyToNodesMap: Map<string, Node>;
     protected _failingNodes: Array<Node>;
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
@@ -10,11 +15,16 @@ export declare class Network {
     protected _latestCrawlDate: Date;
     constructor(nodes: Array<Node>);
     computeQuorumIntersection(): void;
-    updateNetwork(nodes: Array<Node>): void;
+    updateNetwork(nodes?: Array<Node>): void;
     detectClusters(): void;
     calculateLatestCrawlDate(): any;
     readonly latestCrawlDate: Date;
-    readonly links: Object[];
+    readonly links: {
+        id: string;
+        source: Node;
+        target: Node;
+        isClusterLink: boolean;
+    }[];
     readonly failingNodes: Node[];
     isNodeFailing(node: Node): boolean;
     isQuorumSetFailing(quorumSet: QuorumSet): boolean;
