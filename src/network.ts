@@ -1,8 +1,5 @@
-import {QuorumSet} from "./quorum-set";
-import {Node} from './node';
+import {QuorumSet, Node, QuorumService, generateTomlString} from "./index";
 import * as _ from 'lodash';
-import QuorumService from "./quorum-service";
-
 
 export class Network {
     protected _nodes: Array<Node>;
@@ -80,6 +77,10 @@ export class Network {
 
     isQuorumSetFailing(quorumSet: QuorumSet) {
         return !this.quorumSetCanReachThreshold(quorumSet, this._failingNodes);
+    }
+
+    getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
+        return generateTomlString(quorumSet, this._publicKeyToNodesMap);
     }
 
     createLinks(){
