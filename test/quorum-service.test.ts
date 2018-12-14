@@ -1,5 +1,5 @@
 import {QuorumSet, QuorumService, Node} from '../src';
-import {_} from 'lodash';
+import * as _ from 'lodash';
 QuorumService.disableCache();
 
 let node1 = new Node("54.160.111.199");

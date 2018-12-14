@@ -70,18 +70,23 @@ export class QuorumSet {
 
 
     static fromJSON(quorumSet: any): QuorumSet {
-        if(!quorumSet){
+        let quorumSetObject;
+        if(typeof quorumSet === 'string') {
+            quorumSetObject = JSON.parse(quorumSet);
+        } else
+            quorumSetObject = quorumSet;
+        if(!quorumSetObject){
             return new QuorumSet();
         }
 
-        let innerQuorumSets = quorumSet.innerQuorumSets.map(
+        let innerQuorumSets = quorumSetObject.innerQuorumSets.map(
             innerQuorumSet => this.fromJSON(innerQuorumSet)
         );
 
         return new QuorumSet(
-            quorumSet.hashKey,
-            quorumSet.threshold,
-            quorumSet.validators,
+            quorumSetObject.hashKey,
+            quorumSetObject.threshold,
+            quorumSetObject.validators,
             innerQuorumSets
         );
     };
