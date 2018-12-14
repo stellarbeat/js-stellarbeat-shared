@@ -1,5 +1,4 @@
-import { QuorumSet } from "./quorum-set";
-import { Node } from './node';
+import { QuorumSet, Node } from "./index";
 export declare class Network {
     protected _nodes: Array<Node>;
     protected _links: Array<{
@@ -28,6 +27,7 @@ export declare class Network {
     readonly failingNodes: Node[];
     isNodeFailing(node: Node): boolean;
     isQuorumSetFailing(quorumSet: QuorumSet): boolean;
+    getQuorumSetTomlConfig(quorumSet: QuorumSet): string;
     createLinks(): void;
     isClusterLink(source: any, target: any): boolean;
     createNodesForUnknownValidators(): void;
