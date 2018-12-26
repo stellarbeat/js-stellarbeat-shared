@@ -1,4 +1,4 @@
-import {QuorumSet, Node, QuorumService, generateTomlString} from "./index";
+import {QuorumSet, Node, QuorumService, QuorumSetService, generateTomlString} from "./index";
 import * as _ from 'lodash';
 
 export class Network {
@@ -9,10 +9,12 @@ export class Network {
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
     protected _clusters: Array<Set<string>>;
     protected _latestCrawlDate: Date;
+    protected _quorumSetService: QuorumSetService;
 
     constructor(nodes: Array<Node>) {
         this._nodes = nodes;
         this._publicKeyToNodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
+        this._quorumSetService = new QuorumSetService();
         this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates
         this.createNodesForUnknownValidators();
         this.initializeReverseNodeDependencyMap();
@@ -43,11 +45,13 @@ export class Network {
     }
 
     detectClusters() {
-        this._clusters = QuorumService.getAllClusters(this.nodes.filter(node => node.active && node.quorumSet.hasValidators()), this._publicKeyToNodesMap);
-        //let clusterLeafs = QuorumService.getAllClusterLeafs(clusters, this._publicKeyToNodesMap);
+        this._clusters = QuorumService.getAllClusters(
+            this.nodes.filter(node => node.active && node.quorumSet.hasValidators()),
+            this._publicKeyToNodesMap
+        );
     }
 
-    calculateLatestCrawlDate(){
+    calculateLatestCrawlDate():Date | undefined {
         if(this.nodes.length === 0) {
             return undefined;
         }
@@ -59,7 +63,7 @@ export class Network {
             })[0];
     }
 
-    get latestCrawlDate(){
+    get latestCrawlDate(): Date{
         return this._latestCrawlDate;
     }
 
@@ -76,7 +80,7 @@ export class Network {
     }
 
     isQuorumSetFailing(quorumSet: QuorumSet) {
-        return !this.quorumSetCanReachThreshold(quorumSet, this._failingNodes);
+        return !this._quorumSetService.quorumSetCanReachThreshold(quorumSet, this._failingNodes, this._publicKeyToNodesMap);
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
@@ -152,7 +156,7 @@ export class Network {
                 continue; //already failing
             }
 
-            if (this.quorumSetCanReachThreshold(nodeToCheck.quorumSet, failingNodes)) {
+            if (this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
                 continue; //working as expected
             }
 
@@ -171,27 +175,5 @@ export class Network {
         }
 
         this._failingNodes=failingNodes;
-    }
-
-    quorumSetCanReachThreshold(quorumSet, failingNodes) { //
-        let counter = quorumSet.validators.filter(validator => {
-            if (!this._publicKeyToNodesMap.has(validator)) {
-                return false;
-            }
-
-            if(failingNodes.includes(this._publicKeyToNodesMap.get(validator))){
-                return false;
-            }
-
-            return this._publicKeyToNodesMap.get(validator).active;
-        }).length;
-
-        quorumSet.innerQuorumSets.forEach(innerQS => {
-            if (this.quorumSetCanReachThreshold(innerQS, failingNodes)) {
-                counter++;
-            }
-        });
-
-        return counter >= quorumSet.threshold;
     }
 }

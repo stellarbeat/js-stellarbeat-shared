@@ -11,28 +11,6 @@ export default {
         cacheEnabled = false;
     },
 
-    quorumSetCanReachThreshold: function(quorumSet, publicKeysToNodesMap) { //
-        let counter = quorumSet.validators.filter(validator => {
-            if(!publicKeysToNodesMap.has(validator)) {
-                return false;
-            }
-
-            return publicKeysToNodesMap.get(validator).active;
-        }).length;
-
-        quorumSet.innerQuorumSets.forEach(innerQS => {
-            if(this.quorumSetCanReachThreshold(innerQS, publicKeysToNodesMap)) {
-                counter ++;
-            }
-        });
-
-        if(counter >= quorumSet.threshold) {
-            return true;
-        }
-
-        return false;
-    },
-
     getClusterLeafNodes: function (cluster, map) {
         let aNodeInCluster = cluster[0]; //every toNode leads to the same leafs.
 
