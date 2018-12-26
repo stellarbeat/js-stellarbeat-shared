@@ -1,9 +1,11 @@
 import {QuorumSet} from "./quorum-set";
 import * as _ from "lodash";
 import {Node} from "./node";
+import {QuorumSlicesGenerator} from "./quorum-slices-generator";
 
 let cache = new Map();
 let cacheEnabled = true;
+let quorumSlicesGenerator = new QuorumSlicesGenerator(cacheEnabled);
 
 export default {
     disableCache: function () {
@@ -87,7 +89,7 @@ export default {
     getQuorumsInCluster(cluster, map){
         console.log("getting quorums in cluster: ");
         console.log(cluster);
-        let combinationGenerator = this.getCombinationsSuperFastGenerator(cluster); //DLKSJFMLKDSJFM
+        let combinationGenerator = this.getCombinationsSuperFastGenerator(cluster);
         let next = combinationGenerator.next();
         let i = 0;
         let quorums = [];
@@ -253,7 +255,7 @@ export default {
 
     hasSliceThatIsASubsetOfQuorum: function (quorumSet, quorum) {
         //console.time("hasSliceThatIsASubsetOfQuorum");
-        let slices = this.getSlices(quorumSet); //todo YIELD
+        let slices = quorumSlicesGenerator.getSlices(quorumSet); //todo YIELD
         let hasSubsetSlice = false;
         slices.some(slice => {
             if(this.isSliceSubsetOfQuorum(slice,quorum)) {
@@ -321,68 +323,9 @@ export default {
         return threshold === 0; //enough matches to satisfy threshold?
     },
 
-    getSlices: function (quorumSet) {
-        //console.time("getslices");
-        if(!quorumSet) {
-            return [];
-        }
-
-
-        if (quorumSet.threshold > quorumSet.validators.size + quorumSet.innerQuorumSets.size) {
-            //console.log("not enough active validators for quorumSet: " + quorumSet.hashKey);
-            return [];
-        }
-
-        if (quorumSet.threshold === 0) {
-            throw new Error('threshold cannot be zero');
-        }
-
-        if(cache.has(quorumSet.hashKey) && cacheEnabled) {
-            return cache.get(quorumSet.hashKey);
-        }
-
-        let slices = this.getCombinationsOfSizeK(
-            quorumSet.threshold,
-            [].concat(quorumSet.validators).concat(quorumSet.innerQuorumSets)
-        );
-
-        cache.set(quorumSet.hashKey, slices);
-        //console.timeEnd("getslices");
-        return slices;
-    },
-
     getAllCombinations: function(nodes) {
         return this.getCombinationsSuperFast(nodes
         );
-    },
-
-    getCombinationsOfSizeK: function (k, nodesOrQSets) {
-        let combinations = [];
-        for (let i = 0; i < nodesOrQSets.length; i++) {
-
-            let prefixes = [];
-            if (nodesOrQSets[i] instanceof QuorumSet) {
-                prefixes = this.getSlices(nodesOrQSets[i]);
-            } else {
-                prefixes = [[nodesOrQSets[i]]];
-            }
-
-            if (k === 1) {
-                prefixes.forEach(prefix => combinations.push(prefix));
-            }
-
-            else if ((k - 1 <= nodesOrQSets.length - i - 1)) { //not enough candidates left
-                let postCombinations = this.getCombinationsOfSizeK(k - 1, nodesOrQSets.slice(i + 1, nodesOrQSets.length));
-                prefixes.forEach(
-                    prefix => postCombinations.forEach(
-                        postCombination =>
-                                combinations.push(prefix.concat(postCombination))
-                    )
-                );
-            }
-        }
-
-        return combinations;
     },
 
     getCombinationsSuperFast: function (publicKeys) {
