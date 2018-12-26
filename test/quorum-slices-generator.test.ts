@@ -1,5 +1,4 @@
-import {QuorumSet, QuorumService, Node} from '../src';
-import {QuorumSlicesGenerator} from "../src/quorum-slices-generator";
+import {QuorumSet, QuorumSlicesGenerator, Node} from '../src';
 
 let quorumSlicesGenerator = new QuorumSlicesGenerator(false);
 

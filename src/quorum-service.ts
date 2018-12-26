@@ -3,7 +3,6 @@ import * as _ from "lodash";
 import {Node} from "./node";
 import {QuorumSlicesGenerator} from "./quorum-slices-generator";
 
-let cache = new Map();
 let cacheEnabled = true;
 let quorumSlicesGenerator = new QuorumSlicesGenerator(cacheEnabled);
 
