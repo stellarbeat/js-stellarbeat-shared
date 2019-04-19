@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 export class Network {
     protected _nodes: Array<Node>;
-    protected _links: Array<{id:string, source:Node, target:Node, isClusterLink:boolean}>;
+    protected _links: Array<{ id: string, source: Node, target: Node, isClusterLink: boolean }>;
     protected _publicKeyToNodesMap: Map<string, Node>;
     protected _failingNodes: Array<Node>;
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
@@ -23,8 +23,7 @@ export class Network {
         this.createLinks();
     }
 
-    computeQuorumIntersection()
-    {
+    computeQuorumIntersection() {
         QuorumService.hasQuorumIntersection(
             this._nodes,
             this._clusters,
@@ -32,9 +31,8 @@ export class Network {
         )
     }
 
-    updateNetwork(nodes?: Array<Node>)
-    {
-        if(nodes){
+    updateNetwork(nodes?: Array<Node>) {
+        if (nodes) {
             this._nodes = nodes;
             this._publicKeyToNodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
             this.createNodesForUnknownValidators();
@@ -51,27 +49,27 @@ export class Network {
         );
     }
 
-    calculateLatestCrawlDate():Date | undefined {
-        if(this.nodes.length === 0) {
+    calculateLatestCrawlDate(): Date | undefined {
+        if (this.nodes.length === 0) {
             return undefined;
         }
 
         this._latestCrawlDate = this.nodes
             .map(node => node.dateUpdated)
-            .sort(function(a: Date,b:Date){
-                return b.valueOf()- a.valueOf();
+            .sort(function (a: Date, b: Date) {
+                return b.valueOf() - a.valueOf();
             })[0];
     }
 
-    get latestCrawlDate(): Date{
+    get latestCrawlDate(): Date {
         return this._latestCrawlDate;
     }
 
-    get links(){
+    get links() {
         return this._links;
     }
 
-    get failingNodes(){
+    get failingNodes() {
         return this._failingNodes;
     }
 
@@ -87,28 +85,28 @@ export class Network {
         return generateTomlString(quorumSet, this._publicKeyToNodesMap);
     }
 
-    createLinks(){
+    createLinks() {
         this._links = _.flatten(this._nodes
             .filter(node => node.active && !this._failingNodes.includes(node))
             .map(node => {
-            return QuorumSet.getAllValidators(node.quorumSet)
-                .filter(validator => this._publicKeyToNodesMap.get(validator).active && !this._failingNodes.includes(this._publicKeyToNodesMap.get(validator))  )
-                .map(validator => {
-                return {
-                    'id': node.publicKey + validator,
-                    'source': node,
-                    'target': this._publicKeyToNodesMap.get(validator),
-                    'isClusterLink': this.isClusterLink(node.publicKey, validator)/*,
+                return QuorumSet.getAllValidators(node.quorumSet)
+                    .filter(validator => this._publicKeyToNodesMap.get(validator).active && !this._failingNodes.includes(this._publicKeyToNodesMap.get(validator)))
+                    .map(validator => {
+                        return {
+                            'id': node.publicKey + validator,
+                            'source': node,
+                            'target': this._publicKeyToNodesMap.get(validator),
+                            'isClusterLink': this.isClusterLink(node.publicKey, validator)/*,
                     'active': this._publicKeyToNodesMap.get(validator).active
                     && this._publicKeyToNodesMap.get(node.publicKey).active
                     && !this._failingNodes.includes(this._publicKeyToNodesMap.get(validator))
                     && !this._failingNodes.includes(node)*/
-                };
-            })
-        }));
+                        };
+                    })
+            }));
     }
 
-    isClusterLink(source, target){
+    isClusterLink(source, target) {
         return Array.from(this._clusters).filter(cluster => cluster.has(source) && cluster.has(target)).length > 0;
     }
 
@@ -145,6 +143,12 @@ export class Network {
         return this._publicKeyToNodesMap.get(publicKey)
     }
 
+    /*
+    * Get nodes that have the given node in their quorumSet
+     */
+    getTrustingNodes(node: Node): Node[] {
+        return this._reverseNodeDependencyMap.get(node.publicKey);
+    }
 
     computeFailingNodes() {
         let failingNodes = [];
@@ -169,11 +173,11 @@ export class Network {
             }
 
             this._reverseNodeDependencyMap.get(nodeToCheck.publicKey).forEach(node => {
-                if(node.active && node.quorumSet.hasValidators())
+                if (node.active && node.quorumSet.hasValidators())
                     nodesToCheck.push(node);
             })
         }
 
-        this._failingNodes=failingNodes;
+        this._failingNodes = failingNodes;
     }
 }
