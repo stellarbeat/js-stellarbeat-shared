@@ -12,6 +12,7 @@ let nodeJson = '{' +
     '},' +
     '"host":"core-live-b.stellar.org",' +
     '"ip":"54.221.140.73",' +
+    '"isFullValidator": true,' +
     '"port":11625,' +
     '"versionStr":"v10.0.0",' +
     '"active":true,' +
@@ -42,7 +43,7 @@ test('nodeToJson', () => {
     expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":8080,\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\"}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false}");
 });
 
 let node2 = new Node("54.221.140.73", 11625, "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
@@ -74,6 +75,7 @@ node2.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXV
 node2.quorumSet.innerQuorumSets = [];
 node2.active = true;
 node2.overLoaded = false;
+node2.isFullValidator = true;
 
 test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)
