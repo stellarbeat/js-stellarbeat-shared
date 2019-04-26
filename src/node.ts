@@ -20,7 +20,7 @@ export class Node {
     protected _dateDiscovered: Date;
     protected _dateUpdated: Date;
     protected _overLoaded: boolean;
-    private _isFullValidator: boolean;
+    protected _isFullValidator: boolean = false;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
