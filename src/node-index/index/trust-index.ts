@@ -15,8 +15,6 @@ export class TrustIndex {
     }
 
     get(node: Node): number {
-        console.log(this._network.nodes
-            .filter(networkNode => networkNode.active && networkNode.isValidator).length -1);
         return (
             this._network.getTrustingNodes(node)
                 .filter((trustingNode) => trustingNode !== node).length

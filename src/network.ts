@@ -147,7 +147,11 @@ export class Network {
     * Get nodes that have the given node in their quorumSet
      */
     getTrustingNodes(node: Node): Node[] {
-        return this._reverseNodeDependencyMap.get(node.publicKey);
+        let trustingNodes = this._reverseNodeDependencyMap.get(node.publicKey);
+        if(trustingNodes === undefined)
+            return [];
+
+        return trustingNodes;
     }
 
     computeFailingNodes() {
