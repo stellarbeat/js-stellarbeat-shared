@@ -17,7 +17,7 @@ export class TrustIndex {
     get(node: Node): number {
         return (
             this._network.getTrustingNodes(node)
-                .filter((trustingNode) => trustingNode !== node).length
+                .filter((trustingNode) => trustingNode.active && trustingNode !== node).length
             )
             /
             (
