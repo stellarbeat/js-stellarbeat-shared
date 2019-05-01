@@ -21,6 +21,7 @@ export class Node {
     protected _dateUpdated: Date;
     protected _overLoaded: boolean;
     protected _isFullValidator: boolean = false;
+    private _index: number = 0.0;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
@@ -195,6 +196,14 @@ export class Node {
         return this.quorumSet.hasValidators(); //if a quorumset exists, it means we picked it up through scp messages.
     }
 
+    get index(): number {
+        return this._index;
+    }
+
+    set index(value: number) {
+        this._index = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -215,7 +224,8 @@ export class Node {
             dateDiscovered: this.dateDiscovered,
             dateUpdated: this.dateUpdated,
             isValidator: this.isValidator,
-            isFullValidator: this.isFullValidator
+            isFullValidator: this.isFullValidator,
+            index: this.index
         };
     };
 
@@ -242,6 +252,7 @@ export class Node {
         newNode.dateDiscovered = new Date(nodeObject.dateDiscovered);
         newNode.dateUpdated = new Date(nodeObject.dateUpdated);
         newNode.isFullValidator = nodeObject.isFullValidator;
+        newNode.index = nodeObject.index;
 
         return newNode;
     }

@@ -11,6 +11,7 @@ let nodeJson = '{' +
     '"longitude":-77.6452' +
     '},' +
     '"host":"core-live-b.stellar.org",' +
+    '"index": 0,' +
     '"ip":"54.221.140.73",' +
     '"isFullValidator": true,' +
     '"port":11625,' +
@@ -43,7 +44,7 @@ test('nodeToJson', () => {
     expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":8080,\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false,\"index\":0}");
 });
 
 let node2 = new Node("54.221.140.73", 11625, "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");

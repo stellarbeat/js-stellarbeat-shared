@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Domain classes",
   "repository": {
     "type": "git",
@@ -19,7 +19,13 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "dependencies": {
-    "lodash": "^4.17.11"
+    "find-versions": "^3.1.0",
+    "latest-semver": "^2.0.0",
+    "lodash": "^4.17.11",
+    "semver": "^6.0.0",
+    "semver-compare": "^1.0.0",
+    "semver-diff": "^3.0.0",
+    "to-semver": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
