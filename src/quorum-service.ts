@@ -21,6 +21,11 @@ export default {
         )
     },
 
+    /**
+     * @deprecated use ClusterService
+     * @param node
+     * @param map
+     */
     getCluster: function (node, map) {
         if(!node.quorumSet){
             return [];
@@ -43,6 +48,11 @@ export default {
         return _.flow([this.getNodesWithPublicKeys, this.getNodesWithQuorumSets])(nodes);
     },
 
+    /**
+     * @deprecated use ClusterService
+     * @param nodes
+     * @param map
+     */
     getAllClusters(nodes, map) {
         let clusters = [];
         nodes.forEach(node => {
@@ -185,6 +195,12 @@ export default {
         return quorumSet;
     },
 
+    /**
+     * @deprecated use ClusterService
+     * @param node
+     * @param publicKeysToNodesMap
+     * @param processedPublicKeys
+     */
     getNodeChainRecursive: function(node, publicKeysToNodesMap, processedPublicKeys = []) {
         if(processedPublicKeys.indexOf(node.publicKey) >= 0)
             return processedPublicKeys;

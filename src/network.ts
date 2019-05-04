@@ -1,4 +1,4 @@
-import {QuorumSet, Node, QuorumService, QuorumSetService, generateTomlString} from "./index";
+import {QuorumSet, Node, QuorumService, QuorumSetService, generateTomlString, ClusterService} from "./index";
 import * as _ from 'lodash';
 
 export class Network {
@@ -43,10 +43,11 @@ export class Network {
     }
 
     detectClusters() {
-        this._clusters = QuorumService.getAllClusters(
+        let clusterService = new ClusterService(
             this.nodes.filter(node => node.active && node.quorumSet.hasValidators()),
             this._publicKeyToNodesMap
         );
+        this._clusters = clusterService.getAllClusters();
     }
 
     calculateLatestCrawlDate(): Date | undefined {
