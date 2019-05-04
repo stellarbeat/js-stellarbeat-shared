@@ -1,6 +1,6 @@
 //A node is part of a cluster if it is connected to itself through the other nodes in the cluster.
 import * as _ from "lodash";
-import {QuorumSet, Node} from '../src';
+import {QuorumSet, Node} from './';
 
 export class ClusterService {
 
