@@ -39,6 +39,7 @@ export class Network {
         }
         this.initializeReverseNodeDependencyMap();
         this.computeFailingNodes();
+        this.detectClusters();
         this.createLinks();
     }
 
