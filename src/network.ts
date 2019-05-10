@@ -79,8 +79,8 @@ export class Network {
         return this._failingNodes.includes(node);
     }
 
-    isQuorumSetFailing(quorumSet: QuorumSet) {
-        return !this._quorumSetService.quorumSetCanReachThreshold(quorumSet, this._failingNodes, this._publicKeyToNodesMap);
+    isQuorumSetFailing(node: Node) {
+        return !this._quorumSetService.quorumSetCanReachThreshold(node, node.quorumSet, this._failingNodes, this._publicKeyToNodesMap);
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
@@ -166,7 +166,7 @@ export class Network {
                 continue; //already failing
             }
 
-            if (this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
+            if (this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
                 continue; //working as expected
             }
 

@@ -1,5 +1,6 @@
 import {Node, QuorumSet} from "./index";
 
+//todo: use toml nodejs package
 function getThresholdPercentage(quorumSet:QuorumSet):number {
     return Math.round(
         (quorumSet.threshold / (quorumSet.validators.length + quorumSet.innerQuorumSets.length)) * 100
@@ -11,7 +12,7 @@ function getValidatorsStringPart(quorumSet: QuorumSet, publicKeysToNodesMap: Map
     quorumSet.validators.forEach((validator, index) => {
         validatorsStringPart += '    "'
             + validator + ' '
-            + publicKeysToNodesMap.get(validator).name + '"';
+            + publicKeysToNodesMap.get(validator).name.replace(/ /g, '_') + '"';
         if (index !== quorumSet.validators.length - 1) {
             validatorsStringPart += ',';
         }

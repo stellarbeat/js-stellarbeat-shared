@@ -19,33 +19,42 @@ map.set("2", node2);
 
 describe('canReachThreshold', () => {
     test('basic true', () => {
+        let qs = new QuorumSet('a', 2, ["1", "2"]);
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
+    });
+    test('true with self included', () => {
         let qs = new QuorumSet('a', 2, ["0","1", "2"]);
-        expect(quorumSetService.quorumSetCanReachThreshold(qs, [], map)).toBeTruthy();
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
+    });
+
+    test('false through including self', () => {
+        let qs = new QuorumSet('a', 3, ["0","1", "2"]);
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeFalsy();
     });
     test('basic false', () => {
         let qs = new QuorumSet('a', 4, ["0","1", "2"]);
-        expect(quorumSetService.quorumSetCanReachThreshold(qs, [], map)).toBeFalsy();
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeFalsy();
     });
     test('failingNode', () => {
         let qs = new QuorumSet('a', 2, ["0","1", "2"]);
-        expect(quorumSetService.quorumSetCanReachThreshold(qs, [node0, node1], map)).toBeFalsy();
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [node0, node1], map)).toBeFalsy();
     });
     test('innerQS', () => {
         let qs = new QuorumSet('a', 2,[], [
             new QuorumSet('b', 2, ["0", "1", "2"]),
-            new QuorumSet('c', 1, ["0"])
+            new QuorumSet('c', 1, ["1"])
         ] );
-        expect(quorumSetService.quorumSetCanReachThreshold(qs, [], map)).toBeTruthy();
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
     });
     test('innerInnerQS', () => {
         let qs = new QuorumSet('a', 2,[], [
-            new QuorumSet('b', 2, ["0"],
+            new QuorumSet('b', 2, ["1"],
                [
                    new QuorumSet('c', 1, ["2"])
                ]
             ),
-            new QuorumSet('c', 1, ["0"])
+            new QuorumSet('c', 1, ["1"])
         ] );
-        expect(quorumSetService.quorumSetCanReachThreshold(qs, [], map)).toBeTruthy();
+        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
     });
 });

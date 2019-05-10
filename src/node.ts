@@ -21,6 +21,7 @@ export class Node {
     protected _dateUpdated: Date;
     protected _overLoaded: boolean;
     protected _isFullValidator: boolean = false;
+    private _homeDomain?:string;
     private _index: number = 0.0;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
@@ -204,6 +205,14 @@ export class Node {
         this._index = value;
     }
 
+    get homeDomain(): string {
+        return this._homeDomain;
+    }
+
+    set homeDomain(value: string) {
+        this._homeDomain = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -225,7 +234,8 @@ export class Node {
             dateUpdated: this.dateUpdated,
             isValidator: this.isValidator,
             isFullValidator: this.isFullValidator,
-            index: this.index
+            index: this.index,
+            homeDomain: this.homeDomain
         };
     };
 
@@ -253,6 +263,7 @@ export class Node {
         newNode.dateUpdated = new Date(nodeObject.dateUpdated);
         newNode.isFullValidator = nodeObject.isFullValidator;
         newNode.index = nodeObject.index;
+        newNode.homeDomain = nodeObject.homeDomain;
 
         return newNode;
     }

@@ -3,6 +3,7 @@ import {Node} from '../src'
 let nodeJson = '{' +
     '"publicKey":"GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK",' +
     '"name":"SDF validator 2",' +
+    '"homeDomain":"my-domain",'+
     '"geoData":{' +
     '"city":"Ashburn",' +
     '"countryName":"United States", ' +
@@ -39,12 +40,13 @@ node1.statistics.activeInLastCrawl = true;
 node1.statistics.overLoadedInLastCrawl = false;
 node1.dateUpdated = new Date("2018-04-28 14:39:01");
 node1.dateDiscovered = new Date("2018-04-28 14:39:02");
+node1.homeDomain = "my-domain";
 
 test('nodeToJson', () => {
     expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":8080,\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false,\"index\":0}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false,\"index\":0,\"homeDomain\":\"my-domain\"}");
 });
 
 let node2 = new Node("54.221.140.73", 11625, "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
@@ -77,6 +79,7 @@ node2.quorumSet.innerQuorumSets = [];
 node2.active = true;
 node2.overLoaded = false;
 node2.isFullValidator = true;
+node2.homeDomain = 'my-domain';
 
 test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)
