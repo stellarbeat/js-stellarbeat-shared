@@ -2,14 +2,17 @@ export class NodeStatistics {
     //todo: store measurement time series for 24h results, monthly results,...?
     _activeCounter: number;
     _overLoadedCounter: number;
+    private _validatingCounter: number;
     _activeInLastCrawl: boolean;
     _overLoadedInLastCrawl: boolean;
+    private _validatingInLastCrawl: boolean = false;
 
-    constructor(activeCounter: number = 0, overLoadedCounter:number = 0) {
+    constructor(activeCounter: number = 0, overLoadedCounter:number = 0, validatingCounter: number = 0) {
         this._activeCounter = activeCounter;
         this._overLoadedCounter = overLoadedCounter;
         this._activeInLastCrawl = false;
         this._overLoadedInLastCrawl = false;
+        this._validatingCounter = validatingCounter;
     }
 
     static get MAX_ACTIVE_COUNTER() {
@@ -26,6 +29,13 @@ export class NodeStatistics {
     get overLoadedRating() {
         let divider = NodeStatistics.MAX_ACTIVE_COUNTER / 5; // 5 star ratings
         let rating = this.overLoadedCounter/divider;
+
+        return Math.ceil(rating);
+    }
+
+    get validatingRating() {
+        let divider = NodeStatistics.MAX_ACTIVE_COUNTER / 5; // 5 star ratings
+        let rating = this.validatingCounter/divider;
 
         return Math.ceil(rating);
     }
@@ -62,6 +72,22 @@ export class NodeStatistics {
         this._overLoadedInLastCrawl = value;
     }
 
+    get validatingCounter(): number {
+        return this._validatingCounter;
+    }
+
+    set validatingCounter(value: number) {
+        this._validatingCounter = value;
+    }
+
+    get validatingInLastCrawl(): boolean {
+        return this._validatingInLastCrawl;
+    }
+
+    set validatingInLastCrawl(value: boolean) {
+        this._validatingInLastCrawl = value;
+    }
+
     incrementOverLoadedCounter() {
         if(this._overLoadedCounter < NodeStatistics.MAX_ACTIVE_COUNTER) { //if crawler runs every 15 minutes, it takes about 3 days to become non active
             this._overLoadedCounter ++;
@@ -86,13 +112,28 @@ export class NodeStatistics {
         }
     }
 
+    incrementValidatingCounter() {
+        if(this._validatingCounter < NodeStatistics.MAX_ACTIVE_COUNTER) { //if crawler runs every 15 minutes, it takes about 3 days to become non active
+            this._validatingCounter ++;
+        }
+    }
+
+    decrementValidatingCounter() {
+        if(this._validatingCounter > 0) {
+            this._validatingCounter --;
+        }
+    }
+
     toJSON():Object {
         return {
             activeCounter: this.activeCounter,
             overLoadedCounter: this.overLoadedCounter,
             activeRating: this.activeRating,
             activeInLastCrawl: this.activeInLastCrawl,
-            overLoadedInLastCrawl: this.overLoadedInLastCrawl
+            overLoadedInLastCrawl: this.overLoadedInLastCrawl,
+            validatingInLastCrawl: this.validatingInLastCrawl,
+            validatingCounter: this.validatingCounter,
+            validatingRating: this.validatingRating
         };
     };
 
@@ -114,6 +155,12 @@ export class NodeStatistics {
             newNodeStatistics.overLoadedInLastCrawl = nodeStatisticsObject.overLoadedInLastCrawl;
         if(nodeStatisticsObject.activeInLastCrawl !== undefined && nodeStatisticsObject.activeInLastCrawl !== null)
             newNodeStatistics.activeInLastCrawl = nodeStatisticsObject.activeInLastCrawl;
+
+        if(nodeStatisticsObject.validatingInLastCrawl !== undefined && nodeStatisticsObject.validatingInLastCrawl !== null)
+            newNodeStatistics.validatingInLastCrawl = nodeStatisticsObject.validatingInLastCrawl;
+
+        if(nodeStatisticsObject.validatingCounter !== undefined && nodeStatisticsObject.validatingCounter !== null)
+            newNodeStatistics.validatingCounter = nodeStatisticsObject.validatingCounter;
 
         return newNodeStatistics;
     }

@@ -21,6 +21,7 @@ export class Node {
     protected _dateUpdated: Date;
     protected _overLoaded: boolean;
     protected _isFullValidator: boolean = false;
+    private _isValidating: boolean = false;
     private _homeDomain?:string;
     private _index: number = 0.0;
 
@@ -213,6 +214,17 @@ export class Node {
         this._homeDomain = value;
     }
 
+    /*
+    * Node is participating in scp
+     */
+    get isValidating(): boolean {
+        return this._isValidating;
+    }
+
+    set isValidating(value: boolean) {
+        this._isValidating = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -234,6 +246,7 @@ export class Node {
             dateUpdated: this.dateUpdated,
             isValidator: this.isValidator,
             isFullValidator: this.isFullValidator,
+            isValidating: this.isValidating,
             index: this.index,
             homeDomain: this.homeDomain
         };

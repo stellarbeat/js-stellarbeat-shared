@@ -46,7 +46,7 @@ test('nodeToJson', () => {
     expect(JSON.stringify(node1)).toBe("{\"ip\":\"localhost\",\"port\":8080,\"publicKey\":\"123\",\"active\":false,\"overLoaded\":false," +
         "\"quorumSet\":{\"threshold\":9007199254740991,\"validators\":[],\"innerQuorumSets\":[]}," +
         "\"geoData\":{}," +
-        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false,\"index\":0,\"homeDomain\":\"my-domain\"}");
+        "\"statistics\":{\"activeCounter\":0,\"overLoadedCounter\":0,\"activeRating\":0,\"activeInLastCrawl\":true,\"overLoadedInLastCrawl\":false,\"validatingInLastCrawl\":false,\"validatingCounter\":0,\"validatingRating\":0},\"dateDiscovered\":\"2018-04-28T12:39:02.000Z\",\"dateUpdated\":\"2018-04-28T12:39:01.000Z\",\"isValidator\":false,\"isFullValidator\":false,\"isValidating\":false,\"index\":0,\"homeDomain\":\"my-domain\"}");
 });
 
 let node2 = new Node("54.221.140.73", 11625, "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
