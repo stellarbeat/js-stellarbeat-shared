@@ -277,6 +277,7 @@ export class Node {
         newNode.isFullValidator = nodeObject.isFullValidator;
         newNode.index = nodeObject.index;
         newNode.homeDomain = nodeObject.homeDomain;
+        newNode.isValidating = nodeObject.isValidating;
 
         return newNode;
     }

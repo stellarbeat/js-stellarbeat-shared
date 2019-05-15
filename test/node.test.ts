@@ -15,6 +15,7 @@ let nodeJson = '{' +
     '"index": 0,' +
     '"ip":"54.221.140.73",' +
     '"isFullValidator": true,' +
+    '"isValidating": false,' +
     '"port":11625,' +
     '"versionStr":"v10.0.0",' +
     '"active":true,' +
@@ -80,6 +81,7 @@ node2.active = true;
 node2.overLoaded = false;
 node2.isFullValidator = true;
 node2.homeDomain = 'my-domain';
+node2.isValidating = false;
 
 test('fromJson', () => {
     expect(Node.fromJSON(nodeJson)).toEqual(node2)
