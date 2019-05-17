@@ -12,10 +12,6 @@ export class QuorumSetService {
                 return false;
             }
 
-            if(owner.publicKey === validator) {
-                return false;
-            }
-
             return publicKeysToNodesMap.get(validator).active;
         }).length;
 

@@ -23,14 +23,10 @@ describe('canReachThreshold', () => {
         expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
     });
     test('true with self included', () => {
-        let qs = new QuorumSet('a', 2, ["0","1", "2"]);
+        let qs = new QuorumSet('a', 3, ["0","1", "2"]);
         expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeTruthy();
     });
 
-    test('false through including self', () => {
-        let qs = new QuorumSet('a', 3, ["0","1", "2"]);
-        expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeFalsy();
-    });
     test('basic false', () => {
         let qs = new QuorumSet('a', 4, ["0","1", "2"]);
         expect(quorumSetService.quorumSetCanReachThreshold(node0, qs, [], map)).toBeFalsy();

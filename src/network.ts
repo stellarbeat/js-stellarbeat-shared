@@ -170,7 +170,7 @@ export class Network {
                 continue; //already failing
             }
 
-            if (this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
+            if (nodeToCheck.isValidating && this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
                 continue; //working as expected
             }
 
