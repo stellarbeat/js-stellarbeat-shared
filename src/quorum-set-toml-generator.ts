@@ -6,12 +6,16 @@ function getThresholdPercentage(quorumSet: QuorumSet): number {
         / (quorumSet.validators.length + quorumSet.innerQuorumSets.length));
 }
 
-function getValidatorsStringPart(quorumSet: QuorumSet, publicKeysToNodesMap: Map<string, Node>) {
+function getValidatorsStringPart(quorumSet, publicKeysToNodesMap) {
     let validatorsStringPart = 'VALIDATORS=[\n';
     quorumSet.validators.forEach((validator, index) => {
-        validatorsStringPart += '    "'
-            + validator + ' '
-            + publicKeysToNodesMap.get(validator).name.replace(/ /g, '_') + '"';
+        validatorsStringPart += '    "' + validator;
+        let name = publicKeysToNodesMap.get(validator).name;
+        if(name) {
+            name = name.replace(/ /g, '_');
+            validatorsStringPart += ' '
+                + name + '"';
+        }
         if (index !== quorumSet.validators.length - 1) {
             validatorsStringPart += ',';
         }
