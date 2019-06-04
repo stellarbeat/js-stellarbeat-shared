@@ -1,4 +1,5 @@
-import {Network, TypeIndex, AvailabilityIndex, Node, VersionIndex, TrustIndex, AgeIndex} from "./../index";
+import {Network, TypeIndex, ActiveIndex, Node, VersionIndex, TrustIndex, AgeIndex} from "./../index";
+import {ValidatingIndex} from "./index/validating-index";
 
 export class NodeIndex {
 
@@ -18,7 +19,8 @@ export class NodeIndex {
             (
                 (
                     TypeIndex.get(node)
-                    + AvailabilityIndex.get(node)
+                    + ActiveIndex.get(node)
+                    + ValidatingIndex.get(node)
                     + this._versionIndex.get(node)
                     + this._trustIndex.get(node)
                     + AgeIndex.get(node)

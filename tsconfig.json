@@ -4,7 +4,8 @@
     "module": "commonjs",
     "outDir": "lib",
     "sourceMap": true,
-    "types": ["node", "lodash", "jest"]
+    "types": ["node", "lodash", "jest"],
+    "strict": false
   },
   "include": [
     "src/**/*.ts"

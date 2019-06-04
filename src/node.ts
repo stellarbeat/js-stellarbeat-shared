@@ -24,6 +24,7 @@ export class Node {
     private _isValidating: boolean = false;
     private _homeDomain?:string;
     private _index: number = 0.0;
+    private _organizationId?:string;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
@@ -225,6 +226,14 @@ export class Node {
         this._isValidating = value;
     }
 
+    get organizationId() {
+        return this._organizationId;
+    }
+
+    set organizationId(value) {
+        this._organizationId = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -248,7 +257,8 @@ export class Node {
             isFullValidator: this.isFullValidator,
             isValidating: this.isValidating,
             index: this.index,
-            homeDomain: this.homeDomain
+            homeDomain: this.homeDomain,
+            organizationId: this.organizationId,
         };
     };
 
@@ -278,6 +288,7 @@ export class Node {
         newNode.index = nodeObject.index;
         newNode.homeDomain = nodeObject.homeDomain;
         newNode.isValidating = nodeObject.isValidating;
+        newNode.organizationId = nodeObject.organizationId;
 
         return newNode;
     }

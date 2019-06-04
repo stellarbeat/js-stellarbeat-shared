@@ -1,6 +1,7 @@
-import {AvailabilityIndex, TypeIndex, NodeIndex, Node, Network, VersionIndex, TrustIndex, AgeIndex} from '../../src';
+import {ActiveIndex, ValidatingIndex, TypeIndex, NodeIndex, Node, Network, VersionIndex, TrustIndex, AgeIndex} from '../../src';
 
-jest.mock('./../../src/node-index/index/availability-index');
+jest.mock('./../../src/node-index/index/active-index');
+jest.mock('./../../src/node-index/index/validating-index');
 jest.mock('./../../src/node-index/index/type-index');
 jest.mock('./../../src/node-index/index/version-index');
 jest.mock('./../../src/node-index/index/trust-index');
@@ -22,7 +23,9 @@ node6.versionStr = "v2.0.0";
 let network = new Network([node1, node2, node3, node4, node5, node6]);
 
 test('getNodeIndex', () => {
-    (AvailabilityIndex.get as any).mockImplementation(() => 1);
+    (ActiveIndex.get as any).mockImplementation(() => 1);
+    (ValidatingIndex.get as any).mockImplementation(() => 0);
+
     (AgeIndex.get as any).mockImplementation(() => 1);
 
     (TypeIndex.get as any).mockImplementation(() => 0.101);
