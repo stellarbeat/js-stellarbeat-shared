@@ -32,6 +32,7 @@ describe('json', () => {
     organizationObject.github="orgcode";
     organizationObject.officialEmail="support@domain.com";
     organizationObject.validators = ['GA'];
+    organizationObject.id = "c1ca926603dc454ba981aa514db8402b";
 
     test('OrgToJson', () => {
         expect(JSON.parse(JSON.stringify(organization))).toEqual(organizationObject);

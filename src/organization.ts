@@ -1,5 +1,8 @@
+import * as crypto from "crypto";
+
 type PublicKey = string;
 export class Organization {
+    private _id?:string;
     private _name?:string;
     private _dba?: string;
     private _url?: string;
@@ -15,12 +18,16 @@ export class Organization {
     private _officialEmail?: string;
     private _validators: PublicKey[] = [];
 
+    private _hash = crypto.createHash('md5');
+
     get name() {
         return this._name;
     }
 
     set name(value) {
         this._name = value;
+        this._hash.update(value);
+        this._id = this._hash.digest('hex');
     }
 
     get dba() {
@@ -127,8 +134,13 @@ export class Organization {
         this._validators = value;
     }
 
+    get id(): string {
+        return this._id;
+    }
+
     public toJSON() :Object {
         return {
+            id: this._id,
             name: this.name,
             dba: this.dba,
             url: this.url,
