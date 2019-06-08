@@ -24,7 +24,7 @@ export class NodeIndex {
                     + this._versionIndex.get(node)
                     + this._trustIndex.get(node)
                     + AgeIndex.get(node)
-                ) / 5
+                ) / 6
             ).toFixed(2)
         );
     }
