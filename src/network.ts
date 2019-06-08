@@ -1,40 +1,60 @@
-import {QuorumSet, Node, QuorumService, QuorumSetService, generateTomlString, ClusterService} from "./index";
+import {
+    QuorumSet,
+    Node,
+    QuorumService,
+    QuorumSetService,
+    generateTomlString,
+    ClusterService,
+    Organization
+} from "./index";
 import * as _ from 'lodash';
+
+type OrganizationId = string;
+type PublicKey = string;
 
 export class Network {
     protected _nodes: Array<Node>;
+    protected _organizations: Array<Organization>;
     protected _links: Array<{ id: string, source: Node, target: Node, isClusterLink: boolean }>;
-    protected _publicKeyToNodesMap: Map<string, Node>;
+    protected _nodesMap: Map<PublicKey, Node>;
+    protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
+
     protected _failingNodes: Array<Node>;
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
     protected _clusters: Array<Set<string>>;
     protected _latestCrawlDate: Date;
     protected _quorumSetService: QuorumSetService;
 
-    constructor(nodes: Array<Node>) {
+    constructor(nodes: Array<Node>, organizations: Array<Organization> = []) {
         this._nodes = nodes;
-        this._publicKeyToNodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
+        this._organizations = organizations;
+        this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
         this._quorumSetService = new QuorumSetService();
         this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates
         this.createNodesForUnknownValidators();
         this.initializeReverseNodeDependencyMap();
+        this.initializeOrganizationsMap();
         this.computeFailingNodes();
         this.detectClusters();
         this.createLinks();
+    }
+
+    initializeOrganizationsMap() {
+        this._organizations.forEach(organization => this._organizationsMap.set(organization.id, organization));
     }
 
     computeQuorumIntersection() {
         QuorumService.hasQuorumIntersection(
             this._nodes,
             this._clusters,
-            this._publicKeyToNodesMap
+            this._nodesMap
         )
     }
 
     updateNetwork(nodes?: Array<Node>) {
         if (nodes) {
             this._nodes = nodes;
-            this._publicKeyToNodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
+            this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
             this.createNodesForUnknownValidators();
         }
         this.initializeReverseNodeDependencyMap();
@@ -46,7 +66,7 @@ export class Network {
     detectClusters() {
         let clusterService = new ClusterService(
             this.nodes.filter(node => node.active && node.quorumSet.hasValidators()),
-            this._publicKeyToNodesMap
+            this._nodesMap
         );
         this._clusters = clusterService.getAllClusters();
     }
@@ -84,11 +104,11 @@ export class Network {
         if(quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
-        return !this._quorumSetService.quorumSetCanReachThreshold(node, quorumSet, this._failingNodes, this._publicKeyToNodesMap);
+        return !this._quorumSetService.quorumSetCanReachThreshold(node, quorumSet, this._failingNodes, this._nodesMap);
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
-        return generateTomlString(quorumSet, this._publicKeyToNodesMap);
+        return generateTomlString(quorumSet, this._nodesMap);
     }
 
     createLinks() {
@@ -96,16 +116,16 @@ export class Network {
             .filter(node => node.active && !this._failingNodes.includes(node))
             .map(node => {
                 return QuorumSet.getAllValidators(node.quorumSet)
-                    .filter(validator => this._publicKeyToNodesMap.get(validator).active && !this._failingNodes.includes(this._publicKeyToNodesMap.get(validator)))
+                    .filter(validator => this._nodesMap.get(validator).active && !this._failingNodes.includes(this._nodesMap.get(validator)))
                     .map(validator => {
                         return {
                             'id': node.publicKey + validator,
                             'source': node,
-                            'target': this._publicKeyToNodesMap.get(validator),
+                            'target': this._nodesMap.get(validator),
                             'isClusterLink': this.isClusterLink(node.publicKey, validator)/*,
-                    'active': this._publicKeyToNodesMap.get(validator).active
-                    && this._publicKeyToNodesMap.get(node.publicKey).active
-                    && !this._failingNodes.includes(this._publicKeyToNodesMap.get(validator))
+                    'active': this._nodesMap.get(validator).active
+                    && this._nodesMap.get(node.publicKey).active
+                    && !this._failingNodes.includes(this._nodesMap.get(validator))
                     && !this._failingNodes.includes(node)*/
                         };
                     })
@@ -119,11 +139,11 @@ export class Network {
     createNodesForUnknownValidators() {
         this._nodes.forEach(node => {
             QuorumSet.getAllValidators(node.quorumSet).forEach(validator => {
-                if (!this._publicKeyToNodesMap.has(validator)) {
+                if (!this._nodesMap.has(validator)) {
                     let missingNode = new Node('unknown');
                     missingNode.publicKey = validator;
                     this.nodes.push(missingNode);
-                    this._publicKeyToNodesMap.set(validator, missingNode);
+                    this._nodesMap.set(validator, missingNode);
                 }
             })
         });
@@ -145,8 +165,12 @@ export class Network {
         return this._nodes;
     }
 
-    getNodeByPublicKey(publicKey): Node {
-        return this._publicKeyToNodesMap.get(publicKey)
+    getNodeByPublicKey(publicKey) {
+        return this._nodesMap.get(publicKey)
+    }
+
+    getOrganizationById(id:OrganizationId) {
+        return this._organizationsMap.get(id);
     }
 
     /*
@@ -170,7 +194,7 @@ export class Network {
                 continue; //already failing
             }
 
-            if (nodeToCheck.isValidating && this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._publicKeyToNodesMap)) {
+            if (nodeToCheck.isValidating && this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._nodesMap)) {
                 continue; //working as expected
             }
 
