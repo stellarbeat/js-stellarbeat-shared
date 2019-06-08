@@ -1,5 +1,3 @@
-import * as crypto from "crypto";
-
 type PublicKey = string;
 export class Organization {
     private _id?:string;
@@ -18,7 +16,10 @@ export class Organization {
     private _officialEmail?: string;
     private _validators: PublicKey[] = [];
 
-    private _hash = crypto.createHash('md5');
+    constructor(id:string, name:string) {
+        this._id = id;
+        this._name = name;
+    }
 
     get name() {
         return this._name;
@@ -26,8 +27,6 @@ export class Organization {
 
     set name(value) {
         this._name = value;
-        this._hash.update(value);
-        this._id = this._hash.digest('hex');
     }
 
     get dba() {
@@ -134,8 +133,11 @@ export class Organization {
         this._validators = value;
     }
 
-    get id(): string {
+    get id() {
         return this._id;
+    }
+    set id(value) {
+        this._id = value;
     }
 
     public toJSON() :Object {
@@ -159,9 +161,9 @@ export class Organization {
     }
 
 
-    static fromJSON(organization:string|Object):Organization {
+    static fromJSON(organization:string|Object):Organization|undefined {
         if(organization === undefined) {
-            return new Organization();
+            return undefined;
         }
 
         let organizationObject:any;
@@ -171,8 +173,7 @@ export class Organization {
         } else
             organizationObject = organization;
 
-        let newOrganization = new Organization();
-        newOrganization.name=organizationObject.name;
+        let newOrganization = new Organization(organizationObject.id, organizationObject.name);
         newOrganization.dba=organizationObject.dba;
         newOrganization.url=organizationObject.url;
         newOrganization.logo=organizationObject.logo;

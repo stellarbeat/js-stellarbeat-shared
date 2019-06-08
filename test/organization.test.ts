@@ -1,8 +1,7 @@
 import {Organization} from '../src'
 
 describe('json', () => {
-    let organization = new Organization();
-    organization.name="Organization Name";
+    let organization = new Organization("1","Organization Name");
     organization.dba="Organization DBA";
     organization.url="https://www.domain.com";
     organization.logo="https://www.domain.com/awesomelogo.jpg";
@@ -32,7 +31,7 @@ describe('json', () => {
     organizationObject.github="orgcode";
     organizationObject.officialEmail="support@domain.com";
     organizationObject.validators = ['GA'];
-    organizationObject.id = "c1ca926603dc454ba981aa514db8402b";
+    organizationObject.id = "1";
 
     test('OrgToJson', () => {
         expect(JSON.parse(JSON.stringify(organization))).toEqual(organizationObject);
