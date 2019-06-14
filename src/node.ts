@@ -25,6 +25,8 @@ export class Node {
     private _homeDomain?:string;
     private _index: number = 0.0;
     private _organizationId?:string;
+    private _historyUrl?: string;
+    private _alias?: string;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
@@ -234,6 +236,23 @@ export class Node {
         this._organizationId = value;
     }
 
+    get historyUrl() {
+        return this._historyUrl;
+    }
+
+    set historyUrl(value) {
+        this._historyUrl = value;
+    }
+
+
+    get alias() {
+        return this._alias;
+    }
+
+    set alias(value) {
+        this._alias = value;
+    }
+
     toJSON():Object {
         return {
             ip: this.ip,
@@ -259,6 +278,8 @@ export class Node {
             index: this.index,
             homeDomain: this.homeDomain,
             organizationId: this.organizationId,
+            historyUrl: this.historyUrl,
+            alias: this.alias
         };
     };
 
@@ -289,6 +310,8 @@ export class Node {
         newNode.homeDomain = nodeObject.homeDomain;
         newNode.isValidating = nodeObject.isValidating;
         newNode.organizationId = nodeObject.organizationId;
+        newNode.historyUrl = nodeObject.historyUrl;
+        newNode.alias = nodeObject.alias;
 
         return newNode;
     }

@@ -32,6 +32,8 @@ node.isFullValidator = true;
 node.homeDomain = 'my-domain';
 node.isValidating = false;
 node.organizationId = '123';
+node.alias = 'my-alias';
+node.historyUrl = 'https://my-history.net';
 
 let nodeObject:any = {};
 nodeObject.name = "SDF validator 2";
@@ -71,6 +73,8 @@ nodeObject.isFullValidator = true;
 nodeObject.homeDomain = 'my-domain';
 nodeObject.isValidating = false;
 nodeObject.organizationId = '123';
+nodeObject.alias = 'my-alias';
+nodeObject.historyUrl = 'https://my-history.net';
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
