@@ -10,11 +10,17 @@ function getValidatorsStringPart(quorumSet, publicKeysToNodesMap) {
     let validatorsStringPart = 'VALIDATORS=[\n';
     quorumSet.validators.forEach((validator, index) => {
         validatorsStringPart += '    "' + validator;
-        let name = publicKeysToNodesMap.get(validator).name;
-        if(name) {
-            name = name.replace(/ /g, '_');
+        let alias = publicKeysToNodesMap.get(validator).alias;
+        if(alias) {
             validatorsStringPart += ' '
-                + name + '"';
+                + alias + '"';
+        } else {
+            let name = publicKeysToNodesMap.get(validator).name;
+            if(name) {
+                name = name.replace(/ /g, '_');
+                validatorsStringPart += ' '
+                    + name + '"';
+            }
         }
         if (index !== quorumSet.validators.length - 1) {
             validatorsStringPart += ',';
