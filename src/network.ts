@@ -169,6 +169,10 @@ export class Network {
         return this._nodesMap.get(publicKey)
     }
 
+    get organizations(): Array<Organization> {
+        return this._organizations;
+    }
+
     getOrganizationById(id:OrganizationId) {
         return this._organizationsMap.get(id);
     }
