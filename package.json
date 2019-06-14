@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "Domain classes",
   "repository": {
     "type": "git",
