@@ -2,9 +2,9 @@ export class NodeStatistics {
     protected _activeInLastCrawl: boolean = false;
     protected _overLoadedInLastCrawl: boolean = false;
     protected _validatingInLastCrawl: boolean = false;
-    protected _active7DaysPercentage: number = 0;
-    protected _overLoaded7DaysPercentage: number = 0;
-    protected _validating7DaysPercentage: number = 0;
+    protected _active30DaysPercentage: number = 0;
+    protected _overLoaded30DaysPercentage: number = 0;
+    protected _validating30DaysPercentage: number = 0;
     protected _active24HoursPercentage: number = 0;
     protected _overLoaded24HoursPercentage: number = 0;
     protected _validating24HoursPercentage: number = 0;
@@ -33,28 +33,28 @@ export class NodeStatistics {
         this._validatingInLastCrawl = value;
     }
 
-    get active7DaysPercentage(): number {
-        return this._active7DaysPercentage;
+    get active30DaysPercentage(): number {
+        return this._active30DaysPercentage;
     }
 
-    set active7DaysPercentage(value: number) {
-        this._active7DaysPercentage = value;
+    set active30DaysPercentage(value: number) {
+        this._active30DaysPercentage = value;
     }
 
-    get overLoaded7DaysPercentage(): number {
-        return this._overLoaded7DaysPercentage;
+    get overLoaded30DaysPercentage(): number {
+        return this._overLoaded30DaysPercentage;
     }
 
-    set overLoaded7DaysPercentage(value: number) {
-        this._overLoaded7DaysPercentage = value;
+    set overLoaded30DaysPercentage(value: number) {
+        this._overLoaded30DaysPercentage = value;
     }
 
-    get validating7DaysPercentage(): number {
-        return this._validating7DaysPercentage;
+    get validating30DaysPercentage(): number {
+        return this._validating30DaysPercentage;
     }
 
-    set validating7DaysPercentage(value: number) {
-        this._validating7DaysPercentage = value;
+    set validating30DaysPercentage(value: number) {
+        this._validating30DaysPercentage = value;
     }
 
     get active24HoursPercentage(): number {
@@ -86,9 +86,9 @@ export class NodeStatistics {
             activeInLastCrawl: this.activeInLastCrawl,
             overLoadedInLastCrawl: this.overLoadedInLastCrawl,
             validatingInLastCrawl: this.validatingInLastCrawl,
-            active7DaysPercentage: this.active7DaysPercentage,
-            overLoaded7DaysPercentage: this.overLoaded7DaysPercentage,
-            validating7DaysPercentage: this.validating7DaysPercentage,
+            active30DaysPercentage: this.active30DaysPercentage,
+            overLoaded30DaysPercentage: this.overLoaded30DaysPercentage,
+            validating30DaysPercentage: this.validating30DaysPercentage,
             active24HoursPercentage: this.active24HoursPercentage,
             overLoaded24HoursPercentage: this.overLoaded24HoursPercentage,
             validating24HoursPercentage: this.validating24HoursPercentage
@@ -115,12 +115,12 @@ export class NodeStatistics {
         if(nodeStatisticsObject.validatingInLastCrawl !== undefined && nodeStatisticsObject.validatingInLastCrawl !== null)
             newNodeStatistics.validatingInLastCrawl = nodeStatisticsObject.validatingInLastCrawl;
 
-        if(nodeStatisticsObject.active7DaysPercentage)
-            newNodeStatistics.active7DaysPercentage = nodeStatisticsObject.active7DaysPercentage;
-        if(nodeStatisticsObject.overLoaded7DaysPercentage)
-            newNodeStatistics.overLoaded7DaysPercentage = nodeStatisticsObject.overLoaded7DaysPercentage;
-        if(nodeStatisticsObject.validating7DaysPercentage)
-            newNodeStatistics.validating7DaysPercentage = nodeStatisticsObject.validating7DaysPercentage;
+        if(nodeStatisticsObject.active30DaysPercentage)
+            newNodeStatistics.active30DaysPercentage = nodeStatisticsObject.active30DaysPercentage;
+        if(nodeStatisticsObject.overLoaded30DaysPercentage)
+            newNodeStatistics.overLoaded30DaysPercentage = nodeStatisticsObject.overLoaded30DaysPercentage;
+        if(nodeStatisticsObject.validating30DaysPercentage)
+            newNodeStatistics.validating30DaysPercentage = nodeStatisticsObject.validating30DaysPercentage;
         if(nodeStatisticsObject.active24HoursPercentage)
             newNodeStatistics.active24HoursPercentage = nodeStatisticsObject.active24HoursPercentage;
         if(nodeStatisticsObject.overLoaded24HoursPercentage)

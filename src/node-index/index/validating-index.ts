@@ -3,6 +3,6 @@ import {NodeStatistics} from "../../node-statistics";
 
 export class ValidatingIndex {
     static get(node:Node):number {
-        return node.statistics.validating7DaysPercentage/100;
+        return node.statistics.validating30DaysPercentage/100;
     }
 }

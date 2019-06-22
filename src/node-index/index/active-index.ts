@@ -3,6 +3,6 @@ import {NodeStatistics} from "../../node-statistics";
 
 export class ActiveIndex {
     static get(node:Node):number {
-        return node.statistics.active7DaysPercentage/100;
+        return node.statistics.active30DaysPercentage/100;
     }
 }
