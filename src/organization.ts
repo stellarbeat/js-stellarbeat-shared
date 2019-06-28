@@ -1,7 +1,7 @@
 type PublicKey = string;
 export class Organization {
-    private _id?:string;
-    private _name?:string;
+    private _id:string;
+    private _name:string;
     private _dba?: string;
     private _url?: string;
     private _logo?: string;
@@ -15,6 +15,8 @@ export class Organization {
     private _github?: string;
     private _officialEmail?: string;
     private _validators: PublicKey[] = [];
+    private _subQuorum24HoursAvailability: number = 0;
+    private _subQuorum30DaysAvailability: number = 0;
 
     constructor(id:string, name:string) {
         this._id = id;
@@ -140,6 +142,30 @@ export class Organization {
         this._id = value;
     }
 
+    get subQuorumFailAt(): number {
+        return this.validators.length - this.subQuorumThreshold + 1;
+    }
+
+    get subQuorumThreshold(): number {
+        return Math.floor(this.validators.length - (this.validators.length - 1) / 2); //simple majority
+    }
+
+    get subQuorum24HoursAvailability(): number {
+        return this._subQuorum24HoursAvailability;
+    }
+
+    set subQuorum24HoursAvailability(value: number) {
+        this._subQuorum24HoursAvailability = value;
+    }
+
+    get subQuorum30DaysAvailability(): number {
+        return this._subQuorum30DaysAvailability;
+    }
+
+    set subQuorum30DaysAvailability(value: number) {
+        this._subQuorum30DaysAvailability = value;
+    }
+
     public toJSON() :Object {
         return {
             id: this._id,
@@ -156,7 +182,9 @@ export class Organization {
             twitter: this.twitter,
             github: this.github,
             officialEmail: this.officialEmail,
-            validators: this.validators
+            validators: this.validators,
+            subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
+            subQuorum30DaysAvailability: this.subQuorum30DaysAvailability
         }
     }
 
@@ -187,6 +215,8 @@ export class Organization {
         newOrganization.github=organizationObject.github;
         newOrganization.officialEmail=organizationObject.officialEmail;
         newOrganization.validators=organizationObject.validators;
+        newOrganization.subQuorum24HoursAvailability=organizationObject.subQuorum24HoursAvailability;
+        newOrganization.subQuorum30DaysAvailability=organizationObject.subQuorum30DaysAvailability;
 
         return newOrganization;
     }

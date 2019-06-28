@@ -15,6 +15,8 @@ describe('json', () => {
     organization.github="orgcode";
     organization.officialEmail="support@domain.com";
     organization.validators.push('GA');
+    organization.subQuorum24HoursAvailability=30;
+    organization.subQuorum30DaysAvailability=40.9;
 
     let organizationObject:any = {};
     organizationObject.name="Organization Name";
@@ -32,11 +34,24 @@ describe('json', () => {
     organizationObject.officialEmail="support@domain.com";
     organizationObject.validators = ['GA'];
     organizationObject.id = "1";
+    organizationObject.subQuorum24HoursAvailability=30;
+    organizationObject.subQuorum30DaysAvailability=40.9;
 
     test('OrgToJson', () => {
         expect(JSON.parse(JSON.stringify(organization))).toEqual(organizationObject);
     });
     test('JsonToOrg', () => {
         expect(Organization.fromJSON((JSON.stringify(organization)))).toEqual(organization);
+    });
+});
+
+describe('subquorum',() => {
+    let organization = new Organization('1', 'me');
+    organization.validators.push(...['1', '2', '3', '4']);
+    test('threshold', () => {
+        expect(organization.subQuorumThreshold).toEqual(2);
+    });
+    test('failAt', () => {
+        expect(organization.subQuorumFailAt).toEqual(3);
     });
 });
