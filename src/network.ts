@@ -133,7 +133,7 @@ export class Network {
     }
 
     isClusterLink(source, target) {
-        return Array.from(this._clusters).filter(cluster => cluster.has(source) && cluster.has(target)).length > 0;
+        return Array.from(this._clusters).filter(cluster => cluster.has(source) && cluster.has(target)).length > 0; //should be find, a link can only be part of 1 strongly connected component
     }
 
     createNodesForUnknownValidators() {
