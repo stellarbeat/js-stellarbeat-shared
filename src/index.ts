@@ -17,3 +17,5 @@ export {TrustIndex} from './node-index/index/trust-index';
 export {AgeIndex} from './node-index/index/age-index';
 export {ClusterService} from './cluster-service';
 export {Organization} from './organization';
+export {StronglyConnectedComponent} from './strongly-connected-component';
+export {StronglyConnectedComponentsFinder} from './strongly-connected-components-finder';
