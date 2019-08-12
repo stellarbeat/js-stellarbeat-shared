@@ -43,7 +43,6 @@ export class StronglyConnectedComponentsFinder {
         if (visitedNodes.get(atNode.publicKey) === low.get(atNode.publicKey)) {
             //console.log("strongly connected component found! Removing it from stack.");
             let stronglyConnectedComponent = new StronglyConnectedComponent();
-            let isTransitiveQuorumSet = true;
             let done = false;
             while (!done) {
                 let poppedNode = stack.pop();
@@ -56,28 +55,57 @@ export class StronglyConnectedComponentsFinder {
                     done = true;
                 }
             }
-            stronglyConnectedComponent.isTransitiveQuorumSet = this.isTransitiveQuorumSet(stronglyConnectedComponent);
+
             stronglyConnectedComponents.push(stronglyConnectedComponent);
         }
     }
 
-    /*
-        transitive quorumSet has no outgoing edges that are not in component
-     */
-    protected isTransitiveQuorumSet(stronglyConnectedComponent: StronglyConnectedComponent): boolean {
-        let isTransitiveQuorumSet = true;
+    protected determineTransitiveQuorumSet(stronglyConnectedComponents:Array<StronglyConnectedComponent>){
+        let scpNoOutgoingEdges:Array<StronglyConnectedComponent> = [];
+        stronglyConnectedComponents.forEach(scp => {
+            if(scp.nodes.size > 1 && !this.hasOutgoingEdgesNotPartOfComponent(scp)){
+                scpNoOutgoingEdges.push(scp);
+            }
+        });
+
+        if(scpNoOutgoingEdges.length === 1) {
+            scpNoOutgoingEdges[0].isTransitiveQuorumSet = true;
+        }
+
+        if(scpNoOutgoingEdges.length > 1) {
+            console.log("multiple candidates for transitive quorumSet");
+            let transitiveQuorumSet = scpNoOutgoingEdges[0];
+            let highestIndexAverage = 0;
+            for(let i=0; i<scpNoOutgoingEdges.length; i++){
+                let scp = scpNoOutgoingEdges[i];
+                let indexSum = Array.from(scp.nodes).reduce((accumulator, publicKey) => accumulator + this._network.getNodeByPublicKey(publicKey).index, 0);
+                let indexAverage = indexSum/scp.nodes.size;
+                if(highestIndexAverage < indexAverage) {
+                    transitiveQuorumSet = scp;
+                    highestIndexAverage = indexAverage;
+                }
+            }
+
+            transitiveQuorumSet.isTransitiveQuorumSet = true;
+            console.log(transitiveQuorumSet);
+        }
+    }
+
+    protected hasOutgoingEdgesNotPartOfComponent(stronglyConnectedComponent: StronglyConnectedComponent): boolean {
+
+        let hasOutgoingEdgesNotPartOfComponent = false;
         stronglyConnectedComponent.nodes.forEach(publicKey => {
             let outgoingEdgesNotInComponent = QuorumSet.getAllValidators(this._network.getNodeByPublicKey(publicKey).quorumSet).filter(
                 validator => !stronglyConnectedComponent.nodes.has(validator)
             );
-            if(outgoingEdgesNotInComponent.length > 0)
-                isTransitiveQuorumSet = false;
+            if (outgoingEdgesNotInComponent.length > 0)
+                hasOutgoingEdgesNotPartOfComponent = true;
         });
 
-        return isTransitiveQuorumSet;
+        return hasOutgoingEdgesNotPartOfComponent;
     }
 
-    findTarjan(network: Network): Array<StronglyConnectedComponent> {
+    findTarjan(network: Network): Array<StronglyConnectedComponent> { //todo nodes parameter to e.g. only check validator nodes
         this._network = network;
         this._time = 0;
         let visitedNodes = new Map<PublicKey, Time>();
@@ -92,6 +120,10 @@ export class StronglyConnectedComponentsFinder {
             }
         }
 
+        this.determineTransitiveQuorumSet(stronglyConnectedComponents);
+
         return stronglyConnectedComponents;
     }
+
+
 }

@@ -5,7 +5,7 @@ import {
     QuorumSetService,
     generateTomlString,
     ClusterService,
-    Organization
+    Organization, StronglyConnectedComponent
 } from "./index";
 import * as _ from 'lodash';
 
@@ -218,4 +218,6 @@ export class Network {
 
         this._failingNodes = failingNodes;
     }
+
+    findStronglyConnected
 }
