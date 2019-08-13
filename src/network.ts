@@ -135,6 +135,10 @@ export class Network {
         return Array.from(this._stronglyConnectedComponents).find(scp => scp.nodes.has(source) && scp.nodes.has(target))
     }
 
+    getTransitiveQuorumSet(){
+        return this._stronglyConnectedComponents.find(scp => scp.isTransitiveQuorumSet);
+    }
+
     createNodesForUnknownValidators() {
         this._nodes.forEach(node => {
             QuorumSet.getAllValidators(node.quorumSet).forEach(validator => {
