@@ -1,4 +1,4 @@
-export {Network} from './network';
+export {Network, PublicKey, Link, OrganizationId} from './network';
 export {Node} from './node';
 export {default as QuorumService} from './quorum-service';
 export {QuorumSlicesGenerator} from './quorum-slices-generator'

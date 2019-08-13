@@ -8,13 +8,14 @@ import {
 } from "./index";
 import * as _ from 'lodash';
 
-type OrganizationId = string;
-type PublicKey = string;
+export type OrganizationId = string;
+export type PublicKey = string;
+export type Link = {id: string, source: Node, target: Node, isPartOfStronglyConnectedComponent: boolean, isPartOfTransitiveQuorumSet: boolean};
 
 export class Network {
     protected _nodes: Array<Node>;
     protected _organizations: Array<Organization>;
-    protected _links: Array<{id: string, source: Node, target: Node, isPartOfStronglyConnectedComponent: boolean, isPartOfTransitiveQuorumSet: boolean}>;
+    protected _links: Array<Link>;
     protected _nodesMap: Map<PublicKey, Node>;
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
 
