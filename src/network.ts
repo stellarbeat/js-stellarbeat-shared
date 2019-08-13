@@ -4,8 +4,7 @@ import {
     QuorumService,
     QuorumSetService,
     generateTomlString,
-    ClusterService,
-    Organization, StronglyConnectedComponent
+    Organization, StronglyConnectedComponent, StronglyConnectedComponentsFinder
 } from "./index";
 import * as _ from 'lodash';
 
@@ -15,13 +14,13 @@ type PublicKey = string;
 export class Network {
     protected _nodes: Array<Node>;
     protected _organizations: Array<Organization>;
-    protected _links: Array<{ id: string, source: Node, target: Node, isClusterLink: boolean }>;
+    protected _links: Array<{id: string, source: Node, target: Node, isPartOfStronglyConnectedComponent: boolean, isPartOfTransitiveQuorumSet: boolean}>;
     protected _nodesMap: Map<PublicKey, Node>;
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
 
     protected _failingNodes: Array<Node>;
     protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
-    protected _clusters: Array<Set<string>>;
+    protected _stronglyConnectedComponents: Array<StronglyConnectedComponent>;
     protected _latestCrawlDate: Date;
     protected _quorumSetService: QuorumSetService;
 
@@ -35,7 +34,7 @@ export class Network {
         this.initializeReverseNodeDependencyMap();
         this.initializeOrganizationsMap();
         this.computeFailingNodes();
-        this.detectClusters();
+        this.findStronglyConnectedComponents();
         this.createLinks();
     }
 
@@ -46,7 +45,7 @@ export class Network {
     computeQuorumIntersection() {
         QuorumService.hasQuorumIntersection(
             this._nodes,
-            this._clusters,
+            this._stronglyConnectedComponents,
             this._nodesMap
         )
     }
@@ -59,16 +58,13 @@ export class Network {
         }
         this.initializeReverseNodeDependencyMap();
         this.computeFailingNodes();
-        this.detectClusters();
+        this.findStronglyConnectedComponents();
         this.createLinks();
     }
 
-    detectClusters() {
-        let clusterService = new ClusterService(
-            this.nodes.filter(node => node.active && node.quorumSet.hasValidators()),
-            this._nodesMap
-        );
-        this._clusters = clusterService.getAllClusters();
+    protected findStronglyConnectedComponents() {
+        let stronglyConnectedComponentsFinder = new StronglyConnectedComponentsFinder();
+        this._stronglyConnectedComponents = stronglyConnectedComponentsFinder.findTarjan(this);
     }
 
     calculateLatestCrawlDate(): Date | undefined {
@@ -118,22 +114,24 @@ export class Network {
                 return QuorumSet.getAllValidators(node.quorumSet)
                     .filter(validator => this._nodesMap.get(validator).active && !this._failingNodes.includes(this._nodesMap.get(validator)))
                     .map(validator => {
+                        let scp = this.getStronglyConnectedComponent(node.publicKey, validator);
                         return {
                             'id': node.publicKey + validator,
                             'source': node,
                             'target': this._nodesMap.get(validator),
-                            'isClusterLink': this.isClusterLink(node.publicKey, validator)/*,
-                    'active': this._nodesMap.get(validator).active
-                    && this._nodesMap.get(node.publicKey).active
-                    && !this._failingNodes.includes(this._nodesMap.get(validator))
-                    && !this._failingNodes.includes(node)*/
+                            'isPartOfStronglyConnectedComponent': scp ? true : false,
+                            'isPartOfTransitiveQuorumSet': scp ? scp.isTransitiveQuorumSet : false
                         };
                     })
             }));
     }
 
-    isClusterLink(source, target) {
-        return Array.from(this._clusters).filter(cluster => cluster.has(source) && cluster.has(target)).length > 0; //should be find, a link can only be part of 1 strongly connected component
+    isPartOfStronglyConnectedComponent(source:PublicKey, target:PublicKey) {
+        return Array.from(this._stronglyConnectedComponents).filter(scp => scp.nodes.has(source) && scp.nodes.has(target)).length > 0; //should be find, a link can only be part of 1 strongly connected component
+    }
+
+    getStronglyConnectedComponent(source, target){
+        return Array.from(this._stronglyConnectedComponents).find(scp => scp.nodes.has(source) && scp.nodes.has(target))
     }
 
     createNodesForUnknownValidators() {
@@ -218,6 +216,4 @@ export class Network {
 
         this._failingNodes = failingNodes;
     }
-
-    findStronglyConnected
 }
