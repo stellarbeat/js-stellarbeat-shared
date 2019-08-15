@@ -22,7 +22,9 @@ export class StronglyConnectedComponentsFinder {
         onStack.set(atNode.publicKey, true);
         //console.log(atNode.displayName + ': Low value of ' + low.get(atNode.publicKey));
         this._time++;
-        QuorumSet.getAllValidators(atNode.quorumSet).forEach(
+        QuorumSet.getAllValidators(atNode.quorumSet)
+            .filter(validator => this._network.getNodeByPublicKey(validator).active && !this._network.failingNodes.includes(this._network.getNodeByPublicKey(validator)))
+            .forEach(
             toNodePublicKey => {
                 //console.log(atNode.displayName + ': Handling neighbour ' + this._network.getNodeByPublicKey(toNodePublicKey).displayName);
                 if (visitedNodes.get(toNodePublicKey) === undefined) {
@@ -105,7 +107,7 @@ export class StronglyConnectedComponentsFinder {
         return hasOutgoingEdgesNotPartOfComponent;
     }
 
-    findTarjan(network: Network): Array<StronglyConnectedComponent> { //todo nodes parameter to e.g. only check validator nodes
+    findTarjan(network: Network): Array<StronglyConnectedComponent> {
         this._network = network;
         this._time = 0;
         let visitedNodes = new Map<PublicKey, Time>();
@@ -113,10 +115,10 @@ export class StronglyConnectedComponentsFinder {
         let stack = [];
         let onStack = new Map<PublicKey, boolean>();
         let stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
-
-        for (let i = 0; i < network.nodes.length; i++) {
-            if (visitedNodes.get(network.nodes[i].publicKey) === undefined) {
-                this.depthFirstSearch(network.nodes[i], visitedNodes, low, stack, onStack, stronglyConnectedComponents);
+        let nodes = this._network.nodes.filter(node => node.isValidating && !this._network.failingNodes.includes(node));
+        for (let i = 0; i < nodes.length; i++) {
+            if (visitedNodes.get(nodes[i].publicKey) === undefined) {
+                this.depthFirstSearch(nodes[i], visitedNodes, low, stack, onStack, stronglyConnectedComponents);
             }
         }
 
