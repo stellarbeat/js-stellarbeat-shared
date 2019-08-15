@@ -156,7 +156,7 @@ test('findTarjanFailingNodes', function () {
 
     expect(results.length).toEqual(3);
     expect(results.find(scp => _.isEqual(scp.nodes, new Set(['2','3','6'])))).toBeTruthy();
-    expect(results.find(scp => _.isEqual(scp.nodes, new Set(['2','3','6']))).isTransitiveQuorumSet).toBeFalsy();
+    expect(results.find(scp => _.isEqual(scp.nodes, new Set(['2','3','6']))).isTransitiveQuorumSet).toBeTruthy();
 
     expect(results.find(scp => _.isEqual(scp.nodes, new Set(['4','7','8'])))).toBeFalsy();
 
@@ -164,5 +164,5 @@ test('findTarjanFailingNodes', function () {
     expect(results.find(scp => _.isEqual(scp.nodes, new Set(['1','5']))).isTransitiveQuorumSet).toBeFalsy();
 
     expect(results.find(scp => _.isEqual(scp.nodes, new Set(['9','10'])))).toBeTruthy();
-    expect(results.find(scp => _.isEqual(scp.nodes, new Set(['9','10']))).isTransitiveQuorumSet).toBeTruthy();
+    expect(results.find(scp => _.isEqual(scp.nodes, new Set(['9','10']))).isTransitiveQuorumSet).toBeFalsy();
 });

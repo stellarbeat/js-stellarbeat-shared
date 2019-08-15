@@ -25,21 +25,21 @@ export class StronglyConnectedComponentsFinder {
         QuorumSet.getAllValidators(atNode.quorumSet)
             .filter(validator => this._network.getNodeByPublicKey(validator).active && !this._network.failingNodes.includes(this._network.getNodeByPublicKey(validator)))
             .forEach(
-            toNodePublicKey => {
-                //console.log(atNode.displayName + ': Handling neighbour ' + this._network.getNodeByPublicKey(toNodePublicKey).displayName);
-                if (visitedNodes.get(toNodePublicKey) === undefined) {
-                    this.depthFirstSearch(this._network.getNodeByPublicKey(toNodePublicKey), visitedNodes, low, stack, onStack, stronglyConnectedComponents);
+                toNodePublicKey => {
+                    //console.log(atNode.displayName + ': Handling neighbour ' + this._network.getNodeByPublicKey(toNodePublicKey).displayName);
+                    if (visitedNodes.get(toNodePublicKey) === undefined) {
+                        this.depthFirstSearch(this._network.getNodeByPublicKey(toNodePublicKey), visitedNodes, low, stack, onStack, stronglyConnectedComponents);
+                    }
+                    if (onStack.get(toNodePublicKey) === true) {
+                        //console.log("neighbour " + this._network.getNodeByPublicKey(toNodePublicKey).displayName + " is on the stack");
+                        //console.log(atNode.displayName + ': updating low value to minimum of this low: ' + low.get(atNode.publicKey) + ' and neighbour low: ' + low.get(toNodePublicKey));
+                        low.set(atNode.publicKey, Math.min(low.get(atNode.publicKey), low.get(toNodePublicKey)));
+                        //console.log(atNode.displayName + ': Low value of ' + low.get(atNode.publicKey));
+                    } else {
+                        //console.log("neighbour " + this._network.getNodeByPublicKey(toNodePublicKey).displayName + " is NOT on the stack, so we ignore its low value");
+                    }
                 }
-                if (onStack.get(toNodePublicKey) === true) {
-                    //console.log("neighbour " + this._network.getNodeByPublicKey(toNodePublicKey).displayName + " is on the stack");
-                    //console.log(atNode.displayName + ': updating low value to minimum of this low: ' + low.get(atNode.publicKey) + ' and neighbour low: ' + low.get(toNodePublicKey));
-                    low.set(atNode.publicKey, Math.min(low.get(atNode.publicKey), low.get(toNodePublicKey)));
-                    //console.log(atNode.displayName + ': Low value of ' + low.get(atNode.publicKey));
-                } else {
-                    //console.log("neighbour " + this._network.getNodeByPublicKey(toNodePublicKey).displayName + " is NOT on the stack, so we ignore its low value");
-                }
-            }
-        );
+            );
 
         //console.log(atNode.displayName + ': All neighbours visited.');
         if (visitedNodes.get(atNode.publicKey) === low.get(atNode.publicKey)) {
@@ -62,34 +62,34 @@ export class StronglyConnectedComponentsFinder {
         }
     }
 
-    protected determineTransitiveQuorumSet(stronglyConnectedComponents:Array<StronglyConnectedComponent>){
-        let scpNoOutgoingEdges:Array<StronglyConnectedComponent> = [];
+    protected determineTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>) {
+        let scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];
         stronglyConnectedComponents.forEach(scp => {
-            if(scp.nodes.size > 1 && !this.hasOutgoingEdgesNotPartOfComponent(scp)){
+            if (scp.nodes.size > 1 && !this.hasOutgoingEdgesNotPartOfComponent(scp)) {
                 scpNoOutgoingEdges.push(scp);
             }
         });
 
-        if(scpNoOutgoingEdges.length === 1) {
+        if (scpNoOutgoingEdges.length === 1) {
             scpNoOutgoingEdges[0].isTransitiveQuorumSet = true;
         }
 
-        if(scpNoOutgoingEdges.length > 1) {
-            console.log("multiple candidates for transitive quorumSet");
+        if (scpNoOutgoingEdges.length > 1) {
+            //.log("multiple candidates for transitive quorumSet");
             let transitiveQuorumSet = scpNoOutgoingEdges[0];
             let highestIndexAverage = 0;
-            for(let i=0; i<scpNoOutgoingEdges.length; i++){
+            for (let i = 0; i < scpNoOutgoingEdges.length; i++) {
                 let scp = scpNoOutgoingEdges[i];
                 let indexSum = Array.from(scp.nodes).reduce((accumulator, publicKey) => accumulator + this._network.getNodeByPublicKey(publicKey).index, 0);
-                let indexAverage = indexSum/scp.nodes.size;
-                if(highestIndexAverage < indexAverage) {
+                let indexAverage = indexSum / scp.nodes.size;
+                if (highestIndexAverage < indexAverage) {
                     transitiveQuorumSet = scp;
                     highestIndexAverage = indexAverage;
                 }
             }
 
             transitiveQuorumSet.isTransitiveQuorumSet = true;
-            console.log(transitiveQuorumSet);
+            //console.log(transitiveQuorumSet);
         }
     }
 
@@ -97,8 +97,11 @@ export class StronglyConnectedComponentsFinder {
 
         let hasOutgoingEdgesNotPartOfComponent = false;
         stronglyConnectedComponent.nodes.forEach(publicKey => {
-            let outgoingEdgesNotInComponent = QuorumSet.getAllValidators(this._network.getNodeByPublicKey(publicKey).quorumSet).filter(
+            let outgoingEdgesNotInComponent = QuorumSet.getAllValidators(this._network.getNodeByPublicKey(publicKey).quorumSet)
+                .filter(
                 validator => !stronglyConnectedComponent.nodes.has(validator)
+                    && this._network.getNodeByPublicKey(validator).active
+                    && !this._network.failingNodes.includes(this._network.getNodeByPublicKey(validator))
             );
             if (outgoingEdgesNotInComponent.length > 0)
                 hasOutgoingEdgesNotPartOfComponent = true;
