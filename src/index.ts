@@ -19,3 +19,5 @@ export {ClusterService} from './cluster-service';
 export {Organization} from './organization';
 export {StronglyConnectedComponent} from './strongly-connected-component';
 export {StronglyConnectedComponentsFinder} from './strongly-connected-components-finder';
+export {DirectedGraph, Edge, Vertex} from './graph/directed-graph';
+export {DirectedGraphManager} from './graph/directed-graph-manager';

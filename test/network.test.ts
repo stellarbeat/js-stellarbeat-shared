@@ -5,7 +5,7 @@ jest.mock('./../src/quorum-set-toml-generator');
 let node1 = new Node('localhost', 20, 'a');
 let node2 = new Node('localhost', 20, 'b');
 let node3 = new Node('localhost', 20, 'c');
-let node4 = new Node('localhost', 20, 'c');
+let node4 = new Node('localhost', 20, 'd');
 
 node2.quorumSet.validators.push(node1.publicKey);
 node3.quorumSet.validators.push(node1.publicKey);
