@@ -93,7 +93,19 @@ export class DirectedGraph {
             .forEach( scp =>
                 scp.forEach(publicKey => this._stronglyConnectedVertices.add(publicKey)
                 )
-            )
+            );
+
+        this._transitiveQuorumSet = this._transitiveQuorumSetFinder.determineTransitiveQuorumSet(
+            this._stronglyConnectedComponents, this
+        );
+    }
+
+    hasTransitiveQuorumSet() {
+        return this._transitiveQuorumSet !== undefined;
+    }
+
+    get transitiveQuorumSet() {
+        return this._transitiveQuorumSet;
     }
 
     public addVertex(vertex: Vertex) {
