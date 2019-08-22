@@ -31,9 +31,13 @@ test('buildGraphFromNodes', () => {
     expect(graph.getParents(graph.getVertex('a')).size).toEqual(3);
     expect(graph.getChildren(graph.getVertex('d')).size).toEqual(2);
     expect(graph.transitiveQuorumSet).toEqual(new Set(['b', 'a']));
+
+    expect(Array.from(graph.edges).filter(
+        edge => graph.isEdgePartOfStronglyConnectedComponent(edge)).length
+    ).toEqual(2);
 });
 
-test('updateGraphWithFailingNodes', () => {
+test('updateGraphWithNoTransitiveQuorumSet', () => {
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
 
     directedGraphManager.updateGraphWithFailingNodes([nodeA.publicKey], graph, [nodeA, nodeB, nodeC, nodeD, nodeE]);

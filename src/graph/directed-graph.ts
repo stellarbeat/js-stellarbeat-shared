@@ -61,6 +61,10 @@ export class Edge {
     get isActive(): boolean {
         return this.child.isValidating && this.parent.isValidating
     }
+
+    toString() {
+        return `Edge (parent: ${this.parent.publicKey}, child: ${this.child.publicKey}, isActive: ${this.isActive})`;
+    }
 }
 
 export class DirectedGraph {
@@ -71,7 +75,7 @@ export class DirectedGraph {
     protected _edges = new Set<Edge>();
 
     protected _stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
-    protected _stronglyConnectedVertices: Set<PublicKey>;
+    protected _stronglyConnectedVertices: Map<PublicKey, number>;
     protected _transitiveQuorumSet: Set<PublicKey>;
 
     protected children = new Map<PublicKey, Set<Vertex>>();
@@ -87,13 +91,12 @@ export class DirectedGraph {
 
     public updateStronglyConnectedComponentsAndTransitiveQuorumSet() {
         this._stronglyConnectedComponents = this._stronglyConnectedComponentsFinder.findTarjan(this);
-        this._stronglyConnectedVertices = new Set<PublicKey>();
+        this._stronglyConnectedVertices = new Map<PublicKey, number>();
 
-        this._stronglyConnectedComponents
-            .forEach( scp =>
-                scp.forEach(publicKey => this._stronglyConnectedVertices.add(publicKey)
-                )
-            );
+        for (let i = 0; i< this._stronglyConnectedComponents.length; i++){
+            this._stronglyConnectedComponents[i]
+                .forEach(publicKey => this._stronglyConnectedVertices.set(publicKey, i));
+        }
 
         this._transitiveQuorumSet = this._transitiveQuorumSetFinder.determineTransitiveQuorumSet(
             this._stronglyConnectedComponents, this
@@ -141,7 +144,10 @@ export class DirectedGraph {
     }
 
     public isEdgePartOfStronglyConnectedComponent(edge:Edge) {
-        return this._stronglyConnectedVertices.has(edge.parent.publicKey) && this._stronglyConnectedVertices.has(edge.child.publicKey);
+        return this._stronglyConnectedVertices.has(edge.parent.publicKey)
+            && this._stronglyConnectedVertices.has(edge.child.publicKey)
+            && this._stronglyConnectedVertices.get(edge.parent.publicKey)
+            === this._stronglyConnectedVertices.get(edge.child.publicKey);
     }
 
     public hasVertex(publicKey: PublicKey) {
