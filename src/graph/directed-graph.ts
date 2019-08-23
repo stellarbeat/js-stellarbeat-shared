@@ -132,7 +132,7 @@ export class DirectedGraph {
     }
 
     public isVertexPartOfTransitiveQuorumSet(publicKey:PublicKey) {
-        return this._transitiveQuorumSet.has(publicKey);
+        return this.hasTransitiveQuorumSet() && this._transitiveQuorumSet.has(publicKey);
     }
 
     public isVertexPartOfStronglyConnectedComponent(publicKey:PublicKey) {
@@ -140,7 +140,9 @@ export class DirectedGraph {
     }
 
     public isEdgePartOfTransitiveQuorumSet(edge:Edge) {
-        return this._transitiveQuorumSet.has(edge.parent.publicKey) && this._transitiveQuorumSet.has(edge.child.publicKey);
+        return this.hasTransitiveQuorumSet()
+            && this._transitiveQuorumSet.has(edge.parent.publicKey)
+            && this._transitiveQuorumSet.has(edge.child.publicKey);
     }
 
     public isEdgePartOfStronglyConnectedComponent(edge:Edge) {
