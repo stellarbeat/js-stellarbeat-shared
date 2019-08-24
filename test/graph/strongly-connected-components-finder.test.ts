@@ -68,10 +68,10 @@ node9.quorumSet.validators.push(node10.publicKey);
 node10.quorumSet.validators.push(node9.publicKey);
 
 let directedGraphManager = new DirectedGraphManager();
-let graph = directedGraphManager.buildGraphFromNodes([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]);
+
 
 test('findTarjan', function () {
-
+    let graph = directedGraphManager.buildGraphFromNodes([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]);
     let dfs = new StronglyConnectedComponentsFinder();
     let results = dfs.findTarjan(graph);
 
@@ -88,7 +88,9 @@ test('findTarjan', function () {
 
 test('findTarjanFailingNodes', function () {
 
-    directedGraphManager.updateGraphWithFailingNodes([node7.publicKey, node8.publicKey], graph, [node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]);
+    node7.isValidating = false;
+    node8.isValidating = false;
+    let graph = directedGraphManager.buildGraphFromNodes([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]);
     let dfs = new StronglyConnectedComponentsFinder();
     let results = dfs.findTarjan(graph);
 

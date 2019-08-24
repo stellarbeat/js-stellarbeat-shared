@@ -18,7 +18,7 @@ export class DirectedGraphManager {
                     return;
                 let vertex = graph.getVertex(node.publicKey);
                 if (!vertex) {
-                    vertex = new Vertex(node.publicKey, node.displayName, node.isValidating, node.index);
+                    vertex = new Vertex(node.publicKey, node.displayName, node.isValidating && node.active, node.index);
                     graph.addVertex(vertex);
                 }
                 QuorumSet.getAllValidators(node.quorumSet)
@@ -30,7 +30,7 @@ export class DirectedGraphManager {
                             validatorVertex = new Vertex(
                                 validator!.publicKey,
                                 validator!.displayName,
-                                validator!.isValidating,
+                                validator!.isValidating && validator!.active,
                                 validator!.index
                             );
                             graph.addVertex(validatorVertex);
@@ -45,27 +45,24 @@ export class DirectedGraphManager {
             }
         );
 
+        this.determineVerticesFailingByQuorumSetNotMeetingThreshold(graph, nodesMap);
+
         graph.updateStronglyConnectedComponentsAndTransitiveQuorumSet();
 
         return graph;
     }
 
-    updateGraphWithFailingNodes(failingNodes: Array<PublicKey>, graph: DirectedGraph, nodes:Node[]) {
-        let nodesMap = new Map(nodes
-            .filter(node => node.publicKey)
-            .map(node => [node.publicKey, node])
-        );
-        let verticesToCheck: Array<Vertex> = [];
-        failingNodes
-            .map(publicKey => graph.getVertex(publicKey))
-            .filter(vertex => vertex !== undefined)
-            .map(vertex => {
-                vertex!.isValidating = false;
-                verticesToCheck.push(...Array.from(graph.getParents(vertex!)))
-            });
+    determineVerticesFailingByQuorumSetNotMeetingThreshold(graph: DirectedGraph, nodesMap:Map<PublicKey, Node>) {
+
+        let verticesToCheck: Array<Vertex> =
+            Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating);
+        let inVerticesToCheckQueue: Map<PublicKey, boolean> = new Map();
+
+        verticesToCheck.forEach(vertex => inVerticesToCheckQueue.set(vertex.publicKey, true));
 
         while (verticesToCheck.length > 0) {
             let vertexToCheck = verticesToCheck.pop()!;
+            inVerticesToCheckQueue.set(vertexToCheck.publicKey, false);
 
             if (!vertexToCheck.isValidating) {
                 continue; //already failing
@@ -82,7 +79,12 @@ export class DirectedGraphManager {
             //node is failing
             vertexToCheck.isValidating = false;
 
-            verticesToCheck.push(...Array.from(graph.getParents(vertexToCheck)));
+            Array.from(graph.getParents(vertexToCheck))
+                .filter(vertex => inVerticesToCheckQueue.get(vertex.publicKey) === false)
+                .forEach(vertex => {
+                verticesToCheck.push(vertex);
+                inVerticesToCheckQueue.set(vertex.publicKey, true);
+            });
         }
 
         graph.updateStronglyConnectedComponentsAndTransitiveQuorumSet();

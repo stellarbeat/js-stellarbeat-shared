@@ -44,7 +44,7 @@ export class TransitiveQuorumSetFinder {
             let outgoingEdgesNotInComponent = Array.from(graph
                 .getChildren(vertex))
                 .filter(
-                    child => !stronglyConnectedComponent.has(child.publicKey)
+                    child => child.isValidating && !stronglyConnectedComponent.has(child.publicKey)
                 );
             if (outgoingEdgesNotInComponent.length > 0)
                 hasOutgoingEdgesNotPartOfComponent = true;
