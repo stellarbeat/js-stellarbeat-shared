@@ -90,7 +90,7 @@ export class DirectedGraphManager {
         graph.updateStronglyConnectedComponentsAndTransitiveQuorumSet();
     }
 
-    protected quorumSetCanReachThreshold( //todo move
+    public quorumSetCanReachThreshold( //todo move
         graph: DirectedGraph,
         quorumSet: QuorumSet,
     ) { //

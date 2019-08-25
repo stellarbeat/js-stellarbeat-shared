@@ -6,11 +6,11 @@ let node2 = new Node('localhost', 20, 'b');
 node2.versionStr = "stellar-core 10.3.0 (de204d718a4603fba2c36d79a7cccad415dd1597)";
 let node3 = new Node('localhost', 20, 'c');
 node3.versionStr = undefined;
-let node4 = new Node('localhost', 20, 'c');
+let node4 = new Node('localhost', 20, 'd');
 node4.versionStr = "v10.3.0";
-let node5 = new Node('localhost', 20, 'c');
+let node5 = new Node('localhost', 20, 'e');
 node5.versionStr = "v11.0.0rc1";
-let node6 = new Node('localhost', 20, 'c');
+let node6 = new Node('localhost', 20, 'f');
 node6.versionStr = "v9.3.0-44-g80ce920";
 
 let network = new Network([node1, node2, node3, node4, node5, node6]);

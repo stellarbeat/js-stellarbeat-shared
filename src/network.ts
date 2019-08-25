@@ -4,24 +4,20 @@ import {
     QuorumService,
     QuorumSetService,
     generateTomlString,
-    Organization, StronglyConnectedComponent, StronglyConnectedComponentsFinder
+    Organization,
+    DirectedGraphManager, DirectedGraph
 } from "./index";
-import * as _ from 'lodash';
 
 export type OrganizationId = string;
 export type PublicKey = string;
-export type Link = {id: string, source: Node, target: Node, isPartOfStronglyConnectedComponent: boolean, isPartOfTransitiveQuorumSet: boolean};
 
 export class Network {
     protected _nodes: Array<Node>;
     protected _organizations: Array<Organization>;
-    protected _links: Array<Link>;
     protected _nodesMap: Map<PublicKey, Node>;
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
-
-    protected _failingNodes: Array<Node>;
-    protected _reverseNodeDependencyMap: Map<string, Array<Node>>;
-    protected _stronglyConnectedComponents: Array<StronglyConnectedComponent>;
+    protected _graphManager: DirectedGraphManager = new DirectedGraphManager();
+    protected _graph: DirectedGraph;
     protected _latestCrawlDate: Date;
     protected _quorumSetService: QuorumSetService;
 
@@ -30,25 +26,18 @@ export class Network {
         this._organizations = organizations;
         this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
         this._quorumSetService = new QuorumSetService();
-        this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates
+        this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates @todo: fetch from db
         this.createNodesForUnknownValidators();
-        this.initializeReverseNodeDependencyMap();
+        this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
-        this.computeFailingNodes();
-        this.findStronglyConnectedComponents();
-        this.createLinks();
+    }
+
+    initializeDirectedGraph(){
+        this._graph = this._graphManager.buildGraphFromNodes(this._nodes);
     }
 
     initializeOrganizationsMap() {
         this._organizations.forEach(organization => this._organizationsMap.set(organization.id, organization));
-    }
-
-    computeQuorumIntersection() {
-        QuorumService.hasQuorumIntersection(
-            this._nodes,
-            this._stronglyConnectedComponents,
-            this._nodesMap
-        )
     }
 
     updateNetwork(nodes?: Array<Node>) {
@@ -57,15 +46,9 @@ export class Network {
             this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
             this.createNodesForUnknownValidators();
         }
-        this.initializeReverseNodeDependencyMap();
-        this.computeFailingNodes();
-        this.findStronglyConnectedComponents();
-        this.createLinks();
-    }
-
-    protected findStronglyConnectedComponents() {
-        let stronglyConnectedComponentsFinder = new StronglyConnectedComponentsFinder();
-        this._stronglyConnectedComponents = stronglyConnectedComponentsFinder.findTarjan(this);
+        this.createNodesForUnknownValidators();
+        this.initializeDirectedGraph();
+        this.initializeOrganizationsMap();
     }
 
     calculateLatestCrawlDate(): Date | undefined {
@@ -84,16 +67,13 @@ export class Network {
         return this._latestCrawlDate;
     }
 
-    get links() {
-        return this._links;
-    }
-
-    get failingNodes() {
-        return this._failingNodes;
-    }
-
     isNodeFailing(node: Node) {
-        return this._failingNodes.includes(node);
+        let vertex = this._graph.getVertex(node.publicKey);
+        if(!vertex) {
+            return false;
+        }
+
+        return vertex.isValidating;
     }
 
     isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {
@@ -101,42 +81,11 @@ export class Network {
         if(quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
-        return !this._quorumSetService.quorumSetCanReachThreshold(node, quorumSet, this._failingNodes, this._nodesMap);
+        return !this._graphManager.quorumSetCanReachThreshold(this._graph, innerQuorumSet);
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
         return generateTomlString(quorumSet, this._nodesMap);
-    }
-
-    createLinks() {
-        this._links = _.flatten(this._nodes
-            .filter(node => node.active && !this._failingNodes.includes(node))
-            .map(node => {
-                return QuorumSet.getAllValidators(node.quorumSet)
-                    .filter(validator => this._nodesMap.get(validator).active && !this._failingNodes.includes(this._nodesMap.get(validator)))
-                    .map(validator => {
-                        let scp = this.getStronglyConnectedComponent(node.publicKey, validator);
-                        return {
-                            'id': node.publicKey + validator,
-                            'source': node,
-                            'target': this._nodesMap.get(validator),
-                            'isPartOfStronglyConnectedComponent': scp ? true : false,
-                            'isPartOfTransitiveQuorumSet': scp ? scp.isTransitiveQuorumSet : false
-                        };
-                    })
-            }));
-    }
-
-    isPartOfStronglyConnectedComponent(source:PublicKey, target:PublicKey) {
-        return Array.from(this._stronglyConnectedComponents).filter(scp => scp.nodes.has(source) && scp.nodes.has(target)).length > 0; //should be find, a link can only be part of 1 strongly connected component
-    }
-
-    getStronglyConnectedComponent(source, target){
-        return Array.from(this._stronglyConnectedComponents).find(scp => scp.nodes.has(source) && scp.nodes.has(target))
-    }
-
-    getTransitiveQuorumSet(){
-        return this._stronglyConnectedComponents.find(scp => scp.isTransitiveQuorumSet);
     }
 
     createNodesForUnknownValidators() {
@@ -148,18 +97,6 @@ export class Network {
                     this.nodes.push(missingNode);
                     this._nodesMap.set(validator, missingNode);
                 }
-            })
-        });
-    }
-
-    initializeReverseNodeDependencyMap() {
-        this._reverseNodeDependencyMap = new Map();
-        this.nodes.forEach(node => {
-            QuorumSet.getAllValidators(node.quorumSet).forEach(validator => {
-                if (!this._reverseNodeDependencyMap.has(validator)) {
-                    this._reverseNodeDependencyMap.set(validator, [])
-                }
-                this._reverseNodeDependencyMap.get(validator).push(node);
             })
         });
     }
@@ -180,45 +117,20 @@ export class Network {
         return this._organizationsMap.get(id);
     }
 
+    getGraph(){
+        return this._graph;
+    }
+
     /*
     * Get nodes that have the given node in their quorumSet
      */
     getTrustingNodes(node: Node): Node[] {
-        let trustingNodes = this._reverseNodeDependencyMap.get(node.publicKey);
-        if(trustingNodes === undefined)
+        let vertex = this._graph.getVertex(node.publicKey);
+        if(!vertex) {
             return [];
-
-        return trustingNodes;
-    }
-
-    computeFailingNodes() {
-        let failingNodes = [];
-        let nodesToCheck = this._nodes.filter(node => node.active && node.quorumSet.hasValidators()); //check all active nodes
-        while (nodesToCheck.length > 0) {
-            let nodeToCheck = nodesToCheck.pop();
-
-            if (failingNodes.includes(nodeToCheck)) {
-                continue; //already failing
-            }
-
-            if (nodeToCheck.isValidating && this._quorumSetService.quorumSetCanReachThreshold(nodeToCheck, nodeToCheck.quorumSet, failingNodes, this._nodesMap)) {
-                continue; //working as expected
-            }
-
-            //node is failing
-            failingNodes.push(nodeToCheck);
-
-            //recheck all nodes that are dependant on it
-            if (!this._reverseNodeDependencyMap.has(nodeToCheck.publicKey)) {
-                continue //no nodes are dependant on it
-            }
-
-            this._reverseNodeDependencyMap.get(nodeToCheck.publicKey).forEach(node => {
-                if (node.active && node.quorumSet.hasValidators())
-                    nodesToCheck.push(node);
-            })
         }
 
-        this._failingNodes = failingNodes;
+        return Array.from(this._graph.getParents(vertex))
+            .map(vertex => this.getNodeByPublicKey(vertex.publicKey))
     }
 }

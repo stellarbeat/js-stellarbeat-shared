@@ -1,4 +1,4 @@
-export {Network, PublicKey, Link, OrganizationId} from './network';
+export {Network, PublicKey, OrganizationId} from './network';
 export {Node} from './node';
 export {default as QuorumService} from './quorum-service';
 export {QuorumSlicesGenerator} from './quorum-slices-generator'
@@ -17,7 +17,5 @@ export {TrustIndex} from './node-index/index/trust-index';
 export {AgeIndex} from './node-index/index/age-index';
 export {ClusterService} from './cluster-service';
 export {Organization} from './organization';
-export {StronglyConnectedComponent} from './strongly-connected-component';
-export {StronglyConnectedComponentsFinder} from './strongly-connected-components-finder';
 export {DirectedGraph, Edge, Vertex} from './graph/directed-graph';
 export {DirectedGraphManager} from './graph/directed-graph-manager';
