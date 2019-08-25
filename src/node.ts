@@ -198,7 +198,7 @@ export class Node {
     }
 
     get isValidator(): boolean {
-        return this.quorumSet.hasValidators(); //if a quorumset exists, it means we picked it up through scp messages.
+        return this.isValidating || this.quorumSet.hasValidators();
     }
 
     get index(): number {
