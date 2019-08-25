@@ -43,9 +43,8 @@ export class Network {
     updateNetwork(nodes?: Array<Node>) {
         if (nodes) {
             this._nodes = nodes;
-            this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
-            this.createNodesForUnknownValidators();
         }
+        this._nodesMap = QuorumService.getPublicKeyToNodeMap(this._nodes);
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
@@ -94,6 +93,7 @@ export class Network {
                 if (!this._nodesMap.has(validator)) {
                     let missingNode = new Node('unknown');
                     missingNode.publicKey = validator;
+                    missingNode.isValidator = true;
                     this.nodes.push(missingNode);
                     this._nodesMap.set(validator, missingNode);
                 }
