@@ -70,10 +70,10 @@ export class Network {
     isNodeFailing(node: Node) {
         let vertex = this._graph.getVertex(node.publicKey);
         if(!vertex) {
-            return false;
+            return true;
         }
 
-        return vertex.isValidating;
+        return !vertex.isValidating;
     }
 
     isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {
@@ -81,7 +81,7 @@ export class Network {
         if(quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
-        return !this._graphManager.quorumSetCanReachThreshold(this._graph, innerQuorumSet);
+        return !this._graphManager.quorumSetCanReachThreshold(this._graph, quorumSet);
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
@@ -117,7 +117,7 @@ export class Network {
         return this._organizationsMap.get(id);
     }
 
-    getGraph(){
+    get graph(){
         return this._graph;
     }
 

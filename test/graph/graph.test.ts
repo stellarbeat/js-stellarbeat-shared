@@ -46,7 +46,6 @@ test('buildGraphFromNodes', () => {
 test('updateGraphWithNoTransitiveQuorumSet', () => {
     nodeA.active = false;
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
-    console.log(graph);
     expect(Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating).length).toEqual(2);
     expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
     expect(graph.transitiveQuorumSet).toEqual(undefined);
