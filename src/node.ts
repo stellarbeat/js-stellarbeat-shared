@@ -21,6 +21,7 @@ export class Node {
     protected _dateUpdated: Date;
     protected _overLoaded: boolean;
     protected _isFullValidator: boolean = false;
+    protected _isValidator: boolean;
     private _isValidating: boolean = false;
     private _homeDomain?:string;
     private _index: number = 0.0;
@@ -198,7 +199,14 @@ export class Node {
     }
 
     get isValidator(): boolean {
-        return this.isValidating || this.quorumSet.hasValidators();
+        if(this._isValidator === undefined)
+            return this.isValidating || this.quorumSet.hasValidators();
+
+        return this._isValidator;
+    }
+
+    set isValidator(value:boolean) {
+        this._isValidator = value
     }
 
     get index(): number {
