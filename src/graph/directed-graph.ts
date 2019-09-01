@@ -2,37 +2,34 @@ import {PublicKey} from "../network";
 import {StronglyConnectedComponentsFinder, StronglyConnectedComponent} from "./strongly-connected-components-finder";
 import {TransitiveQuorumSetFinder} from "./transitive-quorum-set-finder";
 
+export class GraphQuorumSet {
+    public threshold: number = 0;
+    public validators: Array<PublicKey> = [];
+    public innerGraphQuorumSets: Array<GraphQuorumSet> = [];
+}
+
 export class Vertex {
-    private readonly _publicKey: PublicKey;
-    private readonly _label: string;
-    private readonly _weight: number; //e.g. trust in the network
-    private _isValidating: boolean;
+    public readonly publicKey: PublicKey;
+    public readonly label: string;
+    public readonly weight: number; //e.g. trust in the network
+    public readonly isMissing: boolean;
+    public isValidating: boolean;
+    public graphQuorumSet: GraphQuorumSet = new GraphQuorumSet();
 
-    constructor(publicKey: PublicKey, label: string, isValidating: boolean, weight: number) {
-        this._isValidating = isValidating;
-        this._label = label;
-        this._publicKey = publicKey;
-        this._weight = weight;
-    }
-
-    get publicKey(): string {
-        return this._publicKey;
-    }
-
-    get label(): string {
-        return this._label;
-    }
-
-    get weight(): number {
-        return this._weight;
-    }
-
-    get isValidating(): boolean {
-        return this._isValidating;
-    }
-
-    set isValidating(value: boolean) {
-        this._isValidating = value;
+    constructor(
+        publicKey: PublicKey,
+        label: string,
+        isValidating: boolean,
+        weight: number,
+        graphQuorumSet: GraphQuorumSet,
+        isMissing: boolean = false
+    ) {
+        this.label = label;
+        this.publicKey = publicKey;
+        this.weight = weight;
+        this.isValidating = isValidating;
+        this.graphQuorumSet = graphQuorumSet;
+        this.isMissing = isMissing;
     }
 
     toString() {
@@ -40,24 +37,19 @@ export class Vertex {
     }
 }
 
+export function isVertex(vertex: Vertex|undefined): vertex is Vertex {
+    return vertex instanceof Vertex;
+}
+
 export class Edge {
-    private readonly _parent: Vertex;
-    private readonly _child: Vertex;
+    public readonly parent: Vertex;
+    public readonly child: Vertex;
 
     constructor(parent: Vertex, child: Vertex) {
-        this._parent = parent;
-        this._child = child;
+        this.parent = parent;
+        this.child = child;
     }
 
-    get parent(): Vertex {
-        return this._parent;
-    }
-
-    get child(): Vertex {
-        return this._child;
-    }
-
-//invariant: when parent and child are validating, the edge is active
     get isActive(): boolean {
         return this.child.isValidating && this.parent.isValidating
     }
@@ -75,8 +67,8 @@ export class DirectedGraph {
     protected _edges = new Set<Edge>();
 
     protected _stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
-    protected _stronglyConnectedVertices: Map<PublicKey, number>;
-    protected _transitiveQuorumSet: Set<PublicKey>;
+    protected _stronglyConnectedVertices: Map<PublicKey, number> = new Map<PublicKey, number>();
+    protected _transitiveQuorumSet: Set<PublicKey> = new Set<PublicKey>();
 
     protected children = new Map<PublicKey, Set<Vertex>>();
     protected parents = new Map<PublicKey, Set<Vertex>>();
@@ -85,26 +77,94 @@ export class DirectedGraph {
         stronglyConnectedComponentsFinder: StronglyConnectedComponentsFinder,
         transitiveQuorumSetFinder: TransitiveQuorumSetFinder) {
 
+
         this._stronglyConnectedComponentsFinder = stronglyConnectedComponentsFinder;
         this._transitiveQuorumSetFinder = transitiveQuorumSetFinder;
     }
+
+    public build(vertices: Array<Vertex>) {
+        vertices.forEach(vertex => this.addVertex(vertex)); //for fast lookup
+        this.vertices.forEach(vertex => this.addEdgesFromGraphQuorumSet(vertex, vertex.graphQuorumSet));
+    }
+
+    protected addEdgesFromGraphQuorumSet(parent: Vertex, graphQuorumSet: GraphQuorumSet) {
+        graphQuorumSet.validators
+            .map(validator => this.getVertex(validator))
+            .filter(isVertex)
+            .forEach(validatorVertex => this.addEdge(new Edge(parent, validatorVertex)));
+        graphQuorumSet.innerGraphQuorumSets.forEach( innerGraphQuorumSet => {
+            this.addEdgesFromGraphQuorumSet(parent, innerGraphQuorumSet);
+        })
+    }
+
+    public updateVerticesFailingByQuorumSetNotMeetingThreshold() {
+        //no reason to check already failing vertices
+        let verticesToCheck: Array<Vertex> =
+            Array.from(this.vertices.values()).filter(vertex => vertex.isValidating);
+
+        let inVerticesToCheckQueue: Map<PublicKey, boolean> = new Map();
+
+        verticesToCheck.forEach(vertex => inVerticesToCheckQueue.set(vertex.publicKey, true));
+
+        while (verticesToCheck.length > 0) {
+            let vertexToCheck = verticesToCheck.pop()!;
+            inVerticesToCheckQueue.set(vertexToCheck.publicKey, false);
+
+            if (!vertexToCheck.isValidating) {
+                continue; //already failing
+            }
+
+            if (this.graphQuorumSetCanReachThreshold(vertexToCheck.graphQuorumSet)
+            ) {
+                continue; //working as expected
+            }
+
+            //node is failing
+            vertexToCheck.isValidating = false;
+
+            Array.from(this.getParents(vertexToCheck))
+                .filter(vertex => inVerticesToCheckQueue.get(vertex.publicKey) === false)
+                .forEach(vertex => {
+                    verticesToCheck.push(vertex);
+                    inVerticesToCheckQueue.set(vertex.publicKey, true);
+                });
+        }
+    }
+
+    public graphQuorumSetCanReachThreshold(
+        graphQuorumSet: GraphQuorumSet
+    ) {
+        let counter = graphQuorumSet.validators
+            .map(validator => this.getVertex(validator))
+            .filter(vertex => vertex !== undefined && vertex.isValidating)
+            .length;
+
+        graphQuorumSet.innerGraphQuorumSets.forEach(innerGraphQS => {
+            if (this.graphQuorumSetCanReachThreshold(innerGraphQS)) {
+                counter++;
+            }
+        });
+
+        return counter >= graphQuorumSet.threshold;
+    }
+
 
     public updateStronglyConnectedComponentsAndTransitiveQuorumSet() {
         this._stronglyConnectedComponents = this._stronglyConnectedComponentsFinder.findTarjan(this);
         this._stronglyConnectedVertices = new Map<PublicKey, number>();
 
-        for (let i = 0; i< this._stronglyConnectedComponents.length; i++){
+        for (let i = 0; i < this._stronglyConnectedComponents.length; i++) {
             this._stronglyConnectedComponents[i]
                 .forEach(publicKey => this._stronglyConnectedVertices.set(publicKey, i));
         }
 
-        this._transitiveQuorumSet = this._transitiveQuorumSetFinder.determineTransitiveQuorumSet(
+        this._transitiveQuorumSet = this._transitiveQuorumSetFinder.getTransitiveQuorumSet(
             this._stronglyConnectedComponents, this
         );
     }
 
-    hasTransitiveQuorumSet() {
-        return this._transitiveQuorumSet !== undefined;
+    public hasTransitiveQuorumSet() {
+        return this._transitiveQuorumSet.size > 0;
     }
 
     get transitiveQuorumSet() {
@@ -131,21 +191,20 @@ export class DirectedGraph {
         return this.children.get(vertex.publicKey)!.size;
     }
 
-    public isVertexPartOfTransitiveQuorumSet(publicKey:PublicKey) {
-        return this.hasTransitiveQuorumSet() && this._transitiveQuorumSet.has(publicKey);
+    public isVertexPartOfTransitiveQuorumSet(publicKey: PublicKey) {
+        return this._transitiveQuorumSet.has(publicKey);
     }
 
-    public isVertexPartOfStronglyConnectedComponent(publicKey:PublicKey) {
+    public isVertexPartOfStronglyConnectedComponent(publicKey: PublicKey) {
         return this._stronglyConnectedVertices.has(publicKey);
     }
 
-    public isEdgePartOfTransitiveQuorumSet(edge:Edge) {
-        return this.hasTransitiveQuorumSet()
-            && this._transitiveQuorumSet.has(edge.parent.publicKey)
+    public isEdgePartOfTransitiveQuorumSet(edge: Edge) {
+        return this._transitiveQuorumSet.has(edge.parent.publicKey)
             && this._transitiveQuorumSet.has(edge.child.publicKey);
     }
 
-    public isEdgePartOfStronglyConnectedComponent(edge:Edge) {
+    public isEdgePartOfStronglyConnectedComponent(edge: Edge) {
         return this._stronglyConnectedVertices.has(edge.parent.publicKey)
             && this._stronglyConnectedVertices.has(edge.child.publicKey)
             && this._stronglyConnectedVertices.get(edge.parent.publicKey)
@@ -174,7 +233,7 @@ export class DirectedGraph {
         return this.parents.get(vertex.publicKey)!;
     }
 
-    public addEdge(edge: Edge) {
+    protected addEdge(edge: Edge) {
         if (!this._vertices.has(edge.parent.publicKey)) {
             throw new Error('unknown vertex: ' + edge.parent);
         }

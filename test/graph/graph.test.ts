@@ -34,8 +34,8 @@ test('buildGraphFromNodes', () => {
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
     expect(graph.vertices.size).toEqual(5);
     expect(graph.edges.size).toEqual(5);
-    expect(graph.getParents(graph.getVertex('a')).size).toEqual(3);
-    expect(graph.getChildren(graph.getVertex('d')).size).toEqual(2);
+    expect(graph.getParents(graph.getVertex('a')!).size).toEqual(3);
+    expect(graph.getChildren(graph.getVertex('d')!).size).toEqual(2);
     expect(graph.transitiveQuorumSet).toEqual(new Set(['b', 'a']));
 
     expect(Array.from(graph.edges).filter(
@@ -48,5 +48,6 @@ test('updateGraphWithNoTransitiveQuorumSet', () => {
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
     expect(Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating).length).toEqual(2);
     expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
-    expect(graph.transitiveQuorumSet).toEqual(undefined);
+    expect(graph.hasTransitiveQuorumSet()).toEqual(false);
+    expect(graph.transitiveQuorumSet.size).toEqual(0);
 });

@@ -1,9 +1,10 @@
-import {DirectedGraph} from "./directed-graph";
+import {DirectedGraph, isVertex} from "./directed-graph";
 import {StronglyConnectedComponent} from "./strongly-connected-components-finder";
+import {PublicKey} from "../network";
 
 export class TransitiveQuorumSetFinder {
 
-    public determineTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>, graph:DirectedGraph):StronglyConnectedComponent|undefined {
+    public getTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>, graph:DirectedGraph):StronglyConnectedComponent {
         let scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];
         stronglyConnectedComponents.forEach(scp => {
             if (scp.size > 1 && !this.hasOutgoingEdgesNotPartOfComponent(scp, graph)) {
@@ -12,7 +13,7 @@ export class TransitiveQuorumSetFinder {
         });
 
         if(scpNoOutgoingEdges.length <= 0) {
-            return undefined;
+            return new Set<PublicKey>();
         }
 
         let transitiveQuorumSet = scpNoOutgoingEdges[0];
@@ -24,6 +25,7 @@ export class TransitiveQuorumSetFinder {
                 let scp = scpNoOutgoingEdges[i];
                 let weightSum = Array.from(scp)
                     .map(publicKey => graph.getVertex(publicKey))
+                    .filter(isVertex)
                     .reduce((accumulator, vertex) => accumulator + vertex.weight, 0);
                 let weightAverage = weightSum / scp.size;
                 if (highestIndexAverage < weightAverage) {
@@ -40,6 +42,7 @@ export class TransitiveQuorumSetFinder {
         let hasOutgoingEdgesNotPartOfComponent = false;
         Array.from(stronglyConnectedComponent.values())
             .map(publicKey => graph.getVertex(publicKey))
+            .filter(isVertex)
             .forEach(vertex => {
             let outgoingEdgesNotInComponent = Array.from(graph
                 .getChildren(vertex))

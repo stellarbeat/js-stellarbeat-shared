@@ -15,7 +15,6 @@ export {NodeIndex} from './node-index/node-index';
 export {VersionIndex} from './node-index/index/version-index';
 export {TrustIndex} from './node-index/index/trust-index';
 export {AgeIndex} from './node-index/index/age-index';
-export {ClusterService} from './cluster-service';
 export {Organization} from './organization';
 export {DirectedGraph, Edge, Vertex} from './graph/directed-graph';
 export {DirectedGraphManager} from './graph/directed-graph-manager';

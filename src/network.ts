@@ -75,12 +75,12 @@ export class Network {
         return !vertex.isValidating;
     }
 
-    isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {
+    isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {//todo should pass graphQuorumSet
         let quorumSet = innerQuorumSet;
         if(quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
-        return !this._graphManager.quorumSetCanReachThreshold(this._graph, quorumSet);
+        return !this._graph.graphQuorumSetCanReachThreshold(this._graphManager.mapQuorumSet(quorumSet));
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
