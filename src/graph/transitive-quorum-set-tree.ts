@@ -1,6 +1,7 @@
 import {PublicKey} from "../network";
 
 export interface TransitiveQuorumSetTreeVertexInterface {
+    readonly id: string;
     readonly publicKey: PublicKey;
     readonly label: string;
     readonly isRoot: boolean;
@@ -10,6 +11,7 @@ export interface TransitiveQuorumSetTreeVertexInterface {
 }
 
 export class TransitiveQuorumSetTreeRoot implements TransitiveQuorumSetTreeVertexInterface {
+    public readonly id;
     public readonly publicKey: PublicKey;
     public readonly label: string;
     public readonly isRoot: boolean = false;
@@ -22,6 +24,7 @@ export class TransitiveQuorumSetTreeRoot implements TransitiveQuorumSetTreeVerte
         this.label = label;
         this.isRoot = true;
         this.distance = 0;
+        this.id = this.publicKey;
     }
 
     toString() {
@@ -36,6 +39,7 @@ export class TransitiveQuorumSetTreeVertex implements TransitiveQuorumSetTreeVer
     public readonly isValidating: boolean;
     public readonly distance: number;
     public readonly parent: TransitiveQuorumSetTreeVertexInterface;
+    public readonly id: string;
 
     constructor(publicKey: string, label: string, isValidating: boolean, parent: TransitiveQuorumSetTreeVertexInterface) {
         this.isValidating = isValidating;
@@ -44,6 +48,7 @@ export class TransitiveQuorumSetTreeVertex implements TransitiveQuorumSetTreeVer
         this.isRoot = false;
         this.distance = parent.distance + 1;
         this.parent = parent;
+        this.id = this.parent.publicKey + '_' + this.publicKey;
     }
 
     toString() {
