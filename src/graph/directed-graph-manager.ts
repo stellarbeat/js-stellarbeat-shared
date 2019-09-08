@@ -2,7 +2,7 @@ import {PublicKey} from "../network";
 import {Node} from "../node";
 import {QuorumSet} from "../quorum-set";
 import {StronglyConnectedComponentsFinder, StronglyConnectedComponent} from "./strongly-connected-components-finder";
-import {TransitiveQuorumSetFinder} from "./transitive-quorum-set-finder";
+import {NetworkTransitiveQuorumSetFinder} from "./network-transitive-quorum-set-finder";
 import {DirectedGraph, Edge, GraphQuorumSet, Vertex} from "./directed-graph";
 
 export class DirectedGraphManager {
@@ -19,11 +19,7 @@ export class DirectedGraphManager {
     };
 
     buildGraphFromNodes(nodes: Node[]): DirectedGraph {
-        let graph = new DirectedGraph(new StronglyConnectedComponentsFinder(), new TransitiveQuorumSetFinder());
-        let nodesMap = new Map(nodes
-            .filter(node => node.publicKey)
-            .map(node => [node.publicKey, node])
-        );
+        let graph = new DirectedGraph(new StronglyConnectedComponentsFinder(), new NetworkTransitiveQuorumSetFinder());
 
         let vertices = nodes
             .filter(node => node.isValidator)
@@ -38,8 +34,6 @@ export class DirectedGraphManager {
                     )
             );
         graph.build(vertices);
-        graph.updateVerticesFailingByQuorumSetNotMeetingThreshold();
-        graph.updateStronglyConnectedComponentsAndTransitiveQuorumSet();
 
         return graph;
     }

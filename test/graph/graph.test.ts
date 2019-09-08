@@ -36,7 +36,7 @@ test('buildGraphFromNodes', () => {
     expect(graph.edges.size).toEqual(5);
     expect(graph.getParents(graph.getVertex('a')!).size).toEqual(3);
     expect(graph.getChildren(graph.getVertex('d')!).size).toEqual(2);
-    expect(graph.transitiveQuorumSet).toEqual(new Set(['b', 'a']));
+    expect(graph.networkTransitiveQuorumSet).toEqual(new Set(['b', 'a']));
 
     expect(Array.from(graph.edges).filter(
         edge => graph.isEdgePartOfStronglyConnectedComponent(edge)).length
@@ -48,6 +48,30 @@ test('updateGraphWithNoTransitiveQuorumSet', () => {
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
     expect(Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating).length).toEqual(2);
     expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
-    expect(graph.hasTransitiveQuorumSet()).toEqual(false);
-    expect(graph.transitiveQuorumSet.size).toEqual(0);
+    expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(false);
+    expect(graph.networkTransitiveQuorumSet.size).toEqual(0);
+    nodeA.active = true;
+});
+
+test('updateGraphWithFailingVertices', () => {
+    let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
+    graph.updateGraphWithFailingVertices(['a']);
+    console.log(graph.vertices);
+    expect(Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating).length).toEqual(2);
+    expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
+    expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(false);
+    expect(graph.networkTransitiveQuorumSet.size).toEqual(0);
+});
+
+test('transitiveQuorumSetTree', () => {
+    let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
+    let vertex = graph.getVertex(nodeD.publicKey);
+    let tree = graph.getTransitiveQuorumSetTree(vertex);
+    expect(tree.vertices.length).toEqual(5);
+    expect(tree.root.distance).toEqual(0);
+    expect(tree.getChildren(tree.root).length).toEqual(2);
+    expect(tree.getChildren(tree.root).map(child => child.distance) ).toEqual([1,1]);
+    expect(tree.getChildren(tree.root).map(child => child.isRoot) ).toEqual([false,false]);
+    expect(tree.getChildren(tree.root).map(child => child.isValidating) ).toEqual([true,true]);
+    expect(tree.edges.length).toEqual(4);
 });

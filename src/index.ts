@@ -18,3 +18,10 @@ export {AgeIndex} from './node-index/index/age-index';
 export {Organization} from './organization';
 export {DirectedGraph, Edge, Vertex, GraphQuorumSet, isVertex} from './graph/directed-graph';
 export {DirectedGraphManager} from './graph/directed-graph-manager';
+export {
+    TransitiveQuorumSetTreeEdge,
+    TransitiveQuorumSetTree,
+    TransitiveQuorumSetTreeVertex,
+    TransitiveQuorumSetTreeVertexInterface,
+    TransitiveQuorumSetTreeRoot
+} from './graph/transitive-quorum-set-tree'

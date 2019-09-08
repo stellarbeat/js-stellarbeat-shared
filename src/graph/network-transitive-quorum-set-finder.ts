@@ -2,7 +2,7 @@ import {DirectedGraph, isVertex} from "./directed-graph";
 import {StronglyConnectedComponent} from "./strongly-connected-components-finder";
 import {PublicKey} from "../network";
 
-export class TransitiveQuorumSetFinder {
+export class NetworkTransitiveQuorumSetFinder {
 
     public getTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>, graph:DirectedGraph):StronglyConnectedComponent {
         let scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];

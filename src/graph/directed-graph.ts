@@ -1,6 +1,11 @@
 import {PublicKey} from "../network";
-import {StronglyConnectedComponentsFinder, StronglyConnectedComponent} from "./strongly-connected-components-finder";
-import {TransitiveQuorumSetFinder} from "./transitive-quorum-set-finder";
+import {StronglyConnectedComponent, StronglyConnectedComponentsFinder} from "./strongly-connected-components-finder";
+import {NetworkTransitiveQuorumSetFinder} from "./network-transitive-quorum-set-finder";
+import {
+    TransitiveQuorumSetTree,
+    TransitiveQuorumSetTreeRoot,
+    TransitiveQuorumSetTreeVertex, TransitiveQuorumSetTreeVertexInterface
+} from "./transitive-quorum-set-tree";
 
 export class GraphQuorumSet {
     public threshold: number = 0;
@@ -37,7 +42,7 @@ export class Vertex {
     }
 }
 
-export function isVertex(vertex: Vertex|undefined): vertex is Vertex {
+export function isVertex(vertex: Vertex | undefined): vertex is Vertex {
     return vertex instanceof Vertex;
 }
 
@@ -61,30 +66,31 @@ export class Edge {
 
 export class DirectedGraph {
     protected readonly _stronglyConnectedComponentsFinder: StronglyConnectedComponentsFinder;
-    protected readonly _transitiveQuorumSetFinder: TransitiveQuorumSetFinder;
+    protected readonly _networkTransitiveQuorumSetFinder: NetworkTransitiveQuorumSetFinder;
 
     protected _vertices = new Map<PublicKey, Vertex>();
     protected _edges = new Set<Edge>();
 
     protected _stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
     protected _stronglyConnectedVertices: Map<PublicKey, number> = new Map<PublicKey, number>();
-    protected _transitiveQuorumSet: Set<PublicKey> = new Set<PublicKey>();
+    protected _networkTransitiveQuorumSet: Set<PublicKey> = new Set<PublicKey>();
 
     protected children = new Map<PublicKey, Set<Vertex>>();
     protected parents = new Map<PublicKey, Set<Vertex>>();
 
     constructor(
         stronglyConnectedComponentsFinder: StronglyConnectedComponentsFinder,
-        transitiveQuorumSetFinder: TransitiveQuorumSetFinder) {
+        networkTransitiveQuorumSetFinder: NetworkTransitiveQuorumSetFinder) {
 
 
         this._stronglyConnectedComponentsFinder = stronglyConnectedComponentsFinder;
-        this._transitiveQuorumSetFinder = transitiveQuorumSetFinder;
+        this._networkTransitiveQuorumSetFinder = networkTransitiveQuorumSetFinder;
     }
 
     public build(vertices: Array<Vertex>) {
         vertices.forEach(vertex => this.addVertex(vertex)); //for fast lookup
         this.vertices.forEach(vertex => this.addEdgesFromGraphQuorumSet(vertex, vertex.graphQuorumSet));
+        this.updateVerticesFailingByQuorumSetNotMeetingThreshold();
     }
 
     protected addEdgesFromGraphQuorumSet(parent: Vertex, graphQuorumSet: GraphQuorumSet) {
@@ -92,15 +98,16 @@ export class DirectedGraph {
             .map(validator => this.getVertex(validator))
             .filter(isVertex)
             .forEach(validatorVertex => this.addEdge(new Edge(parent, validatorVertex)));
-        graphQuorumSet.innerGraphQuorumSets.forEach( innerGraphQuorumSet => {
+        graphQuorumSet.innerGraphQuorumSets.forEach(innerGraphQuorumSet => {
             this.addEdgesFromGraphQuorumSet(parent, innerGraphQuorumSet);
         })
     }
 
-    public updateVerticesFailingByQuorumSetNotMeetingThreshold() {
-        //no reason to check already failing vertices
-        let verticesToCheck: Array<Vertex> =
-            Array.from(this.vertices.values()).filter(vertex => vertex.isValidating);
+    protected updateVerticesFailingByQuorumSetNotMeetingThreshold(verticesToCheck: Array<Vertex> = []) {
+        if (verticesToCheck.length === 0) {
+            verticesToCheck = Array.from(this.vertices.values()).filter(vertex => vertex.isValidating);
+            //no reason to check already failing vertices
+        }
 
         let inVerticesToCheckQueue: Map<PublicKey, boolean> = new Map();
 
@@ -129,6 +136,43 @@ export class DirectedGraph {
                     inVerticesToCheckQueue.set(vertex.publicKey, true);
                 });
         }
+        this.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
+    }
+
+    updateGraphWithFailingVertices(failingPublicKeys: PublicKey[]): void {
+        failingPublicKeys
+            .map(publicKey => this.getVertex(publicKey))
+            .filter(isVertex)
+            .map(vertex => vertex.isValidating = false);
+
+        this.updateVerticesFailingByQuorumSetNotMeetingThreshold();
+        this.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
+    }
+
+    protected mapToTransitiveQuorumSetTreeVertex(vertex: Vertex, parent: TransitiveQuorumSetTreeVertexInterface): TransitiveQuorumSetTreeVertex {
+        return new TransitiveQuorumSetTreeVertex(vertex.publicKey, vertex.label, vertex.isValidating, parent);
+    }
+
+    public getTransitiveQuorumSetTree(vertex: Vertex) {
+        let root = new TransitiveQuorumSetTreeRoot(vertex.publicKey, vertex.label, vertex.isValidating);
+        let tree = new TransitiveQuorumSetTree(root);
+
+        return this.buildTransitiveQuorumSetTreeRecursive(root, tree);
+    }
+
+    protected buildTransitiveQuorumSetTreeRecursive(treeVertex: TransitiveQuorumSetTreeVertexInterface, tree: TransitiveQuorumSetTree, processedPublicKeys: Set<PublicKey> = new Set()) {
+        if (processedPublicKeys.has(treeVertex.publicKey))
+            return tree;
+
+        processedPublicKeys.add(treeVertex.publicKey);
+
+        this.getChildren(this.getVertex(treeVertex.publicKey)).forEach(child => {
+            let transitiveQuorumSetChildVertex = this.mapToTransitiveQuorumSetTreeVertex(child, treeVertex);
+            tree.addVertex(transitiveQuorumSetChildVertex);
+            return this.buildTransitiveQuorumSetTreeRecursive(transitiveQuorumSetChildVertex, tree, processedPublicKeys);
+        });
+
+        return tree;
     }
 
     public graphQuorumSetCanReachThreshold(
@@ -149,7 +193,7 @@ export class DirectedGraph {
     }
 
 
-    public updateStronglyConnectedComponentsAndTransitiveQuorumSet() {
+    protected updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet() {
         this._stronglyConnectedComponents = this._stronglyConnectedComponentsFinder.findTarjan(this);
         this._stronglyConnectedVertices = new Map<PublicKey, number>();
 
@@ -158,17 +202,17 @@ export class DirectedGraph {
                 .forEach(publicKey => this._stronglyConnectedVertices.set(publicKey, i));
         }
 
-        this._transitiveQuorumSet = this._transitiveQuorumSetFinder.getTransitiveQuorumSet(
+        this._networkTransitiveQuorumSet = this._networkTransitiveQuorumSetFinder.getTransitiveQuorumSet(
             this._stronglyConnectedComponents, this
         );
     }
 
-    public hasTransitiveQuorumSet() {
-        return this._transitiveQuorumSet.size > 0;
+    public hasNetworkTransitiveQuorumSet() {
+        return this._networkTransitiveQuorumSet.size > 0;
     }
 
-    get transitiveQuorumSet() {
-        return this._transitiveQuorumSet;
+    get networkTransitiveQuorumSet() {
+        return this._networkTransitiveQuorumSet;
     }
 
     public addVertex(vertex: Vertex) {
@@ -191,17 +235,17 @@ export class DirectedGraph {
         return this.children.get(vertex.publicKey)!.size;
     }
 
-    public isVertexPartOfTransitiveQuorumSet(publicKey: PublicKey) {
-        return this._transitiveQuorumSet.has(publicKey);
+    public isVertexPartOfNetworkTransitiveQuorumSet(publicKey: PublicKey) {
+        return this._networkTransitiveQuorumSet.has(publicKey);
     }
 
     public isVertexPartOfStronglyConnectedComponent(publicKey: PublicKey) {
         return this._stronglyConnectedVertices.has(publicKey);
     }
 
-    public isEdgePartOfTransitiveQuorumSet(edge: Edge) {
-        return this._transitiveQuorumSet.has(edge.parent.publicKey)
-            && this._transitiveQuorumSet.has(edge.child.publicKey);
+    public isEdgePartOfNetworkTransitiveQuorumSet(edge: Edge) {
+        return this._networkTransitiveQuorumSet.has(edge.parent.publicKey)
+            && this._networkTransitiveQuorumSet.has(edge.child.publicKey);
     }
 
     public isEdgePartOfStronglyConnectedComponent(edge: Edge) {
