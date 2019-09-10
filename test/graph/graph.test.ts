@@ -56,7 +56,6 @@ test('updateGraphWithNoTransitiveQuorumSet', () => {
 test('updateGraphWithFailingVertices', () => {
     let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
     graph.updateGraphWithFailingVertices(['a']);
-    console.log(graph.vertices);
     expect(Array.from(graph.vertices.values()).filter(vertex => vertex.isValidating).length).toEqual(2);
     expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
     expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(false);

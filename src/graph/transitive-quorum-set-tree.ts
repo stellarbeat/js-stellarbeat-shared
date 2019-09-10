@@ -107,6 +107,9 @@ export class TransitiveQuorumSetTree {
     }
 
     getChildren(transitiveQuorumSetTreeVertex:TransitiveQuorumSetTreeVertexInterface){
+        if(!this._children.get(transitiveQuorumSetTreeVertex))
+            return [];
+
         return this._children.get(transitiveQuorumSetTreeVertex);
     }
 }

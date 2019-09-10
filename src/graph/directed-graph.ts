@@ -157,20 +157,23 @@ export class DirectedGraph {
         let root = new TransitiveQuorumSetTreeRoot(vertex.publicKey, vertex.label, vertex.isValidating);
         let tree = new TransitiveQuorumSetTree(root);
 
-        return this.buildTransitiveQuorumSetTreeRecursive(root, tree);
-    }
+        let processedPublicKeys: Set<PublicKey> = new Set();
+        let queue:TransitiveQuorumSetTreeVertexInterface[] = [];
+        queue.push(root);
 
-    protected buildTransitiveQuorumSetTreeRecursive(treeVertex: TransitiveQuorumSetTreeVertexInterface, tree: TransitiveQuorumSetTree, processedPublicKeys: Set<PublicKey> = new Set()) {
-        if (processedPublicKeys.has(treeVertex.publicKey))
-            return tree;
+        while(queue.length > 0) {
+            let transVertex = queue.shift();
+            if (processedPublicKeys.has(transVertex.publicKey))
+                continue;
+            processedPublicKeys.add(transVertex.publicKey);
 
-        processedPublicKeys.add(treeVertex.publicKey);
-
-        this.getChildren(this.getVertex(treeVertex.publicKey)).forEach(child => {
-            let transitiveQuorumSetChildVertex = this.mapToTransitiveQuorumSetTreeVertex(child, treeVertex);
-            tree.addVertex(transitiveQuorumSetChildVertex);
-            return this.buildTransitiveQuorumSetTreeRecursive(transitiveQuorumSetChildVertex, tree, processedPublicKeys);
-        });
+            this.getChildren(this.getVertex(transVertex.publicKey))
+                .forEach(child => {
+                    let transitiveQuorumSetChildVertex = this.mapToTransitiveQuorumSetTreeVertex(child, transVertex);
+                    tree.addVertex(transitiveQuorumSetChildVertex);
+                    queue.push(transitiveQuorumSetChildVertex);
+                });
+        }
 
         return tree;
     }
