@@ -34,6 +34,7 @@ node.isValidating = false;
 node.organizationId = '123';
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
+node.isp = 'amazon.com Inc.';
 
 let nodeObject:any = {};
 nodeObject.name = "SDF validator 2";
@@ -75,6 +76,7 @@ nodeObject.isValidating = false;
 nodeObject.organizationId = '123';
 nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
+nodeObject.isp = 'amazon.com Inc.'
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);

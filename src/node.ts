@@ -28,6 +28,7 @@ export class Node {
     private _organizationId?:string;
     private _historyUrl?: string;
     private _alias?: string;
+    public isp?: string;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
@@ -287,7 +288,8 @@ export class Node {
             homeDomain: this.homeDomain,
             organizationId: this.organizationId,
             historyUrl: this.historyUrl,
-            alias: this.alias
+            alias: this.alias,
+            isp: this.isp
         };
     };
 
@@ -320,6 +322,7 @@ export class Node {
         newNode.organizationId = nodeObject.organizationId;
         newNode.historyUrl = nodeObject.historyUrl;
         newNode.alias = nodeObject.alias;
+        newNode.isp = nodeObject.isp;
 
         return newNode;
     }
