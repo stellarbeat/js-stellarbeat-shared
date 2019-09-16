@@ -53,7 +53,7 @@ export class NodeGeoData {
         newNodeGeo.latitude = nodeGeoObject.latitude;
         newNodeGeo.longitude = nodeGeoObject.longitude;
         newNodeGeo.metroCode = nodeGeoObject.metroCode;
-        if(newNodeGeo.dateUpdated)
+        if(nodeGeoObject.dateUpdated)
             newNodeGeo.dateUpdated = new Date(nodeGeoObject.dateUpdated);
 
         return newNodeGeo;
