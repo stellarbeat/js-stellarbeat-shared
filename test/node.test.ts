@@ -34,6 +34,7 @@ node.isValidating = false;
 node.organizationId = '123';
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
+node.geoData.dateUpdated = new Date("2018-10-12T09:17:39.000Z");
 node.isp = 'amazon.com Inc.';
 
 let nodeObject:any = {};
@@ -49,6 +50,7 @@ nodeObject.geoData.countryName = "United States";
 nodeObject.geoData.countryCode = "US";
 nodeObject.geoData.latitude = 39.0853;
 nodeObject.geoData.longitude = -77.6452;
+nodeObject.geoData.dateUpdated = "2018-10-12T09:17:39.000Z";
 nodeObject.versionStr = "v10.0.0";
 nodeObject.statistics = {};
 nodeObject.statistics.activeInLastCrawl = true;
@@ -76,7 +78,7 @@ nodeObject.isValidating = false;
 nodeObject.organizationId = '123';
 nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
-nodeObject.isp = 'amazon.com Inc.'
+nodeObject.isp = 'amazon.com Inc.';
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);

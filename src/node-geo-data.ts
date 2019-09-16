@@ -1,93 +1,19 @@
 export class NodeGeoData {
-    _countryCode?:string;
-    _countryName?:string;
-    _regionCode?:string;
-    _regionName?:string;
-    _city?:string;
-    _zipCode?:string;
-    _timeZone?:string;
-    _latitude?:number;
-    _longitude?:number;
-    _metroCode?:string;
+    public countryCode?:string;
+    public countryName?:string;
+    public regionCode?:string;
+    public regionName?:string;
+    public city?:string;
+    public zipCode?:string;
+    public timeZone?:string;
+    public latitude?:number;
+    public longitude?:number;
+    public metroCode?:string;
+    public dateUpdated: Date;
 
-    get countryCode():string {
-        return this._countryCode;
-    }
-
-    set countryCode(value: string) {
-        this._countryCode = value;
-    }
-
-    get countryName():string {
-        return this._countryName;
-    }
-
-    set countryName(value: string) {
-        this._countryName = value;
-    }
-
-    get regionCode():string {
-        return this._regionCode;
-    }
-
-    set regionCode(value: string) {
-        this._regionCode = value;
-    }
-
-    get regionName():string {
-        return this._regionName;
-    }
-
-    set regionName(value: string) {
-        this._regionName = value;
-    }
-
-    get city():string {
-        return this._city;
-    }
-
-    set city(value: string) {
-        this._city = value;
-    }
-
-    get zipCode():string {
-        return this._zipCode;
-    }
-
-    set zipCode(value: string) {
-        this._zipCode = value;
-    }
-
-    get timeZone():string {
-        return this._timeZone;
-    }
-
-    set timeZone(value: string) {
-        this._timeZone = value;
-    }
-
-    get latitude():number {
-        return this._latitude;
-    }
-
-    set latitude(value: number) {
-        this._latitude = value;
-    }
-
-    get longitude():number {
-        return this._longitude;
-    }
-
-    set longitude(value: number) {
-        this._longitude = value;
-    }
-
-    get metroCode():string {
-        return this._metroCode;
-    }
-
-    set metroCode(value: string) {
-        this._metroCode = value;
+    constructor(dateUpdated?: Date) {
+        if(!dateUpdated)
+            this.dateUpdated = new Date();
     }
 
     toJSON():Object {
@@ -102,6 +28,7 @@ export class NodeGeoData {
             latitude: this.latitude,
             longitude: this.longitude,
             metroCode: this.metroCode,
+            dateUpdated: this.dateUpdated
         };
     };
 
@@ -126,6 +53,7 @@ export class NodeGeoData {
         newNodeGeo.latitude = nodeGeoObject.latitude;
         newNodeGeo.longitude = nodeGeoObject.longitude;
         newNodeGeo.metroCode = nodeGeoObject.metroCode;
+        newNodeGeo.dateUpdated = new Date(nodeGeoObject.dateUpdated);
 
         return newNodeGeo;
     }
