@@ -2,6 +2,7 @@ import {QuorumSet} from "./quorum-set";
 import * as _ from "lodash";
 import {Node} from "./node";
 import {QuorumSlicesGenerator} from "./quorum-slices-generator";
+import {PublicKey} from "./network";
 
 let cacheEnabled = true;
 let quorumSlicesGenerator = new QuorumSlicesGenerator(cacheEnabled);
@@ -344,7 +345,7 @@ export default {
         return combinations;
     },
 
-    getCombinationsSuperFastGenerator: function* (publicKeys) {
+    getCombinationsSuperFastGenerator: function* (publicKeys):Generator {
         let max = Math.pow(2,publicKeys.length);
         for(let i = 1; i<max;i++){
             ////console.time("run");
