@@ -79,6 +79,8 @@ nodeObject.organizationId = '123';
 nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
+nodeObject.statistics.validating30DayBuckets = [];
+nodeObject.statistics.validating24HourBuckets = [];
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
