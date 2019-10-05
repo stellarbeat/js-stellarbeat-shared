@@ -1,7 +1,7 @@
 import {Network, Node} from "./../../index";
 import * as semverCompare from "semver-compare";
 import * as findVersions from "find-versions";
-import * as semverDiff from "semver-diff";
+import * as semver from "semver";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
@@ -39,18 +39,27 @@ export class VersionIndex {
         }
 
         let version = findVersions(node.versionStr, {"loose": true})[0]; //get release candidates
+        if(semver.gt(version, this._highestStellarCoreVersion)) { //release candidates higher then current stable
+            return 1;
+        }
 
-        switch (semverDiff(version, this._highestStellarCoreVersion)) {
+        switch (semver.diff(version, this._highestStellarCoreVersion)) {
             case undefined:
+                return 1;
+            case null:
                 return 1;
             case "patch":
                 return 0.8;
+            case "prepatch":
+                return 0.8;
             case "minor":
+                return 0.6;
+            case "preminor":
                 return 0.6;
             case "major":
                 return 0.3;
-            case "build":
-                return 0.8;
+            case "premajor":
+                return 0.3;
             case "prerelease":
                 return 0.8;
         }

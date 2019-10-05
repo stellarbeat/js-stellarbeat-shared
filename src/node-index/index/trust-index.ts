@@ -1,7 +1,4 @@
 import {Network, Node} from "./../../index";
-import * as semverCompare from "semver-compare";
-import * as findVersions from "find-versions";
-import * as semverDiff from "semver-diff";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)

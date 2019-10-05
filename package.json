@@ -22,12 +22,12 @@
     "find-versions": "^3.1.0",
     "latest-semver": "^2.0.0",
     "lodash": "^4.17.13",
-    "semver": "^6.0.0",
+    "semver": "^6.3.0",
     "semver-compare": "^1.0.0",
-    "semver-diff": "^3.0.0",
     "to-semver": "^2.0.0"
   },
   "devDependencies": {
+    "@types/semver": "^6.0.2",
     "@types/jest": "^24.0.18",
     "@types/lodash": "^4.14.136",
     "@types/node": "^10.12.12",
