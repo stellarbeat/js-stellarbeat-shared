@@ -14,7 +14,7 @@
   "author": "pieterjan84@github",
   "license": "MIT",
   "engines": {
-    "node": "11.x"
+    "node": "12.x"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
