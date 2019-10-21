@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Domain classes",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
   "author": "pieterjan84@github",
   "license": "MIT",
   "engines": {
-    "node": "12.x"
+    "node": ">=10.16.3"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
