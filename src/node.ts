@@ -1,6 +1,7 @@
 import {NodeGeoData} from "./node-geo-data";
 import {NodeStatistics} from "./node-statistics";
 import {QuorumSet} from "./quorum-set";
+import {OrganizationId} from "./network";
 
 export class Node {
     protected _ip:string;
@@ -25,10 +26,10 @@ export class Node {
     private _isValidating: boolean = false;
     private _homeDomain?:string;
     private _index: number = 0.0;
-    private _organizationId?:string;
     private _historyUrl?: string;
     private _alias?: string;
     public isp?: string;
+    public organizationId?:OrganizationId;
 
     constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this._ip = ip;
@@ -235,14 +236,6 @@ export class Node {
 
     set isValidating(value: boolean) {
         this._isValidating = value;
-    }
-
-    get organizationId() {
-        return this._organizationId;
-    }
-
-    set organizationId(value) {
-        this._organizationId = value;
     }
 
     get historyUrl() {

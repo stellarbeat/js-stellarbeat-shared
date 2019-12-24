@@ -1,6 +1,9 @@
+import {OrganizationId} from "./network";
+
 type PublicKey = string;
+
 export class Organization {
-    private _id:string;
+    private _id:OrganizationId;
     private _name:string;
     private _dba?: string;
     private _url?: string;
