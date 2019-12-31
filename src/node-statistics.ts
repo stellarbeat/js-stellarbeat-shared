@@ -1,8 +1,3 @@
-export type TimeBucketAverages = {
-    date: Date,
-    percentage: number
-}
-
 export class NodeStatistics {
     public activeInLastCrawl: boolean = false;
     public overLoadedInLastCrawl: boolean = false;
@@ -13,8 +8,6 @@ export class NodeStatistics {
     public active24HoursPercentage: number = 0;
     public overLoaded24HoursPercentage: number = 0;
     public validating24HoursPercentage: number = 0;
-    public validating30DayBuckets: TimeBucketAverages[] = [];
-    public validating24HourBuckets: TimeBucketAverages[] = [];
 
     toJSON():Object {
         return {
@@ -26,9 +19,7 @@ export class NodeStatistics {
             validating30DaysPercentage: this.validating30DaysPercentage,
             active24HoursPercentage: this.active24HoursPercentage,
             overLoaded24HoursPercentage: this.overLoaded24HoursPercentage,
-            validating24HoursPercentage: this.validating24HoursPercentage,
-            validating30DayBuckets: this.validating30DayBuckets,
-            validating24HourBuckets: this.validating24HourBuckets
+            validating24HoursPercentage: this.validating24HoursPercentage
         };
     };
 
@@ -64,11 +55,6 @@ export class NodeStatistics {
             newNodeStatistics.overLoaded24HoursPercentage = nodeStatisticsObject.overLoaded24HoursPercentage;
         if(nodeStatisticsObject.validating24HoursPercentage)
             newNodeStatistics.validating24HoursPercentage = nodeStatisticsObject.validating24HoursPercentage;
-
-        if(nodeStatisticsObject.validating24HourBuckets)
-            newNodeStatistics.validating24HourBuckets = nodeStatisticsObject.validating24HourBuckets;
-        if(nodeStatisticsObject.validating30DayBuckets)
-            newNodeStatistics.validating30DayBuckets = nodeStatisticsObject.validating30DayBuckets;
 
         return newNodeStatistics;
     }
