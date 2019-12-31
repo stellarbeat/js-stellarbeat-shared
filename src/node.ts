@@ -22,7 +22,7 @@ export class Node {
     public dateUpdated: Date;
     public overLoaded: boolean;
     public isFullValidator: boolean = false;
-    protected _isValidator: boolean;
+    protected _isValidator: boolean = false;
     public isValidating: boolean = false;
     public homeDomain?:string;
     public index: number = 0.0;
@@ -31,7 +31,7 @@ export class Node {
     public isp?: string;
     public organizationId?:OrganizationId;
 
-    constructor(ip:string, port:number = 11625, publicKey:string = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
+    constructor(ip:string, port:number = 11625, publicKey:string|undefined = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this.ip = ip;
         this.port = port;
         this.publicKey = publicKey;
@@ -99,7 +99,7 @@ export class Node {
     };
 
     static fromJSON(node:string|Object):Node {
-        let nodeObject;
+        let nodeObject:any;
         if(typeof node === 'string') {
             nodeObject = JSON.parse(node);
         } else
@@ -120,8 +120,10 @@ export class Node {
         newNode.host = nodeObject.host;
         newNode.dateDiscovered = new Date(nodeObject.dateDiscovered);
         newNode.dateUpdated = new Date(nodeObject.dateUpdated);
-        newNode.isFullValidator = nodeObject.isFullValidator;
-        newNode.index = nodeObject.index;
+        if(nodeObject.isFullValidator !== undefined)
+            newNode.isFullValidator = nodeObject.isFullValidator;
+        if(nodeObject.index !== undefined)
+            newNode.index = nodeObject.index;
         newNode.homeDomain = nodeObject.homeDomain;
         newNode.isValidating = nodeObject.isValidating;
         newNode.organizationId = nodeObject.organizationId;
