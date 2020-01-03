@@ -57,7 +57,7 @@ export class Node {
     }
 
     get isValidator(): boolean {
-        if(this._isValidator === undefined)
+        if(!this._isValidator)
             return this.isValidating || this.quorumSet.hasValidators();
 
         return this._isValidator;

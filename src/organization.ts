@@ -217,7 +217,8 @@ export class Organization {
         newOrganization.twitter=organizationObject.twitter;
         newOrganization.github=organizationObject.github;
         newOrganization.officialEmail=organizationObject.officialEmail;
-        newOrganization.validators=organizationObject.validators;
+        if(organizationObject.validators !== undefined)
+            newOrganization.validators=organizationObject.validators;
         newOrganization.subQuorum24HoursAvailability=organizationObject.subQuorum24HoursAvailability;
         newOrganization.subQuorum30DaysAvailability=organizationObject.subQuorum30DaysAvailability;
 
