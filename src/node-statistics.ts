@@ -8,6 +8,7 @@ export class NodeStatistics {
     public active24HoursPercentage: number = 0;
     public overLoaded24HoursPercentage: number = 0;
     public validating24HoursPercentage: number = 0;
+    public has30DayStats: boolean = true; //todo: should be default false after migration
 
     toJSON():Object {
         return {

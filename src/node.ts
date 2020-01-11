@@ -133,4 +133,8 @@ export class Node {
 
         return newNode;
     }
+
+    toString(){
+        return `Node (key: ${this.key}, publicKey: ${this.publicKey})`;
+    }
 }

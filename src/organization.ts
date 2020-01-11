@@ -224,4 +224,8 @@ export class Organization {
 
         return newOrganization;
     }
+
+    toString(){
+        return `Organization (id: ${this.id}, name: ${this.name})`;
+    }
 }
