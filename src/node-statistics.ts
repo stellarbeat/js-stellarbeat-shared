@@ -20,7 +20,8 @@ export class NodeStatistics {
             validating30DaysPercentage: this.validating30DaysPercentage,
             active24HoursPercentage: this.active24HoursPercentage,
             overLoaded24HoursPercentage: this.overLoaded24HoursPercentage,
-            validating24HoursPercentage: this.validating24HoursPercentage
+            validating24HoursPercentage: this.validating24HoursPercentage,
+            has30DayStats: this.has30DayStats
         };
     };
 
@@ -56,6 +57,8 @@ export class NodeStatistics {
             newNodeStatistics.overLoaded24HoursPercentage = nodeStatisticsObject.overLoaded24HoursPercentage;
         if(nodeStatisticsObject.validating24HoursPercentage)
             newNodeStatistics.validating24HoursPercentage = nodeStatisticsObject.validating24HoursPercentage;
+        if(nodeStatisticsObject.has30DayStats)
+            newNodeStatistics.has30DayStats = nodeStatisticsObject.has30DayStats;
 
         return newNodeStatistics;
     }
