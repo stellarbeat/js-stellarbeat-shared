@@ -21,6 +21,8 @@ export class Organization {
     private _subQuorum24HoursAvailability: number = 0;
     private _subQuorum30DaysAvailability: number = 0;
 
+    public dateDiscovered?: Date;
+
     constructor(id:string, name:string) {
         this._id = id;
         this._name = name;
@@ -187,7 +189,8 @@ export class Organization {
             officialEmail: this.officialEmail,
             validators: this.validators,
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
-            subQuorum30DaysAvailability: this.subQuorum30DaysAvailability
+            subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
+            dateDiscovered: this.dateDiscovered
         }
     }
 
@@ -221,7 +224,7 @@ export class Organization {
             newOrganization.validators=organizationObject.validators;
         newOrganization.subQuorum24HoursAvailability=organizationObject.subQuorum24HoursAvailability;
         newOrganization.subQuorum30DaysAvailability=organizationObject.subQuorum30DaysAvailability;
-
+        newOrganization.dateDiscovered = organizationObject.dateDiscovered;
         return newOrganization;
     }
 
