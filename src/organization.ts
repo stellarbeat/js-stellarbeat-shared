@@ -19,6 +19,7 @@ export class Organization {
     public officialEmail?: string;
     public validators: PublicKey[] = [];
     public subQuorumAvailable?: boolean; //todo: add default after migration
+    public has30DayStats?:boolean;//todo: add default after migration
     public subQuorum24HoursAvailability: number = 0;
     public subQuorum30DaysAvailability: number = 0;
 
@@ -57,6 +58,7 @@ export class Organization {
             subQuorumAvailable: this.subQuorumAvailable,
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
             subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
+            has30DayStats: this.has30DayStats,
             dateDiscovered: this.dateDiscovered
         }
     }
@@ -93,6 +95,7 @@ export class Organization {
         newOrganization.subQuorum30DaysAvailability=organizationObject.subQuorum30DaysAvailability;
         newOrganization.dateDiscovered = organizationObject.dateDiscovered;
         newOrganization.subQuorumAvailable = organizationObject.subQuorumAvailable;
+        newOrganization.has30DayStats = organizationObject.has30DayStats;
         return newOrganization;
     }
 
