@@ -38,6 +38,10 @@ export class Organization {
         return Math.floor(this.validators.length - (this.validators.length - 1) / 2); //simple majority
     }
 
+    get isTierOneOrganization(){
+        return this.has30DayStats && this.subQuorum30DaysAvailability >= 99 && this.validators.length >=3;
+    }
+
     public toJSON() :Object {
         return {
             id: this.id,

@@ -55,3 +55,41 @@ describe('subquorum',() => {
         expect(organization.subQuorumFailAt).toEqual(3);
     });
 });
+
+describe('tierOne', () => {
+    test("true", () => {
+        let organization = new Organization('1', 'me');
+        organization.has30DayStats = true;
+        organization.subQuorum30DaysAvailability = 99.5;
+        organization.validators.push(...["1","2","3"]);
+
+        expect(organization.isTierOneOrganization).toBeTruthy();
+    });
+
+    test("not enough validators", () => {
+        let organization = new Organization('1', 'me');
+        organization.has30DayStats = true;
+        organization.subQuorum30DaysAvailability = 99.5;
+        organization.validators.push(...["1","2"]);
+
+        expect(organization.isTierOneOrganization).toBeFalsy();
+    });
+
+    test("not enough measurements", () => {
+        let organization = new Organization('1', 'me');
+        organization.has30DayStats = false;
+        organization.subQuorum30DaysAvailability = 99.5;
+        organization.validators.push(...["1","2", "3"]);
+
+        expect(organization.isTierOneOrganization).toBeFalsy();
+    });
+
+    test("availability too low", () => {
+        let organization = new Organization('1', 'me');
+        organization.has30DayStats = true;
+        organization.subQuorum30DaysAvailability = 98;
+        organization.validators.push(...["1","2", "3"]);
+
+        expect(organization.isTierOneOrganization).toBeFalsy();
+    });
+});
