@@ -21,10 +21,6 @@ node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
 
 let network = new Network([node1, node2, node3, node4]);
 
-test('getLatestCrawlDate', () => {
-    expect(network.latestCrawlDate).toEqual(node2.dateUpdated);
-});
-
 test('getQuorumSetTomlConfig', () => {
     network.getQuorumSetTomlConfig(node1.quorumSet);
     expect(generateTomlString).toBeCalledTimes(1);

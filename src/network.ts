@@ -18,15 +18,14 @@ export class Network {
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
     protected _graphManager: DirectedGraphManager = new DirectedGraphManager();
     protected _graph: DirectedGraph;
-    protected _latestCrawlDate: Date;
+    protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
 
-    constructor(nodes: Array<Node>, organizations: Array<Organization> = []) {
+    constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date()) {
         this._nodes = nodes;
         this._organizations = organizations;
         this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
         this._quorumSetService = new QuorumSetService();
-        this.calculateLatestCrawlDate(); //before we create nodes for unknown validators because they will have higher updated dates @todo: fetch from db
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
@@ -50,20 +49,8 @@ export class Network {
         this.initializeOrganizationsMap();
     }
 
-    calculateLatestCrawlDate(): Date | undefined {
-        if (this.nodes.length === 0) {
-            return undefined;
-        }
-
-        this._latestCrawlDate = this.nodes
-            .map(node => node.dateUpdated)
-            .sort(function (a: Date, b: Date) {
-                return b.valueOf() - a.valueOf();
-            })[0];
-    }
-
-    get latestCrawlDate(): Date {
-        return this._latestCrawlDate;
+    get crawlDate(): Date {
+        return this._crawlDate;
     }
 
     isNodeFailing(node: Node) {
