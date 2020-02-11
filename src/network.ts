@@ -26,6 +26,7 @@ export class Network {
         this._organizations = organizations;
         this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
         this._quorumSetService = new QuorumSetService();
+        this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
