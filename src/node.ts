@@ -49,7 +49,10 @@ export class Node {
             return this.name;
         }
 
-        return this.publicKey;
+        if(this.publicKey)
+            return this.publicKey;
+
+        return '';
     }
 
     get key() {
