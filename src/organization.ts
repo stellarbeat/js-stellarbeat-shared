@@ -39,7 +39,9 @@ export class Organization {
     }
 
     get isTierOneOrganization(){
-        return this.has30DayStats && this.subQuorum30DaysAvailability >= 99 && this.validators.length >=3;
+        if(!this.has30DayStats)
+            return false;
+        return this.subQuorum30DaysAvailability >= 99 && this.validators.length >=3;
     }
 
     public toJSON() :Object {
