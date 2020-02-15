@@ -22,17 +22,12 @@ export class Network {
     constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date()) {
         this._nodes = nodes;
         this._organizations = organizations;
-        this.addOrganizationsToNodes();//convenience, should be handled in factory in the future
         this._nodesMap = this.getPublicKeyToNodeMap(nodes);
+        this.initializeOrganizationsMap();
         this._quorumSetService = new QuorumSetService();
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
-        this.initializeOrganizationsMap();
-    }
-
-    addOrganizationsToNodes(){
-
     }
 
     initializeDirectedGraph(){
