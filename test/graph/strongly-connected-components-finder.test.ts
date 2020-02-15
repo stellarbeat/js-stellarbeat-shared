@@ -50,22 +50,22 @@ node8.quorumSet.threshold = 1;
 node9.quorumSet.threshold = 1;
 node10.quorumSet.threshold = 1;
 
-node1.quorumSet.validators.push(node2.publicKey);
-node1.quorumSet.validators.push(node5.publicKey);
-node2.quorumSet.validators.push(node6.publicKey);
-node3.quorumSet.validators.push(node2.publicKey);
-node3.quorumSet.validators.push(node4.publicKey);
-node3.quorumSet.validators.push(node7.publicKey);
-node4.quorumSet.validators.push(node7.publicKey);
-node5.quorumSet.validators.push(node1.publicKey);
-node5.quorumSet.validators.push(node6.publicKey);
-node6.quorumSet.validators.push(node3.publicKey);
-node6.quorumSet.validators.push(node7.publicKey);
-node7.quorumSet.validators.push(node8.publicKey);
-node8.quorumSet.validators.push(node4.publicKey);
+node1.quorumSet.validators.push(node2.publicKey!);
+node1.quorumSet.validators.push(node5.publicKey!);
+node2.quorumSet.validators.push(node6.publicKey!);
+node3.quorumSet.validators.push(node2.publicKey!);
+node3.quorumSet.validators.push(node4.publicKey!);
+node3.quorumSet.validators.push(node7.publicKey!);
+node4.quorumSet.validators.push(node7.publicKey!);
+node5.quorumSet.validators.push(node1.publicKey!);
+node5.quorumSet.validators.push(node6.publicKey!);
+node6.quorumSet.validators.push(node3.publicKey!);
+node6.quorumSet.validators.push(node7.publicKey!);
+node7.quorumSet.validators.push(node8.publicKey!);
+node8.quorumSet.validators.push(node4.publicKey!);
 
-node9.quorumSet.validators.push(node10.publicKey);
-node10.quorumSet.validators.push(node9.publicKey);
+node9.quorumSet.validators.push(node10.publicKey!);
+node10.quorumSet.validators.push(node9.publicKey!);
 
 let directedGraphManager = new DirectedGraphManager();
 

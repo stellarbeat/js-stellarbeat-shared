@@ -13,7 +13,7 @@ export class AgeIndex {
             return monthDifference/6;
     }
 
-    protected static monthDifference(date1, date2) {
+    protected static monthDifference(date1:Date, date2:Date) {
         let months;
         months = (date2.getFullYear() - date1.getFullYear()) * 12;
         months -= date1.getMonth() + 1;

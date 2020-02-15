@@ -1,9 +1,7 @@
 import {
     QuorumSet,
     Node,
-    QuorumService,
     QuorumSetService,
-    generateTomlString,
     Organization,
     DirectedGraphManager, DirectedGraph
 } from "./index";
@@ -17,19 +15,24 @@ export class Network {
     protected _nodesMap: Map<PublicKey, Node>;
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
     protected _graphManager: DirectedGraphManager = new DirectedGraphManager();
-    protected _graph: DirectedGraph;
+    protected _graph!: DirectedGraph;
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
 
     constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date()) {
         this._nodes = nodes;
         this._organizations = organizations;
-        this._nodesMap = QuorumService.getPublicKeyToNodeMap(nodes);
+        this.addOrganizationsToNodes();//convenience, should be handled in factory in the future
+        this._nodesMap = this.getPublicKeyToNodeMap(nodes);
         this._quorumSetService = new QuorumSetService();
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
+    }
+
+    addOrganizationsToNodes(){
+
     }
 
     initializeDirectedGraph(){
@@ -44,7 +47,7 @@ export class Network {
         if (nodes) {
             this._nodes = nodes;
         }
-        this._nodesMap = QuorumService.getPublicKeyToNodeMap(this._nodes);
+        this._nodesMap = this.getPublicKeyToNodeMap(this._nodes);
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
@@ -55,7 +58,7 @@ export class Network {
     }
 
     isNodeFailing(node: Node) {
-        let vertex = this._graph.getVertex(node.publicKey);
+        let vertex = this._graph.getVertex(node.publicKey!);
         if(!vertex) {
             return true;
         }
@@ -72,7 +75,7 @@ export class Network {
     }
 
     getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
-        return generateTomlString(quorumSet, this._nodesMap);
+        return '';//generateTomlString(quorumSet, this._nodesMap);
     }
 
     createNodesForUnknownValidators() {
@@ -93,7 +96,7 @@ export class Network {
         return this._nodes;
     }
 
-    getNodeByPublicKey(publicKey) {
+    getNodeByPublicKey(publicKey: PublicKey) {
         return this._nodesMap.get(publicKey)
     }
 
@@ -113,12 +116,19 @@ export class Network {
     * Get nodes that have the given node in their quorumSet
      */
     getTrustingNodes(node: Node): Node[] {
-        let vertex = this._graph.getVertex(node.publicKey);
+        let vertex = this._graph.getVertex(node.publicKey!);
         if(!vertex) {
             return [];
         }
 
         return Array.from(this._graph.getParents(vertex))
-            .map(vertex => this.getNodeByPublicKey(vertex.publicKey))
+            .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
+    }
+
+    protected getPublicKeyToNodeMap(nodes:Node[]):Map<string, Node> {
+        return new Map(nodes
+            .filter(node => node.publicKey!)
+            .map(node => [node.publicKey!, node])
+        );
     }
 }

@@ -63,7 +63,8 @@ export class Organization {
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
             subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
             has30DayStats: this.has30DayStats,
-            dateDiscovered: this.dateDiscovered
+            dateDiscovered: this.dateDiscovered,
+            isTierOneOrganization: this.isTierOneOrganization
         }
     }
 
@@ -100,6 +101,7 @@ export class Organization {
         newOrganization.dateDiscovered = organizationObject.dateDiscovered;
         newOrganization.subQuorumAvailable = organizationObject.subQuorumAvailable;
         newOrganization.has30DayStats = organizationObject.has30DayStats;
+
         return newOrganization;
     }
 

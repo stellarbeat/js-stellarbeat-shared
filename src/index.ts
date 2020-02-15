@@ -7,7 +7,6 @@ export {QuorumSetService} from './quorum-set-service';
 export {NodeStatistics} from './node-statistics';
 export {NodeGeoData} from './node-geo-data';
 export {getPublicKeysToNodesMap} from './public-keys-to-nodes-mapper';
-export {generateTomlString} from './quorum-set-toml-generator';
 export {ActiveIndex} from './node-index/index/active-index';
 export {ValidatingIndex} from './node-index/index/validating-index';
 export {TypeIndex} from './node-index/index/type-index';

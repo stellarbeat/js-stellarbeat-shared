@@ -9,7 +9,11 @@ export class NodeGeoData {
     public latitude?:number;
     public longitude?:number;
     public metroCode?:string;
-    public dateUpdated: Date;
+
+    /*
+    @Deprecated
+     */
+    public dateUpdated!: Date;
 
     constructor(dateUpdated?: Date) {
         if(!dateUpdated)

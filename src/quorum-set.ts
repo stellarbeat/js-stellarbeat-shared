@@ -5,7 +5,7 @@ export class QuorumSet {
     public validators: Array<string>;
     public innerQuorumSets: Array<QuorumSet>;
 
-    constructor(hashKey:string = undefined,
+    constructor(hashKey?:string,
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
                 innerQuorumSets: Array<QuorumSet> = []
@@ -48,7 +48,7 @@ export class QuorumSet {
         }
 
         let innerQuorumSets = quorumSetObject.innerQuorumSets.map(
-            innerQuorumSet => this.fromJSON(innerQuorumSet)
+            (innerQuorumSet:QuorumSet) => this.fromJSON(innerQuorumSet)
         );
 
         return new QuorumSet(

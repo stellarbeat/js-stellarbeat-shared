@@ -26,8 +26,8 @@ export class DirectedGraphManager {
             .map(
                 node =>
                     new Vertex(
-                        node.publicKey,
-                        node.displayName,
+                        node.publicKey!,
+                        node.displayName!,
                         node.isValidating && node.active,
                         node.index,
                         this.mapQuorumSet(node.quorumSet)

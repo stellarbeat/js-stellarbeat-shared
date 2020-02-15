@@ -162,12 +162,12 @@ export class DirectedGraph {
         queue.push(root);
 
         while(queue.length > 0) {
-            let transVertex = queue.shift();
+            let transVertex = queue.shift()!;
             if (processedPublicKeys.has(transVertex.publicKey))
                 continue;
             processedPublicKeys.add(transVertex.publicKey);
 
-            this.getChildren(this.getVertex(transVertex.publicKey))
+            this.getChildren(this.getVertex(transVertex.publicKey)!)
                 .forEach(child => {
                     let transitiveQuorumSetChildVertex = this.mapToTransitiveQuorumSetTreeVertex(child, transVertex);
                     tree.addVertex(transitiveQuorumSetChildVertex);

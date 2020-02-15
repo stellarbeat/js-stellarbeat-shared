@@ -2,6 +2,7 @@ import {NodeGeoData} from "./node-geo-data";
 import {NodeStatistics} from "./node-statistics";
 import {QuorumSet} from "./quorum-set";
 import {OrganizationId} from "./network";
+import {Organization} from "./organization";
 
 export class Node {
     public ip:string;
@@ -30,6 +31,7 @@ export class Node {
     public alias?: string;
     public isp?: string;
     public organizationId?:OrganizationId;
+    public organization?: Organization;
 
     constructor(ip:string, port:number = 11625, publicKey:string|undefined = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this.ip = ip;

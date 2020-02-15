@@ -20,7 +20,7 @@ export class VersionIndex {
         let versions = nodes
             .map(node => node.versionStr)
             .filter(version => version!==undefined)
-            .map(versionDirty => findVersions(versionDirty, {"loose": false})[0])
+            .map(versionDirty => findVersions(versionDirty!, {"loose": false})[0])
             .filter(node => node !== undefined);
         //release candidates get filtered out.
 

@@ -8,11 +8,11 @@ export class QuorumSetService {
                 return false;
             }
 
-            if(failingNodes.includes(publicKeysToNodesMap.get(validator))){
+            if(failingNodes.includes(publicKeysToNodesMap.get(validator)!)){
                 return false;
             }
 
-            return publicKeysToNodesMap.get(validator).active;
+            return publicKeysToNodesMap.get(validator)!.active;
         }).length;
 
         quorumSet.innerQuorumSets.forEach(innerQS => {

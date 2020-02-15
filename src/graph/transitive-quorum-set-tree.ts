@@ -11,7 +11,7 @@ export interface TransitiveQuorumSetTreeVertexInterface {
 }
 
 export class TransitiveQuorumSetTreeRoot implements TransitiveQuorumSetTreeVertexInterface {
-    public readonly id;
+    public readonly id:string;
     public readonly publicKey: PublicKey;
     public readonly label: string;
     public readonly isRoot: boolean = false;
@@ -93,7 +93,7 @@ export class TransitiveQuorumSetTree {
         if (!this._children.has(vertex.parent))
             this._children.set(vertex.parent, []);
 
-        this._children.get(vertex.parent).push(vertex);
+        this._children.get(vertex.parent)!.push(vertex);
 
         this._edges.add(new TransitiveQuorumSetTreeEdge(vertex.parent, vertex));
     }
