@@ -50,7 +50,7 @@ export class Node {
         }
 
         if(this.publicKey)
-            return this.publicKey;
+            return this.publicKey.substr(0, 10) + '...' + this.publicKey.substr(50, 100);
 
         return '';
     }

@@ -4,6 +4,7 @@ import {Network, Node, Organization, QuorumSet} from "../src";
 test("quorumSetToToml", ()=>{
     let node = new Node('localhost');
     node.publicKey = 'a';
+    node.name = 'a';
     node.quorumSet.validators.push('b');
     node.quorumSet.validators.push('d');
     let innerQSet = new QuorumSet();
@@ -11,6 +12,7 @@ test("quorumSetToToml", ()=>{
     node.quorumSet.innerQuorumSets.push(innerQSet);
     let nodeB = new Node('otherHost');
     nodeB.publicKey = 'b';
+    nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
     nodeB.organizationId = 'orgHighQuality';
     nodeB.historyUrl = 'myHistory.org';
@@ -21,11 +23,13 @@ test("quorumSetToToml", ()=>{
     let orgLowQuality = new Organization('orgLowQuality', 'orgLowQuality');
     let nodeC = new Node('yetAnotherHost');
     nodeC.publicKey = 'c';
+    nodeC.name = 'c';
     nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
 
     let nodeD = new Node('hostD');
     nodeD.publicKey = 'd';
+    nodeD.name = 'd';
 
     let nodes:Node[] = [node, nodeB, nodeC, nodeD];
     let organizations:Organization[] = [orgHighQuality, orgLowQuality];
@@ -63,6 +67,7 @@ HOME_DOMAIN = "lowQuality.com"
 test("nodesToToml", ()=>{
     let nodeB = new Node('otherHost');
     nodeB.publicKey = 'b';
+    nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
     nodeB.organizationId = 'orgHighQuality';
     nodeB.historyUrl = 'myHistory.org';
@@ -75,6 +80,7 @@ test("nodesToToml", ()=>{
     nodeC.publicKey = 'c';
     nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
+    nodeC.name = 'c'
     let network = new Network([nodeB, nodeC], [orgHighQuality, orgLowQuality]);
     let quorumSetCoreConfiguration = new StellarCoreConfigurationGenerator(network);
    expect(quorumSetCoreConfiguration.nodesToToml([nodeB, nodeC])).toEqual(`[[HOME_DOMAINS]]

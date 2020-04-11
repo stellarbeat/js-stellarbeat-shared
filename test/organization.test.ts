@@ -36,6 +36,7 @@ describe('json', () => {
     organizationObject.id = "1";
     organizationObject.subQuorum24HoursAvailability=30;
     organizationObject.subQuorum30DaysAvailability=40.9;
+    organizationObject.isTierOneOrganization=false;
 
     test('OrgToJson', () => {
         expect(JSON.parse(JSON.stringify(organization))).toEqual(organizationObject);
