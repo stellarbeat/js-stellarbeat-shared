@@ -53,6 +53,9 @@ export class Network {
     }
 
     isNodeFailing(node: Node) {
+        if(!node.isValidator)
+            return !node.active;
+
         let vertex = this._graph.getVertex(node.publicKey!);
         if(!vertex) {
             return true;
