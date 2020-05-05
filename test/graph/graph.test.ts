@@ -61,16 +61,3 @@ test('updateGraphWithFailingVertices', () => {
     expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(false);
     expect(graph.networkTransitiveQuorumSet.size).toEqual(0);
 });
-
-test('transitiveQuorumSetTree', () => {
-    let graph = directedGraphManager.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
-    let vertex = graph.getVertex(nodeD.publicKey!);
-    let tree = graph.getTransitiveQuorumSetTree(vertex!);
-    expect(tree.vertices.length).toEqual(5);
-    expect(tree.root.distance).toEqual(0);
-    expect(tree.getChildren(tree.root)!.length).toEqual(2);
-    expect(tree.getChildren(tree.root)!.map(child => child.distance) ).toEqual([1,1]);
-    expect(tree.getChildren(tree.root)!.map(child => child.isRoot) ).toEqual([false,false]);
-    expect(tree.getChildren(tree.root)!.map(child => child.isValidating) ).toEqual([true,true]);
-    expect(tree.edges.length).toEqual(4);
-});

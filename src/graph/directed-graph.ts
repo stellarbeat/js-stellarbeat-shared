@@ -1,11 +1,6 @@
 import {PublicKey} from "../network";
 import {StronglyConnectedComponent, StronglyConnectedComponentsFinder} from "./strongly-connected-components-finder";
 import {NetworkTransitiveQuorumSetFinder} from "./network-transitive-quorum-set-finder";
-import {
-    TransitiveQuorumSetTree,
-    TransitiveQuorumSetTreeRoot,
-    TransitiveQuorumSetTreeVertex, TransitiveQuorumSetTreeVertexInterface
-} from "./transitive-quorum-set-tree";
 
 export class GraphQuorumSet {
     public threshold: number = 0;
@@ -149,35 +144,6 @@ export class DirectedGraph {
         this.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
     }
 
-    protected mapToTransitiveQuorumSetTreeVertex(vertex: Vertex, parent: TransitiveQuorumSetTreeVertexInterface): TransitiveQuorumSetTreeVertex {
-        return new TransitiveQuorumSetTreeVertex(vertex.publicKey, vertex.label, vertex.isValidating, parent);
-    }
-
-    public getTransitiveQuorumSetTree(vertex: Vertex) {
-        let root = new TransitiveQuorumSetTreeRoot(vertex.publicKey, vertex.label, vertex.isValidating);
-        let tree = new TransitiveQuorumSetTree(root);
-
-        let processedPublicKeys: Set<PublicKey> = new Set();
-        let queue:TransitiveQuorumSetTreeVertexInterface[] = [];
-        queue.push(root);
-
-        while(queue.length > 0) {
-            let transVertex = queue.shift()!;
-            if (processedPublicKeys.has(transVertex.publicKey))
-                continue;
-            processedPublicKeys.add(transVertex.publicKey);
-
-            this.getChildren(this.getVertex(transVertex.publicKey)!)
-                .forEach(child => {
-                    let transitiveQuorumSetChildVertex = this.mapToTransitiveQuorumSetTreeVertex(child, transVertex);
-                    tree.addVertex(transitiveQuorumSetChildVertex);
-                    queue.push(transitiveQuorumSetChildVertex);
-                });
-        }
-
-        return tree;
-    }
-
     public graphQuorumSetCanReachThreshold(
         graphQuorumSet: GraphQuorumSet
     ) {
@@ -299,5 +265,9 @@ export class DirectedGraph {
 
     public get edges() {
         return this._edges;
+    }
+
+    public get stronglyConnectedComponents() {
+        return this._stronglyConnectedComponents;
     }
 }
