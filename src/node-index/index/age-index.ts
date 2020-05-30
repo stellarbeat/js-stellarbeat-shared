@@ -1,12 +1,12 @@
 import {Node} from "../../node";
-import {NodeStatistics} from "../../node-statistics";
 
 /**
- * Index for node availability. Availability is the amount of times the node was active in the latest x crawls.
+ * Age index. The more recent, the lower the value
  */
 export class AgeIndex {
     static get(node:Node):number {
         let monthDifference = AgeIndex.monthDifference(node.dateDiscovered, new Date());
+        console.log(monthDifference);
         if(monthDifference > 6)//older then 6 months
             return 1;
         else
