@@ -6,7 +6,6 @@ import {Node} from "../../node";
 export class AgeIndex {
     static get(node:Node):number {
         let monthDifference = AgeIndex.monthDifference(node.dateDiscovered, new Date());
-        console.log(monthDifference);
         if(monthDifference > 6)//older then 6 months
             return 1;
         else
