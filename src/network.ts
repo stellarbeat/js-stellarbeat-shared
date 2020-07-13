@@ -77,16 +77,20 @@ export class Network {
     }
 
     createNodesForUnknownValidators() {
+        let createValidatorIfUnknown = (validator:PublicKey) => {
+            if (!this._nodesMap.has(validator)) {
+                let missingNode = new Node('unknown');
+                missingNode.publicKey = validator;
+                missingNode.isValidator = true;
+                this.nodes.push(missingNode);
+                this._nodesMap.set(validator, missingNode);
+            }
+        }
+        this._organizations.forEach(organization => {
+           organization.validators.forEach(validator => createValidatorIfUnknown(validator))
+        });
         this._nodes.forEach(node => {
-            QuorumSet.getAllValidators(node.quorumSet).forEach(validator => {
-                if (!this._nodesMap.has(validator)) {
-                    let missingNode = new Node('unknown');
-                    missingNode.publicKey = validator;
-                    missingNode.isValidator = true;
-                    this.nodes.push(missingNode);
-                    this._nodesMap.set(validator, missingNode);
-                }
-            })
+            QuorumSet.getAllValidators(node.quorumSet).forEach(validator => createValidatorIfUnknown(validator))
         });
     }
 
