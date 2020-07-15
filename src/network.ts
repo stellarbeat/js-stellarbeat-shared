@@ -79,8 +79,7 @@ export class Network {
     createNodesForUnknownValidators() {
         let createValidatorIfUnknown = (validator:PublicKey) => {
             if (!this._nodesMap.has(validator)) {
-                let missingNode = new Node('unknown');
-                missingNode.publicKey = validator;
+                let missingNode = new Node('unknown', 11625, validator);
                 missingNode.isValidator = true;
                 this.nodes.push(missingNode);
                 this._nodesMap.set(validator, missingNode);

@@ -6,7 +6,7 @@ import {OrganizationId} from "./network";
 export class Node {
     public ip:string;
     public port:number;
-    public publicKey?:string;
+    public publicKey:string;
     public name?:string;
     public host?:string;
     public ledgerVersion?:string;
@@ -31,7 +31,7 @@ export class Node {
     public isp?: string;
     public organizationId?:OrganizationId;
 
-    constructor(ip:string, port:number = 11625, publicKey:string|undefined = undefined, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
+    constructor(ip:string, port:number = 11625, publicKey:string, active:boolean = false, overLoaded:boolean = false, quorumSet:QuorumSet = new QuorumSet(), geoData = new NodeGeoData(), statistics = new NodeStatistics(), dateDiscovered:Date = new Date(), dateUpdated:Date = new Date() ) {
         this.ip = ip;
         this.port = port;
         this.publicKey = publicKey;

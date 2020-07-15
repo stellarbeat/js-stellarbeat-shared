@@ -25,8 +25,7 @@ test('containsQuorum', function () {
     let innerQuorumSet = new QuorumSet('hash', 2);
     innerQuorumSet.validators.push(...['c', 'd']);
 
-    let nodeA = new Node('localhost');
-    nodeA.publicKey = 'a';
+    let nodeA = new Node('localhost', 11625, "a");
     nodeA.active = true;
     nodeA.isValidating = true;
     nodeA.quorumSet.threshold = 3;
@@ -36,9 +35,8 @@ test('containsQuorum', function () {
     nodeA.quorumSet.validators.push('e');
     nodeA.quorumSet.validators.push('f');
 
-    let nodeB = new Node('localhost');
+    let nodeB = new Node('localhost', 11625, "b");
     nodeB.active = true;
-    nodeB.publicKey = 'b';
     nodeB.isValidating = true;
     nodeB.quorumSet.threshold = 3;
     nodeB.quorumSet.validators.push('a');
@@ -47,9 +45,8 @@ test('containsQuorum', function () {
     nodeB.quorumSet.validators.push('e');
     nodeB.quorumSet.validators.push('f');
 
-    let nodeC = new Node('localhost');
+    let nodeC = new Node('localhost', 11625, "c");
     nodeC.active = true;
-    nodeC.publicKey = 'c';
     nodeC.isValidating = true;
     nodeC.quorumSet.threshold = 3;
     nodeC.quorumSet.validators.push('a');
@@ -58,9 +55,8 @@ test('containsQuorum', function () {
     nodeC.quorumSet.validators.push('e');
     nodeC.quorumSet.validators.push('f');
 
-    let nodeD = new Node('localhost');
+    let nodeD = new Node('localhost', 11625, "d");
     nodeD.active = true;
-    nodeD.publicKey = 'd';
     nodeD.isValidating = true;
     nodeD.quorumSet.threshold = 3;
     nodeD.quorumSet.validators.push('a');
@@ -69,9 +65,8 @@ test('containsQuorum', function () {
     nodeD.quorumSet.validators.push('e');
     nodeD.quorumSet.validators.push('f');
 
-    let nodeE = new Node('localhost');
+    let nodeE = new Node('localhost', 11625, "e");
     nodeE.active = true;
-    nodeE.publicKey = 'e';
     nodeE.isValidating = true;
     nodeE.quorumSet.threshold = 3;
     nodeE.quorumSet.validators.push('a');
@@ -80,9 +75,8 @@ test('containsQuorum', function () {
     nodeE.quorumSet.validators.push('e');
     nodeE.quorumSet.validators.push('f');
 
-    let nodeF = new Node('localhost');
+    let nodeF = new Node('localhost', 11625, "f");
     nodeF.active = true;
-    nodeF.publicKey = 'f';
     nodeF.isValidating = true;
     nodeF.quorumSet.threshold = 3;
     nodeF.quorumSet.validators.push('a');

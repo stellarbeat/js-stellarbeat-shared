@@ -2,14 +2,11 @@ import {QuorumSet, QuorumSetService, Node} from '../src';
 
 let quorumSetService = new QuorumSetService();
 
-let node0 = new Node('localhost');
-node0.publicKey = "0";
+let node0 = new Node('localhost', 11625, "0");
 node0.active = true;
-let node1 = new Node('localhost');
-node1.publicKey = "1";
+let node1 = new Node('localhost', 11625, "1");
 node1.active = true;
-let node2 = new Node('localhost');
-node2.publicKey = "2";
+let node2 = new Node('localhost', 11625, "2");
 node2.active = true;
 
 let map = new Map();

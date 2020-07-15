@@ -2,16 +2,14 @@ import StellarCoreConfigurationGenerator from "../src/stellar-core-configuration
 import {Network, Node, Organization, QuorumSet} from "../src";
 
 test("quorumSetToToml", ()=>{
-    let node = new Node('localhost');
-    node.publicKey = 'a';
+    let node = new Node('localhost', 11625, "a");
     node.name = 'a';
     node.quorumSet.validators.push('b');
     node.quorumSet.validators.push('d');
     let innerQSet = new QuorumSet();
     innerQSet.validators.push('c');
     node.quorumSet.innerQuorumSets.push(innerQSet);
-    let nodeB = new Node('otherHost');
-    nodeB.publicKey = 'b';
+    let nodeB = new Node('otherHost', 11625, "b");
     nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
     nodeB.organizationId = 'orgHighQuality';
@@ -21,14 +19,12 @@ test("quorumSetToToml", ()=>{
     orgHighQuality.subQuorum30DaysAvailability = 100;
     orgHighQuality.validators.push(...['b', 'e', 'f']);
     let orgLowQuality = new Organization('orgLowQuality', 'orgLowQuality');
-    let nodeC = new Node('yetAnotherHost');
-    nodeC.publicKey = 'c';
+    let nodeC = new Node('yetAnotherHost', 11625, "c");
     nodeC.name = 'c';
     nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
 
-    let nodeD = new Node('hostD');
-    nodeD.publicKey = 'd';
+    let nodeD = new Node('hostD', 11625, "d");
     nodeD.name = 'd';
 
     let nodes:Node[] = [node, nodeB, nodeC, nodeD];
@@ -65,8 +61,7 @@ HOME_DOMAIN = "lowQuality.com"
 });
 
 test("nodesToToml", ()=>{
-    let nodeB = new Node('otherHost');
-    nodeB.publicKey = 'b';
+    let nodeB = new Node('otherHost', 11625, "b");
     nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
     nodeB.organizationId = 'orgHighQuality';
@@ -76,8 +71,7 @@ test("nodesToToml", ()=>{
     orgHighQuality.subQuorum30DaysAvailability = 100;
     orgHighQuality.validators.push(...['b', 'e', 'f']);
     let orgLowQuality = new Organization('orgLowQuality', 'orgLowQuality');
-    let nodeC = new Node('yetAnotherHost');
-    nodeC.publicKey = 'c';
+    let nodeC = new Node('yetAnotherHost', 11625, "c");
     nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
     nodeC.name = 'c'

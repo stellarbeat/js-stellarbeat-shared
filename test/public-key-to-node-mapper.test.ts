@@ -2,11 +2,9 @@ import {Node} from '../src'
 import {getPublicKeysToNodesMap} from "../src";
 
 test('mapper', () => {
-    let node1 = new Node('localhost');
-    node1.publicKey = 'a';
+    let node1 = new Node('localhost', 11625, "a");
 
-    let node2 = new Node('localhost');
-    node2.publicKey = 'b';
+    let node2 = new Node('localhost', 11625, "b");
 
     let nodesMap = getPublicKeysToNodesMap([node1, node2]);
 

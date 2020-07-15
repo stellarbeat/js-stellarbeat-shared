@@ -3,32 +3,28 @@ import {QuorumSet, QuorumSlicesGenerator, Node} from '../src';
 
 let quorumSlicesGenerator = new QuorumSlicesGenerator(false);
 
-let node1 = new Node("54.160.111.199");
-node1.publicKey = "1";
+let node1 = new Node("54.160.111.199", 11625, "1");
 let quorumSet1 = new QuorumSet();
 quorumSet1.hashKey = "a";
 quorumSet1.validators = ["3", "2", "1", "4"];
 quorumSet1.threshold = 2;
 node1.quorumSet = quorumSet1;
 
-let node2 = new Node("54.221.140.73");
-node2.publicKey = "2";
+let node2 = new Node("54.221.140.73", 11625, "2");
 let quorumSet2 = new QuorumSet();
 quorumSet2.hashKey = "b";
 quorumSet2.validators = ["3", "2", "1"];
 quorumSet2.threshold = 2;
 node2.quorumSet = quorumSet2;
 
-let node3 = new Node("54.204.238.171");
-node3.publicKey = "3";
+let node3 = new Node("54.204.238.171",11625, "3");
 let quorumSet3 = new QuorumSet();
 quorumSet3.hashKey = "c";
 quorumSet3.validators = ["3", "2", "1"];
 quorumSet3.threshold = 2;
 node3.quorumSet = quorumSet3;
 
-let node4 = new Node("45.55.22.18");
-node4.publicKey = "4";
+let node4 = new Node("45.55.22.18", 11625, "4");
 let quorumSet4 = new QuorumSet();
 quorumSet4.hashKey = "c";
 quorumSet4.validators = ["4", "2", "1", "3"];

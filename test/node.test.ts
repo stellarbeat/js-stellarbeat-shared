@@ -88,7 +88,7 @@ test('JsonToNode', () => {
     expect(Node.fromJSON((JSON.stringify(nodeObject)))).toEqual(node);
 });
 
-let node3 = new Node("localhost");
+let node3 = new Node("localhost", 11625, "a");
 test('testDefaultPort', () => {
     expect(node3.port).toEqual(11625);
 });
