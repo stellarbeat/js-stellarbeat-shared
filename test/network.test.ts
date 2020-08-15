@@ -1,4 +1,4 @@
-import {Node, Network, QuorumSet} from '../src';
+import {Node, Network, QuorumSet, Organization} from '../src';
 
 let node1 = new Node('localhost', 20, 'a');
 node1.active = true;
@@ -17,8 +17,13 @@ let node4 = new Node('localhost', 20, 'd');
 node3.quorumSet.validators.push(node1.publicKey!);
 node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
 
-let network = new Network([node1, node2, node3, node4]);
+let organization = new Organization('id', 'org');
+organization.validators = [node1.publicKey, node2.publicKey, node3.publicKey, node4.publicKey];
+let network:Network;
 
+beforeEach(() => {
+    network = new Network([node1, node2, node3, node4], [organization]);
+} )
 test('getTrustingNodes', () => {
     expect(network.getTrustingNodes(node1)).toEqual([node2, node3, node4]);
 });
@@ -31,6 +36,16 @@ test('isQuorumSetFailing', () => {
 
 test('isNodeFailing', () => {
     expect(network.isNodeFailing(node1)).toBeFalsy();
+    expect(network.isNodeFailing(node2)).toBeFalsy();
     expect(network.isNodeFailing(node3)).toBeTruthy();
+    expect(network.isNodeFailing(node4)).toBeTruthy();
     expect(network.isNodeFailing(new Node('localhost', 11625, 'unknown'))).toBeTruthy();
 });
+
+test ('isOrganizationFailing', () => {
+    expect(network.isOrganizationFailing(organization)).toBeFalsy();
+    node1.isValidating = false;
+    network.updateNetwork();
+    expect(network.isOrganizationFailing(organization)).toBeTruthy();
+
+})

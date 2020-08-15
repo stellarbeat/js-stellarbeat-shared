@@ -64,6 +64,15 @@ export class Network {
         return !vertex.isValidating;
     }
 
+    isOrganizationFailing(organization: Organization) {
+        let nrOfValidatingNodes = organization.validators
+            .map(validator => this.getNodeByPublicKey(validator)!)
+            .filter(validator => validator !== undefined)
+            .filter(node => !this.isNodeFailing(node)).length;
+
+        return nrOfValidatingNodes - organization.subQuorumThreshold < 0;
+    }
+
     isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {//todo should pass graphQuorumSet
         let quorumSet = innerQuorumSet;
         if(quorumSet === undefined) {
