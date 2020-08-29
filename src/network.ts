@@ -5,7 +5,7 @@ import {
     Organization,
     DirectedGraphManager, DirectedGraph
 } from "./index";
-import FbasAnalysisResult from "./fbas-analysis-result";
+import NetworkStatistics from "./network-statistics";
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -19,9 +19,9 @@ export class Network {
     protected _graph!: DirectedGraph;
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
-    protected _fbasAnalysisResult?: FbasAnalysisResult;
+    protected _networkStatistics: NetworkStatistics;
 
-    constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date()) {
+    constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date(), networkStatistics?:NetworkStatistics) {
         this._nodes = nodes;
         this._organizations = organizations;
         this._nodesMap = this.getPublicKeyToNodeMap(nodes);
@@ -30,17 +30,26 @@ export class Network {
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
+        if(networkStatistics)
+            this._networkStatistics = networkStatistics;
+        else {
+            this._networkStatistics = new NetworkStatistics();
+            this.updateNetworkStatistics();
+        }
     }
 
-    get fbasAnalysisResult(){
-        if(!this._fbasAnalysisResult)
-            throw new Error('Fbas Analysis result not populated');
-
-        return this._fbasAnalysisResult;
+    get networkStatistics(){
+        return this._networkStatistics;
     }
+    updateNetworkStatistics(fbasAnalysisResult?:any){
+        this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(node => !node.isValidator && node.active).length;
+        this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
+        this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
+        this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
 
-    set fbasAnalysisResult(fbasAnalysisResult: FbasAnalysisResult){
-        this._fbasAnalysisResult = fbasAnalysisResult;
+        if(fbasAnalysisResult){
+            //todo: integrate fbas analyzer wasm implementation
+        }
     }
 
     initializeDirectedGraph(){
@@ -59,6 +68,7 @@ export class Network {
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
         this.initializeOrganizationsMap();
+        this.updateNetworkStatistics();
     }
 
     get crawlDate(): Date {
@@ -92,10 +102,6 @@ export class Network {
             quorumSet = node.quorumSet;
         }
         return !this._graph.graphQuorumSetCanReachThreshold(this._graphManager.mapQuorumSet(quorumSet));
-    }
-
-    getQuorumSetTomlConfig(quorumSet: QuorumSet): string {
-        return '';//generateTomlString(quorumSet, this._nodesMap);
     }
 
     createNodesForUnknownValidators() {
@@ -148,22 +154,6 @@ export class Network {
             .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
     }
 
-    get nrOfActiveWatchers() {
-        return this.nodes.filter(node => !node.isValidator && node.active).length;
-    }
-
-    get nrOfActiveValidators() {
-        return this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
-    }
-
-    get nrOfActiveFullValidators() {
-       return this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
-    }
-
-    get nrOfActiveOrganizations() {
-        return this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
-    }
-
     protected getPublicKeyToNodeMap(nodes:Node[]):Map<string, Node> {
         return new Map(nodes
             .filter(node => node.publicKey!)
@@ -184,10 +174,9 @@ export class Network {
         let organizations = networkObject.organizations
             .map((organization: any) => Organization.fromJSON(organization));
 
-        let fbasAnalysisResult = FbasAnalysisResult.fromJSON(networkObject.fbasAnalysisResult)
+        let networkStatistics = NetworkStatistics.fromJSON(networkObject.statistics)
 
-        let newNetwork = new Network(nodes, organizations, new Date(networkObject.time));
-        newNetwork.fbasAnalysisResult = fbasAnalysisResult;
+        let newNetwork = new Network(nodes, organizations, new Date(networkObject.time), networkStatistics);
 
         return newNetwork
     }
@@ -201,7 +190,7 @@ export class Network {
                 .map(scp => Array.from(scp)),
             nodes: this.nodes,
             organizations: this.organizations,
-            fbasAnalysisResult: this.fbasAnalysisResult
+            statistics: this.networkStatistics
         }
     }
 }
