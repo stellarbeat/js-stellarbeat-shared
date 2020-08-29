@@ -35,7 +35,7 @@ export default class FbasAnalysisResult {
             fbasResultObject = fbasResult;
 
         let newFbasResult = new FbasAnalysisResult();
-        for (const [key, value] of Object.entries(fbasResultObject)) {
+        for (const [key, value] of Object.entries(FbasAnalysisResult)) {
             //@ts-ignore
             newFbasResult[key] = value;
         }
