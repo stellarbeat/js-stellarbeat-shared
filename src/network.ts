@@ -5,6 +5,7 @@ import {
     Organization,
     DirectedGraphManager, DirectedGraph
 } from "./index";
+import FbasAnalysisResult from "./fbas-analysis-result";
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -18,6 +19,7 @@ export class Network {
     protected _graph!: DirectedGraph;
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
+    protected _fbasAnalysisResult?: FbasAnalysisResult;
 
     constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date()) {
         this._nodes = nodes;
@@ -28,6 +30,17 @@ export class Network {
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
+    }
+
+    get fbasAnalysisResult(){
+        if(!this._fbasAnalysisResult)
+            throw new Error('Fbas Analysis result not populated');
+
+        return this._fbasAnalysisResult;
+    }
+
+    set fbasAnalysisResult(fbasAnalysisResult: FbasAnalysisResult){
+        this._fbasAnalysisResult = fbasAnalysisResult;
     }
 
     initializeDirectedGraph(){
@@ -135,10 +148,60 @@ export class Network {
             .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
     }
 
+    get nrOfActiveWatchers() {
+        return this.nodes.filter(node => !node.isValidator && node.active).length;
+    }
+
+    get nrOfActiveValidators() {
+        return this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
+    }
+
+    get nrOfActiveFullValidators() {
+       return this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
+    }
+
+    get nrOfActiveOrganizations() {
+        return this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
+    }
+
     protected getPublicKeyToNodeMap(nodes:Node[]):Map<string, Node> {
         return new Map(nodes
             .filter(node => node.publicKey!)
             .map(node => [node.publicKey!, node])
         );
+    }
+
+    static fromJSON(network:string|Object):Network {
+        let networkObject: any;
+        if (typeof network === 'string') {
+            networkObject = JSON.parse(network);
+        } else
+            networkObject = network;
+
+        let nodes = networkObject.nodes
+            .map((node: any) => Node.fromJSON(node));
+
+        let organizations = networkObject.organizations
+            .map((organization: any) => Organization.fromJSON(organization));
+
+        let fbasAnalysisResult = FbasAnalysisResult.fromJSON(networkObject.fbasAnalysisResult)
+
+        let newNetwork = new Network(nodes, organizations, new Date(networkObject.time));
+        newNetwork.fbasAnalysisResult = fbasAnalysisResult;
+
+        return newNetwork
+    }
+
+    toJSON():Object {
+        return {
+            time: this._crawlDate,
+            topTier: Array.from(this.graph.networkTransitiveQuorumSet),
+            scp: this.graph.stronglyConnectedComponents
+                .filter(scp => scp.size > 1)
+                .map(scp => Array.from(scp)),
+            nodes: this.nodes,
+            organizations: this.organizations,
+            fbasAnalysisResult: this.fbasAnalysisResult
+        }
     }
 }
