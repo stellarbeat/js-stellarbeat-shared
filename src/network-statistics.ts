@@ -29,7 +29,7 @@ export default class NetworkStatistics {
             networkStatsObject = networkStats;
 
         let newFbasResult = new NetworkStatistics();
-        for (const [key, value] of Object.entries(NetworkStatistics)) {
+        for (const [key, value] of Object.entries(networkStatsObject)) {
             //@ts-ignore
             newFbasResult[key] = value;
         }
