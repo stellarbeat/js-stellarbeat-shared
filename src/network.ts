@@ -46,6 +46,7 @@ export class Network {
         this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
+        this.networkStatistics.transitiveQuorumSetSize = this.graph.networkTransitiveQuorumSet.size;
 
         if(fbasAnalysisResult){
             //todo: integrate fbas analyzer wasm implementation
