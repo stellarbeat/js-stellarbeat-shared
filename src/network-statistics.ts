@@ -1,6 +1,7 @@
 import {PublicKey} from "./network";
 
 export default class NetworkStatistics {
+    time: Date = new Date();
     nrOfActiveWatchers: number = 0;
     nrOfActiveValidators: number = 0; //validators that are validating
     nrOfActiveFullValidators: number = 0;
@@ -28,12 +29,18 @@ export default class NetworkStatistics {
         } else
             networkStatsObject = networkStats;
 
-        let newFbasResult = new NetworkStatistics();
+        let newNetworkStatistics = new NetworkStatistics();
         for (const [key, value] of Object.entries(networkStatsObject)) {
-            //@ts-ignore
-            newFbasResult[key] = value;
+            if(key === 'time'){
+                //@ts-ignore
+                newNetworkStatistics.time = new Date(value);
+            }
+            else {
+                //@ts-ignore
+                newNetworkStatistics[key] = value;
+            }
         }
 
-        return newFbasResult;
+        return newNetworkStatistics;
     }
 }
