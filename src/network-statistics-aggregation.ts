@@ -46,7 +46,7 @@ export default class NetworkStatisticsAggregation {
     minSplittingSetOrgsFilteredMin: number = 0;
     minSplittingSetOrgsFilteredMax: number = 0;
     minSplittingSetOrgsFilteredSum: number = 0;
-    crawlCount:number = 0;
+    crawlCount: number = 0;
 
     get nrOfActiveWatchersAverage() {
         return +((this.nrOfActiveWatchersSum / this.crawlCount).toFixed(2));
@@ -77,55 +77,61 @@ export default class NetworkStatisticsAggregation {
     }
 
     get topTierAverage() {
-        return  +((this.topTierSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.topTierSum);
     }
 
     get topTierFilteredAverage() {
-        return  +((this.topTierFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.topTierFilteredSum);
     }
 
     get topTierOrgsAverage() {
-        return  +((this.topTierOrgsSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.topTierOrgsSum);
     }
 
     get topTierOrgsFilteredAverage() {
-        return  +((this.topTierOrgsFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.topTierOrgsFilteredSum);
     }
 
     get minBlockingSetAverage() {
-        return  +((this.minBlockingSetSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minBlockingSetSum);
     }
 
     get minBlockingSetFilteredAverage() {
-        return  +((this.minBlockingSetFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minBlockingSetFilteredSum);
     }
 
     get minBlockingSetOrgsAverage() {
-        return  +((this.minBlockingSetSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minBlockingSetSum);
     }
 
     get minBlockingSetOrgsFilteredAverage() {
-        return  +((this.minBlockingSetOrgsFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minBlockingSetOrgsFilteredSum);
     }
 
     get minSplittingSetAverage() {
-        return  +((this.minSplittingSetSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minSplittingSetSum);
     }
 
     get minSplittingSetFilteredAverage() {
-        return  +((this.minSplittingSetFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minSplittingSetFilteredSum);
     }
 
     get minSplittingSetOrgsAverage() {
-        return  +((this.minSplittingSetSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minSplittingSetSum);
     }
 
     get minSplittingSetOrgsFilteredAverage() {
-        return  +((this.minSplittingSetOrgsFilteredSum / this.crawlCount)).toFixed(2);
+        return this.getAverage(this.minSplittingSetOrgsFilteredSum);
     }
-    
 
-    static fromJSON(networkStats:string|Object):NetworkStatisticsAggregation {
+    protected getAverage(value: number) {
+        if (this.crawlCount === 0)
+            return 0;
+
+        return +((value / this.crawlCount)).toFixed(2);
+    }
+
+    static fromJSON(networkStats: string | Object): NetworkStatisticsAggregation {
         let networkStatsObject: any;
         if (typeof networkStats === 'string') {
             networkStatsObject = JSON.parse(networkStats);
