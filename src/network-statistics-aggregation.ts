@@ -101,7 +101,7 @@ export default class NetworkStatisticsAggregation {
     }
 
     get minBlockingSetOrgsAverage() {
-        return this.getAverage(this.minBlockingSetSum);
+        return this.getAverage(this.minBlockingSetOrgsSum);
     }
 
     get minBlockingSetOrgsFilteredAverage() {
@@ -117,7 +117,7 @@ export default class NetworkStatisticsAggregation {
     }
 
     get minSplittingSetOrgsAverage() {
-        return this.getAverage(this.minSplittingSetSum);
+        return this.getAverage(this.minSplittingSetOrgsSum);
     }
 
     get minSplittingSetOrgsFilteredAverage() {
