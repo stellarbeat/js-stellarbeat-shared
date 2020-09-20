@@ -9,7 +9,6 @@ export default class NetworkStatisticsAggregation {
     nrOfActiveOrganizationsSum: number = 0;
     transitiveQuorumSetSizeSum: number = 0;
     hasQuorumIntersectionCount: number = 0;
-    hasQuorumIntersectionFilteredCount: number = 0;
     topTierMin: number = 0;
     topTierMax: number = 0;
     topTierSum: number = 0;
@@ -40,12 +39,6 @@ export default class NetworkStatisticsAggregation {
     minSplittingSetOrgsMin: number = 0;
     minSplittingSetOrgsMax: number = 0;
     minSplittingSetOrgsSum: number = 0;
-    minSplittingSetFilteredMin: number = 0;
-    minSplittingSetFilteredMax: number = 0;
-    minSplittingSetFilteredSum: number = 0;
-    minSplittingSetOrgsFilteredMin: number = 0;
-    minSplittingSetOrgsFilteredMax: number = 0;
-    minSplittingSetOrgsFilteredSum: number = 0;
     crawlCount: number = 0;
 
     get nrOfActiveWatchersAverage() {
@@ -70,10 +63,6 @@ export default class NetworkStatisticsAggregation {
 
     get hasQuorumIntersectionCountAverage() {
         return +((this.hasQuorumIntersectionCount / this.crawlCount).toFixed(2));
-    }
-
-    get hasQuorumIntersectionFilteredCountAverage() {
-        return +((this.hasQuorumIntersectionFilteredCount / this.crawlCount).toFixed(2));
     }
 
     get topTierAverage() {
@@ -112,16 +101,8 @@ export default class NetworkStatisticsAggregation {
         return this.getAverage(this.minSplittingSetSum);
     }
 
-    get minSplittingSetFilteredAverage() {
-        return this.getAverage(this.minSplittingSetFilteredSum);
-    }
-
     get minSplittingSetOrgsAverage() {
         return this.getAverage(this.minSplittingSetOrgsSum);
-    }
-
-    get minSplittingSetOrgsFilteredAverage() {
-        return this.getAverage(this.minSplittingSetOrgsFilteredSum);
     }
 
     protected getAverage(value: number) {

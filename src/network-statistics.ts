@@ -8,15 +8,12 @@ export default class NetworkStatistics {
     nrOfActiveOrganizations: number = 0;
     transitiveQuorumSetSize: number = 0;
     hasQuorumIntersection?: boolean;
-    hasQuorumIntersectionFiltered?:boolean;
     minBlockingSetSize?: number;
     minBlockingSetFilteredSize:number = 0;
     minBlockingSetOrgsSize?: number;
     minBlockingSetOrgsFilteredSize?: number;
     minSplittingSetSize?: number;
-    minSplittingSetFilteredSize?: number;
     minSplittingSetOrgsSize?: number;
-    minSplittingSetOrgsFilteredSize?: number;
     topTierSize?: number;
     topTierFilteredSize?: number;
     topTierOrgsSize?: number;
