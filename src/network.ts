@@ -185,7 +185,7 @@ export class Network {
     toJSON():Object {
         return {
             time: this._crawlDate,
-            topTier: Array.from(this.graph.networkTransitiveQuorumSet),
+            transitiveQuorumSet: Array.from(this.graph.networkTransitiveQuorumSet),
             scp: this.graph.stronglyConnectedComponents
                 .filter(scp => scp.size > 1)
                 .map(scp => Array.from(scp)),
