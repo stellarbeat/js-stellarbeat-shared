@@ -186,7 +186,7 @@ export class Network {
         return {
             time: this._crawlDate,
             transitiveQuorumSet: Array.from(this.graph.networkTransitiveQuorumSet),
-            scp: this.graph.stronglyConnectedComponents
+            scc: this.graph.stronglyConnectedComponents
                 .filter(scp => scp.size > 1)
                 .map(scp => Array.from(scp)),
             nodes: this.nodes,
