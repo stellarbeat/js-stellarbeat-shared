@@ -9,6 +9,7 @@ export default class NetworkStatisticsAggregation {
     nrOfActiveOrganizationsSum: number = 0;
     transitiveQuorumSetSizeSum: number = 0;
     hasQuorumIntersectionCount: number = 0;
+    hasTransitiveQuorumSetCount: number = 0;
     topTierMin: number = 0;
     topTierMax: number = 0;
     topTierSum: number = 0;
@@ -61,7 +62,11 @@ export default class NetworkStatisticsAggregation {
         return +((this.transitiveQuorumSetSizeSum / this.crawlCount).toFixed(2));
     }
 
-    get hasQuorumIntersectionCountAverage() {
+    get hasTransitiveQuorumSetAverage() {
+        return +((this.hasTransitiveQuorumSetCount / this.crawlCount).toFixed(2));
+    }
+
+    get hasQuorumIntersectionAverage() {
         return +((this.hasQuorumIntersectionCount / this.crawlCount).toFixed(2));
     }
 

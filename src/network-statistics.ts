@@ -7,6 +7,7 @@ export default class NetworkStatistics {
     nrOfActiveFullValidators: number = 0;
     nrOfActiveOrganizations: number = 0;
     transitiveQuorumSetSize: number = 0;
+    hasTransitiveQuorumSet: boolean = false;
     hasQuorumIntersection?: boolean;
     minBlockingSetSize?: number;
     minBlockingSetFilteredSize:number = 0;
