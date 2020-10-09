@@ -27,8 +27,8 @@ export class NodeSnapShot {
             snapShotObject = nodeSnapShot;
 
         return new NodeSnapShot(
-            snapShotObject.startDate,
-            snapShotObject.endDate,
+            new Date(snapShotObject.startDate),
+            new Date(snapShotObject.endDate),
             Node.fromJSON(snapShotObject.node)
         );
     }
