@@ -160,6 +160,31 @@ export class Network {
             .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
     }
 
+    getTrustedOrganizations(quorumSet:QuorumSet):Organization[] {
+        let trustedOrganizations:Organization[] = [];
+        quorumSet.innerQuorumSets.forEach(innerQSet => {
+            if (quorumSet.validators.length === 0) {
+                return;
+            }
+            let organizationId = this.getNodeByPublicKey(quorumSet.validators[0])!.organizationId;
+            if ( organizationId === undefined || this.getOrganizationById(organizationId) === undefined) {
+                return;
+            }
+
+            if(!quorumSet.validators
+                .map(validator => this.getNodeByPublicKey(validator)!)
+                .every((validator, index, validators) => validator.organizationId === validators[0].organizationId)
+            ){
+                return;
+            }
+
+            trustedOrganizations.push(this.getOrganizationById(organizationId)!);
+            trustedOrganizations.push(...this.getTrustedOrganizations(innerQSet));
+        })
+
+        return trustedOrganizations;
+    }
+
     protected getPublicKeyToNodeMap(nodes: Node[]): Map<string, Node> {
         return new Map(nodes
             .filter(node => node.publicKey!)
