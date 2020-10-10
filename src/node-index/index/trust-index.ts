@@ -16,6 +16,7 @@ export class TrustIndex {
 
     get(node: Node): number {
         let vertex = this._graph.getVertex(node.publicKey!);
+
         if(!vertex)
             return 0;
 
@@ -25,7 +26,7 @@ export class TrustIndex {
             )
             /
             (
-                this._graph.vertices.size - 1
+                Array.from(this._graph.vertices.values()).filter(vertex => this._graph.getOutDegree(vertex) > 0).length - 1
             );//exclude the node itself
     }
 }
