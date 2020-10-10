@@ -19,7 +19,7 @@ export class TrustIndex {
             /
             (
                 this._network.nodes
-                    .filter(networkNode => networkNode.active && networkNode.isValidator).length -1
+                    .filter(networkNode => networkNode.active && networkNode.isValidator && networkNode.quorumSet.hasValidators()).length -1
             );//exclude the node itself
     }
 }

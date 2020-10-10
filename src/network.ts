@@ -21,7 +21,7 @@ export class Network {
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
 
-    constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date(), networkStatistics?:NetworkStatistics) {
+    constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date(), networkStatistics?: NetworkStatistics) {
         this._nodes = nodes;
         this._organizations = organizations;
         this._nodesMap = this.getPublicKeyToNodeMap(nodes);
@@ -30,7 +30,7 @@ export class Network {
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
         this.initializeDirectedGraph();
-        if(networkStatistics)
+        if (networkStatistics)
             this._networkStatistics = networkStatistics;
         else {
             this._networkStatistics = new NetworkStatistics();
@@ -38,10 +38,11 @@ export class Network {
         }
     }
 
-    get networkStatistics(){
+    get networkStatistics() {
         return this._networkStatistics;
     }
-    updateNetworkStatistics(fbasAnalysisResult?:any){
+
+    updateNetworkStatistics(fbasAnalysisResult?: any) {
         this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(node => !node.isValidator && node.active).length;
         this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
@@ -49,12 +50,12 @@ export class Network {
         this.networkStatistics.transitiveQuorumSetSize = this.graph.networkTransitiveQuorumSet.size;
         this.networkStatistics.hasTransitiveQuorumSet = this.graph.hasNetworkTransitiveQuorumSet();
 
-        if(fbasAnalysisResult){
+        if (fbasAnalysisResult) {
             //todo: integrate fbas analyzer wasm implementation
         }
     }
 
-    initializeDirectedGraph(){
+    initializeDirectedGraph() {
         this._graph = this._graphManager.buildGraphFromNodes(this._nodes);
     }
 
@@ -78,11 +79,11 @@ export class Network {
     }
 
     isNodeFailing(node: Node) {
-        if(!node.isValidator)
+        if (!node.isValidator)
             return !node.active;
 
         let vertex = this._graph.getVertex(node.publicKey!);
-        if(!vertex) {
+        if (!vertex) {
             return true;
         }
 
@@ -98,25 +99,28 @@ export class Network {
         return nrOfValidatingNodes - organization.subQuorumThreshold < 0;
     }
 
-    isQuorumSetFailing(node: Node, innerQuorumSet?:QuorumSet) {//todo should pass graphQuorumSet
+    isQuorumSetFailing(node: Node, innerQuorumSet?: QuorumSet) {//todo should pass graphQuorumSet
         let quorumSet = innerQuorumSet;
-        if(quorumSet === undefined) {
+        if (quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
         return !this._graph.graphQuorumSetCanReachThreshold(this._graphManager.mapQuorumSet(quorumSet));
     }
 
     createNodesForUnknownValidators() {
-        let createValidatorIfUnknown = (validator:PublicKey) => {
+        let createValidatorIfUnknown = (validator: PublicKey) => {
             if (!this._nodesMap.has(validator)) {
                 let missingNode = new Node('unknown', 11625, validator);
                 missingNode.isValidator = true;
                 this.nodes.push(missingNode);
                 this._nodesMap.set(validator, missingNode);
+            } else {
+                let validatorObject = this._nodesMap.get(validator)!;
+                validatorObject.isValidator = true; //it could be a node is trusted by other nodes, or defined in a toml file of the org as a validator, but we have not yet picked up any quorumsets
             }
         }
         this._organizations.forEach(organization => {
-           organization.validators.forEach(validator => createValidatorIfUnknown(validator))
+            organization.validators.forEach(validator => createValidatorIfUnknown(validator))
         });
         this._nodes.forEach(node => {
             QuorumSet.getAllValidators(node.quorumSet).forEach(validator => createValidatorIfUnknown(validator))
@@ -135,11 +139,11 @@ export class Network {
         return this._organizations;
     }
 
-    getOrganizationById(id:OrganizationId) {
+    getOrganizationById(id: OrganizationId) {
         return this._organizationsMap.get(id);
     }
 
-    get graph(){
+    get graph() {
         return this._graph;
     }
 
@@ -148,7 +152,7 @@ export class Network {
      */
     getTrustingNodes(node: Node): Node[] {
         let vertex = this._graph.getVertex(node.publicKey!);
-        if(!vertex) {
+        if (!vertex) {
             return [];
         }
 
@@ -156,14 +160,14 @@ export class Network {
             .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
     }
 
-    protected getPublicKeyToNodeMap(nodes:Node[]):Map<string, Node> {
+    protected getPublicKeyToNodeMap(nodes: Node[]): Map<string, Node> {
         return new Map(nodes
             .filter(node => node.publicKey!)
             .map(node => [node.publicKey!, node])
         );
     }
 
-    static fromJSON(network:string|Object):Network {
+    static fromJSON(network: string | Object): Network {
         let networkObject: any;
         if (typeof network === 'string') {
             networkObject = JSON.parse(network);
@@ -183,7 +187,7 @@ export class Network {
         return newNetwork
     }
 
-    toJSON():Object {
+    toJSON(): Object {
         return {
             time: this._crawlDate,
             transitiveQuorumSet: Array.from(this.graph.networkTransitiveQuorumSet),
