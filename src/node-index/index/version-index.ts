@@ -1,4 +1,4 @@
-import {Network, Node} from "./../../index";
+import {Node} from "./../../index";
 import * as semverCompare from "semver-compare";
 import * as findVersions from "find-versions";
 import * as semver from "semver";
@@ -8,12 +8,12 @@ import * as semver from "semver";
  */
 export class VersionIndex {
 
-    _network: Network;
+    _nodes: Node[];
     _highestStellarCoreVersion: string;
 
-    constructor(network: Network) {
-        this._network = network;
-        this._highestStellarCoreVersion = this.getHighestStellarCoreVersion(this._network.nodes);
+    constructor(nodes: Node[]) {
+        this._nodes = nodes;
+        this._highestStellarCoreVersion = this.getHighestStellarCoreVersion(nodes);
     }
 
     getHighestStellarCoreVersion(nodes:Node[]) {

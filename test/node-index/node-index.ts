@@ -20,7 +20,7 @@ node5.versionStr = "stellar-core 2.0.0";
 let node6 = new Node('localhost', 20, 'c');
 node6.versionStr = "v2.0.0";
 
-let network = new Network([node1, node2, node3, node4, node5, node6]);
+let nodes =[node1, node2, node3, node4, node5, node6];
 
 test('getNodeIndex', () => {
     (ActiveIndex.get as any).mockImplementation(() => 1);
@@ -40,6 +40,6 @@ test('getNodeIndex', () => {
         };
     });
 
-    let nodeIndex = new NodeIndex(network);
+    let nodeIndex = new NodeIndex(nodes);
     expect(nodeIndex.getIndex(node1)).toEqual(0.6);
 });

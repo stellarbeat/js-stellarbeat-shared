@@ -1,25 +1,31 @@
-import {Network, Node} from "./../../index";
+import {DirectedGraph, DirectedGraphManager, Network, Node} from "./../../index";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
  */
 export class TrustIndex {
 
-    _network: Network;
+    protected _graph!: DirectedGraph;
+    protected _nodes:Node[];
 
-    constructor(network: Network) {
-        this._network = network;
+    constructor(nodes: Node[]) {
+        this._nodes = nodes;
+        let manager = new DirectedGraphManager();
+        this._graph = manager.buildGraphFromNodes(nodes);
     }
 
     get(node: Node): number {
+        let vertex = this._graph.getVertex(node.publicKey!);
+        if(!vertex)
+            return 0;
+
         return (
-            this._network.getTrustingNodes(node)
-                .filter((trustingNode) => trustingNode.active && trustingNode !== node).length
+                Array.from(this._graph.getParents(vertex))
+                .filter((trustingVertex) => trustingVertex.publicKey !== vertex!.publicKey).length
             )
             /
             (
-                this._network.nodes
-                    .filter(networkNode => networkNode.active && networkNode.isValidator && networkNode.quorumSet.hasValidators()).length -1
+                this._graph.vertices.size - 1
             );//exclude the node itself
     }
 }

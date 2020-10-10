@@ -13,12 +13,12 @@ node5.versionStr = "v11.0.0rc1";
 let node6 = new Node('localhost', 20, 'f');
 node6.versionStr = "v9.3.0-44-g80ce920";
 
-let network = new Network([node1, node2, node3, node4, node5, node6]);
+let nodes =[node1, node2, node3, node4, node5, node6];
 
-let versionIndex = new VersionIndex(network);
+let versionIndex = new VersionIndex(nodes);
 
 test('getHighestStellarCoreVersion', () => {
-    expect(versionIndex.getHighestStellarCoreVersion(network.nodes)).toEqual("10.9.0");
+    expect(versionIndex.getHighestStellarCoreVersion(nodes)).toEqual("10.9.0");
 });
 
 test('get', () => {
