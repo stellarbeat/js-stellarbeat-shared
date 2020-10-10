@@ -163,15 +163,15 @@ export class Network {
     getTrustedOrganizations(quorumSet:QuorumSet):Organization[] {
         let trustedOrganizations:Organization[] = [];
         quorumSet.innerQuorumSets.forEach(innerQSet => {
-            if (quorumSet.validators.length === 0) {
+            if (innerQSet.validators.length === 0) {
                 return;
             }
-            let organizationId = this.getNodeByPublicKey(quorumSet.validators[0])!.organizationId;
+            let organizationId = this.getNodeByPublicKey(innerQSet.validators[0])!.organizationId;
             if ( organizationId === undefined || this.getOrganizationById(organizationId) === undefined) {
                 return;
             }
 
-            if(!quorumSet.validators
+            if(!innerQSet.validators
                 .map(validator => this.getNodeByPublicKey(validator)!)
                 .every((validator, index, validators) => validator.organizationId === validators[0].organizationId)
             ){
