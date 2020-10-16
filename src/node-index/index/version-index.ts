@@ -39,6 +39,11 @@ export class VersionIndex {
         }
 
         let version = findVersions(node.versionStr, {"loose": true})[0]; //get release candidates
+
+        if(version === undefined) {
+            return 0;
+        }
+
         if(semver.gt(version, this._highestStellarCoreVersion)) { //release candidates higher then current stable
             return 1;
         }

@@ -1,6 +1,7 @@
 import {TypeIndex, ActiveIndex, Node, VersionIndex, TrustIndex, AgeIndex} from "./../index";
 import {ValidatingIndex} from "./index/validating-index";
 
+//todo: extract to separate package (version detection packages don't need to be included in frontend
 export class NodeIndex {
 
     _nodes: Node[];

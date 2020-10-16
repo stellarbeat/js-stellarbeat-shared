@@ -12,8 +12,10 @@ let node5 = new Node('localhost', 20, 'e');
 node5.versionStr = "v11.0.0rc1";
 let node6 = new Node('localhost', 20, 'f');
 node6.versionStr = "v9.3.0-44-g80ce920";
+let node7 = new Node('localhost', 20, 'g');
+node7.versionStr = "796f08a5-dirty"; //invalid version
 
-let nodes =[node1, node2, node3, node4, node5, node6];
+let nodes =[node1, node2, node3, node4, node5, node6, node7];
 
 let versionIndex = new VersionIndex(nodes);
 
@@ -28,6 +30,6 @@ test('get', () => {
     expect(versionIndex.get(node4)).toEqual(0.6);
     expect(versionIndex.get(node5)).toEqual(1); //todo what about release candidates?
     expect(versionIndex.get(node6)).toEqual(0.3); //todo what about release candidates?
-
+    expect(versionIndex.get(node7)).toEqual(0);
 
 });
