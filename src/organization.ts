@@ -18,8 +18,9 @@ export class Organization {
     public github?: string;
     public officialEmail?: string;
     public validators: PublicKey[] = [];
-    public subQuorumAvailable?: boolean; //todo: add default after migration
-    public has30DayStats?:boolean;//todo: add default after migration
+    public subQuorumAvailable: boolean = false;
+    public has30DayStats:boolean = false;
+    public has24HourStats: boolean = false;
     public subQuorum24HoursAvailability: number = 0;
     public subQuorum30DaysAvailability: number = 0;
 
@@ -65,6 +66,7 @@ export class Organization {
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
             subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
             has30DayStats: this.has30DayStats,
+            has24HourStats: this.has24HourStats,
             dateDiscovered: this.dateDiscovered,
             isTierOneOrganization: this.isTierOneOrganization
         }
@@ -103,6 +105,7 @@ export class Organization {
         newOrganization.dateDiscovered = organizationObject.dateDiscovered;
         newOrganization.subQuorumAvailable = organizationObject.subQuorumAvailable;
         newOrganization.has30DayStats = organizationObject.has30DayStats;
+        newOrganization.has24HourStats = organizationObject.has24HourStats;
 
         return newOrganization;
     }
