@@ -8,8 +8,8 @@ export class NodeStatistics {
     public active24HoursPercentage: number = 0;
     public overLoaded24HoursPercentage: number = 0;
     public validating24HoursPercentage: number = 0;
-    public has30DayStats: boolean = true; //todo: should be default false after migration
-    public has24HourStats: boolean = true; //todo: should be default false after migration
+    public has30DayStats: boolean = false;
+    public has24HourStats: boolean = false;
 
 
     toJSON():Object {
@@ -23,6 +23,7 @@ export class NodeStatistics {
             active24HoursPercentage: this.active24HoursPercentage,
             overLoaded24HoursPercentage: this.overLoaded24HoursPercentage,
             validating24HoursPercentage: this.validating24HoursPercentage,
+            has24HourStats: this.has24HourStats,
             has30DayStats: this.has30DayStats
         };
     };

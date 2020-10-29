@@ -36,6 +36,8 @@ node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
 node.geoData.dateUpdated = new Date("2018-10-12T09:17:39.000Z");
 node.isp = 'amazon.com Inc.';
+node.statistics.has30DayStats = true;
+node.statistics.has24HourStats = true;
 
 let nodeObject:any = {};
 nodeObject.name = "SDF validator 2";
@@ -80,6 +82,7 @@ nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
 nodeObject.statistics.has30DayStats = true;
+nodeObject.statistics.has24HourStats = true;
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
