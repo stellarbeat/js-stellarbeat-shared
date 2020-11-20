@@ -3,7 +3,7 @@ import {
     Node,
     QuorumSetService,
     Organization,
-    DirectedGraphManager, DirectedGraph
+    TrustGraphBuilder, TrustGraph
 } from "./index";
 import NetworkStatistics from "./network-statistics";
 
@@ -15,8 +15,8 @@ export class Network {
     protected _organizations: Array<Organization>;
     protected _nodesMap: Map<PublicKey, Node>;
     protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
-    protected _graphManager: DirectedGraphManager = new DirectedGraphManager();
-    protected _graph!: DirectedGraph;
+    protected _trustGraphBuilder: TrustGraphBuilder = new TrustGraphBuilder();
+    protected _nodesTrustGraph!: TrustGraph;
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
@@ -29,7 +29,7 @@ export class Network {
         this._quorumSetService = new QuorumSetService();
         this._crawlDate = crawlDate;
         this.createNodesForUnknownValidators();
-        this.initializeDirectedGraph();
+        this.initializeNodesTrustGraph();
         if (networkStatistics)
             this._networkStatistics = networkStatistics;
         else {
@@ -47,16 +47,16 @@ export class Network {
         this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
-        this.networkStatistics.transitiveQuorumSetSize = this.graph.networkTransitiveQuorumSet.size;
-        this.networkStatistics.hasTransitiveQuorumSet = this.graph.hasNetworkTransitiveQuorumSet();
+        this.networkStatistics.transitiveQuorumSetSize = this.nodesTrustGraph.networkTransitiveQuorumSet.size;
+        this.networkStatistics.hasTransitiveQuorumSet = this.nodesTrustGraph.hasNetworkTransitiveQuorumSet();
 
         if (fbasAnalysisResult) {
             //todo: integrate fbas analyzer wasm implementation
         }
     }
 
-    initializeDirectedGraph() {
-        this._graph = this._graphManager.buildGraphFromNodes(this._nodes);
+    initializeNodesTrustGraph() {
+        this._nodesTrustGraph = this._trustGraphBuilder.buildGraphFromNodes(this.nodes, false);
     }
 
     initializeOrganizationsMap() {
@@ -69,7 +69,7 @@ export class Network {
         }
         this._nodesMap = this.getPublicKeyToNodeMap(this._nodes);
         this.createNodesForUnknownValidators();
-        this.initializeDirectedGraph();
+        this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
         this.updateNetworkStatistics();
     }
@@ -82,12 +82,12 @@ export class Network {
         if (!node.isValidator)
             return !node.active;
 
-        let vertex = this._graph.getVertex(node.publicKey!);
+        let vertex = this._nodesTrustGraph.getVertex(node.publicKey!);
         if (!vertex) {
             return true;
         }
 
-        return !vertex.isValidating;
+        return !vertex.available;
     }
 
     isOrganizationFailing(organization: Organization) {
@@ -104,7 +104,8 @@ export class Network {
         if (quorumSet === undefined) {
             quorumSet = node.quorumSet;
         }
-        return !this._graph.graphQuorumSetCanReachThreshold(this._graphManager.mapQuorumSet(quorumSet));
+
+        return !QuorumSetService.quorumSetCanReachThreshold(quorumSet, this._nodesTrustGraph);
     }
 
     createNodesForUnknownValidators() {
@@ -143,21 +144,21 @@ export class Network {
         return this._organizationsMap.get(id);
     }
 
-    get graph() {
-        return this._graph;
+    get nodesTrustGraph() {
+        return this._nodesTrustGraph;
     }
 
     /*
     * Get nodes that have the given node in their quorumSet
      */
     getTrustingNodes(node: Node): Node[] {
-        let vertex = this._graph.getVertex(node.publicKey!);
+        let vertex = this._nodesTrustGraph.getVertex(node.publicKey!);
         if (!vertex) {
             return [];
         }
 
-        return Array.from(this._graph.getParents(vertex))
-            .map(vertex => this.getNodeByPublicKey(vertex.publicKey)!)
+        return Array.from(this._nodesTrustGraph.getParents(vertex))
+            .map(vertex => this.getNodeByPublicKey(vertex.key)!)
     }
 
     getTrustedOrganizations(quorumSet:QuorumSet):Organization[] {
@@ -215,8 +216,8 @@ export class Network {
     toJSON(): Object {
         return {
             time: this._crawlDate,
-            transitiveQuorumSet: Array.from(this.graph.networkTransitiveQuorumSet),
-            scc: this.graph.stronglyConnectedComponents
+            transitiveQuorumSet: Array.from(this.nodesTrustGraph.networkTransitiveQuorumSet),
+            scc: this.nodesTrustGraph.stronglyConnectedComponents
                 .filter(scp => scp.size > 1)
                 .map(scp => Array.from(scp)),
             nodes: this.nodes,

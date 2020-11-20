@@ -1,10 +1,9 @@
-import {DirectedGraph, isVertex} from "./directed-graph";
+import {TrustGraph, isVertex, VertexKey} from "./trust-graph";
 import {StronglyConnectedComponent} from "./strongly-connected-components-finder";
-import {PublicKey} from "../network";
 
 export class NetworkTransitiveQuorumSetFinder {
 
-    public getTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>, graph:DirectedGraph):StronglyConnectedComponent {
+    public getTransitiveQuorumSet(stronglyConnectedComponents: Array<StronglyConnectedComponent>, graph:TrustGraph):StronglyConnectedComponent {
         let scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];
         stronglyConnectedComponents.forEach(scp => {
             if (scp.size > 1 && !this.hasOutgoingEdgesNotPartOfComponent(scp, graph)) {
@@ -13,18 +12,17 @@ export class NetworkTransitiveQuorumSetFinder {
         });
 
         if(scpNoOutgoingEdges.length <= 0) {
-            return new Set<PublicKey>();
+            return new Set<VertexKey>();
         }
 
         let transitiveQuorumSet = scpNoOutgoingEdges[0];
 
         if (scpNoOutgoingEdges.length > 1) {
-            //.log("multiple candidates for transitive quorumSet");
             let highestIndexAverage = 0;
             for (let i = 0; i < scpNoOutgoingEdges.length; i++) {
                 let scp = scpNoOutgoingEdges[i];
                 let weightSum = Array.from(scp)
-                    .map(publicKey => graph.getVertex(publicKey))
+                    .map(vertexKey => graph.getVertex(vertexKey))
                     .filter(isVertex)
                     .reduce((accumulator, vertex) => accumulator + vertex.weight, 0);
                 let weightAverage = weightSum / scp.size;
@@ -38,7 +36,7 @@ export class NetworkTransitiveQuorumSetFinder {
         return transitiveQuorumSet;
     }
 
-    protected hasOutgoingEdgesNotPartOfComponent(stronglyConnectedComponent: StronglyConnectedComponent, graph:DirectedGraph): boolean {
+    protected hasOutgoingEdgesNotPartOfComponent(stronglyConnectedComponent: StronglyConnectedComponent, graph:TrustGraph): boolean {
         let hasOutgoingEdgesNotPartOfComponent = false;
         Array.from(stronglyConnectedComponent.values())
             .map(publicKey => graph.getVertex(publicKey))
@@ -47,7 +45,7 @@ export class NetworkTransitiveQuorumSetFinder {
             let outgoingEdgesNotInComponent = Array.from(graph
                 .getChildren(vertex))
                 .filter(
-                    child => child.isValidating && !stronglyConnectedComponent.has(child.publicKey)
+                    child => child.available && !stronglyConnectedComponent.has(child.key)
                 );
             if (outgoingEdgesNotInComponent.length > 0)
                 hasOutgoingEdgesNotPartOfComponent = true;

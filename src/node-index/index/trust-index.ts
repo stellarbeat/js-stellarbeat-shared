@@ -1,16 +1,16 @@
-import {DirectedGraph, DirectedGraphManager, Network, Node} from "./../../index";
+import {TrustGraph, TrustGraphBuilder, Network, Node} from "./../../index";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
  */
 export class TrustIndex {
 
-    protected _graph!: DirectedGraph;
+    protected _graph!: TrustGraph;
     protected _nodes:Node[];
 
     constructor(nodes: Node[]) {
         this._nodes = nodes;
-        let manager = new DirectedGraphManager();
+        let manager = new TrustGraphBuilder();
         this._graph = manager.buildGraphFromNodes(nodes);
     }
 
@@ -22,7 +22,7 @@ export class TrustIndex {
 
         return (
                 Array.from(this._graph.getParents(vertex))
-                .filter((trustingVertex) => trustingVertex.publicKey !== vertex!.publicKey).length
+                .filter((trustingVertex) => trustingVertex.key !== vertex!.key).length
             )
             /
             (

@@ -1,8 +1,7 @@
 import {Node} from '../../src';
-import {StronglyConnectedComponentsFinder} from "../../src/graph/strongly-connected-components-finder";
-import {DirectedGraphManager} from "../../src";
+import {StronglyConnectedComponentsFinder} from "../../src/trust-graph/strongly-connected-components-finder";
+import {TrustGraphBuilder} from "../../src";
 import * as _ from 'lodash';
-import {DirectedGraph, Vertex} from "../../src";
 
 //https://www.youtube.com/watch?v=TyWtx7q2D7Y
 
@@ -67,7 +66,7 @@ node8.quorumSet.validators.push(node4.publicKey!);
 node9.quorumSet.validators.push(node10.publicKey!);
 node10.quorumSet.validators.push(node9.publicKey!);
 
-let directedGraphManager = new DirectedGraphManager();
+let directedGraphManager = new TrustGraphBuilder();
 
 
 test('findTarjan', function () {
@@ -94,10 +93,10 @@ test('findTarjanFailingNodes', function () {
     let dfs = new StronglyConnectedComponentsFinder();
     let results = dfs.findTarjan(graph);
 
-    expect(results.length).toEqual(3);
+    expect(results.length).toEqual(4); //failed nodes not filtered from scp
     expect(results.find(scp => _.isEqual(scp, new Set(['2','3','6'])))).toBeTruthy();
 
-    expect(results.find(scp => _.isEqual(scp, new Set(['4','7','8'])))).toBeFalsy();
+    expect(results.find(scp => _.isEqual(scp, new Set(['4','7','8'])))).toBeTruthy();
 
     expect(results.find(scp => _.isEqual(scp, new Set(['1','5'])))).toBeTruthy();
 

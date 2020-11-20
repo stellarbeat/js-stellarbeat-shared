@@ -1,22 +1,15 @@
 import {QuorumSet} from "./quorum-set";
-import {Node} from "./node";
+import {TrustGraph} from "./trust-graph/trust-graph";
 
 export class QuorumSetService {
-    public quorumSetCanReachThreshold(owner:Node, quorumSet:QuorumSet, failingNodes:Array<Node>, publicKeysToNodesMap:Map<string, Node>) { //
-        let counter = quorumSet.validators.filter(validator => {
-            if (!publicKeysToNodesMap.has(validator)) {
-                return false;
-            }
-
-            if(failingNodes.includes(publicKeysToNodesMap.get(validator)!)){
-                return false;
-            }
-
-            return publicKeysToNodesMap.get(validator)!.active;
-        }).length;
+    public static quorumSetCanReachThreshold(quorumSet:QuorumSet, nodesTrustGraph: TrustGraph) { //
+        let counter = quorumSet.validators
+            .map(validator => nodesTrustGraph.getVertex(validator))
+            .filter(vertex => vertex !== undefined && vertex.available)
+            .length;
 
         quorumSet.innerQuorumSets.forEach(innerQS => {
-            if (this.quorumSetCanReachThreshold(owner, innerQS, failingNodes, publicKeysToNodesMap)) {
+            if (this.quorumSetCanReachThreshold(innerQS, nodesTrustGraph)) {
                 counter++;
             }
         });
