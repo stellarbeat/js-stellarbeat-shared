@@ -135,6 +135,10 @@ export class TrustGraph {
         return this._networkTransitiveQuorumSet.has(publicKey);
     }
 
+    public getStronglyConnectedComponent(key: VertexKey) {
+        return this._stronglyConnectedVertices.get(key);
+    }
+
     public isVertexPartOfStronglyConnectedComponent(publicKey: PublicKey) {
         return this._stronglyConnectedVertices.has(publicKey);
     }
