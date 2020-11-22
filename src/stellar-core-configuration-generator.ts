@@ -61,7 +61,7 @@ export default class StellarCoreConfigurationGenerator {
 
     protected processQuorumSet(quorumSet: QuorumSet, tomlConfig: TomlConfig, alreadyAddedHomeDomains: Set<string> = new Set<string>()) {
         quorumSet.validators.forEach(
-            validator => this.processValidator(this.network.getNodeByPublicKey(validator)!, alreadyAddedHomeDomains, tomlConfig)
+            validator => this.processValidator(validator, alreadyAddedHomeDomains, tomlConfig)
         );
 
         quorumSet.innerQuorumSets.forEach(innerQSet => this.processQuorumSet(innerQSet, tomlConfig, alreadyAddedHomeDomains))
@@ -79,8 +79,8 @@ export default class StellarCoreConfigurationGenerator {
 
         if (validatorNode.homeDomain) {
             let quality = Quality.MEDIUM_OR_LOW;
-            if (validatorNode.organizationId) {
-                let organization = this.network.getOrganizationById(validatorNode.organizationId);
+            if (validatorNode.organization) {
+                let organization = this.network.getOrganizationById(validatorNode.organization.id);
                 if (organization!.isTierOneOrganization)
                     quality = Quality.HIGH;
             }

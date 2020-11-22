@@ -1,6 +1,6 @@
 import {Node, AgeIndex} from "../../../src";
 
-let node1 = new Node('localhost', 20, 'a');
+let node1 = new Node('a');
 
 test('get', () => {
     node1.dateDiscovered = new Date();

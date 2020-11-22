@@ -6,6 +6,7 @@ import {
     TrustGraphBuilder, TrustGraph
 } from "./index";
 import NetworkStatistics from "./network-statistics";
+import NetworkHydrator from "./network-hydrator";
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -28,7 +29,6 @@ export class Network {
         this.initializeOrganizationsMap();
         this._quorumSetService = new QuorumSetService();
         this._crawlDate = crawlDate;
-        this.createNodesForUnknownValidators();
         this.initializeNodesTrustGraph();
         if (networkStatistics)
             this._networkStatistics = networkStatistics;
@@ -68,7 +68,6 @@ export class Network {
             this._nodes = nodes;
         }
         this._nodesMap = this.getPublicKeyToNodeMap(this._nodes);
-        this.createNodesForUnknownValidators();
         this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
         this.updateNetworkStatistics();
@@ -87,13 +86,11 @@ export class Network {
             return true;
         }
 
-        return !vertex.available;
+        return vertex.failing;
     }
 
     isOrganizationFailing(organization: Organization) {
         let nrOfValidatingNodes = organization.validators
-            .map(validator => this.getNodeByPublicKey(validator)!)
-            .filter(validator => validator !== undefined)
             .filter(node => !this.isNodeFailing(node)).length;
 
         return nrOfValidatingNodes - organization.subQuorumThreshold < 0;
@@ -106,26 +103,6 @@ export class Network {
         }
 
         return !QuorumSetService.quorumSetCanReachThreshold(quorumSet, this._nodesTrustGraph);
-    }
-
-    createNodesForUnknownValidators() {
-        let createValidatorIfUnknown = (validator: PublicKey) => {
-            if (!this._nodesMap.has(validator)) {
-                let missingNode = new Node('unknown', 11625, validator);
-                missingNode.isValidator = true;
-                this.nodes.push(missingNode);
-                this._nodesMap.set(validator, missingNode);
-            } else {
-                let validatorObject = this._nodesMap.get(validator)!;
-                validatorObject.isValidator = true; //it could be a node is trusted by other nodes, or defined in a toml file of the org as a validator, but we have not yet picked up any quorumsets
-            }
-        }
-        this._organizations.forEach(organization => {
-            organization.validators.forEach(validator => createValidatorIfUnknown(validator))
-        });
-        this._nodes.forEach(node => {
-            QuorumSet.getAllValidators(node.quorumSet).forEach(validator => createValidatorIfUnknown(validator))
-        });
     }
 
     get nodes(): Array<Node> {
@@ -167,19 +144,19 @@ export class Network {
             if (innerQSet.validators.length === 0) {
                 return;
             }
-            let organizationId = this.getNodeByPublicKey(innerQSet.validators[0])!.organizationId;
-            if ( organizationId === undefined || this.getOrganizationById(organizationId) === undefined) {
+
+            let organization = innerQSet.validators[0].organization;
+            if (!organization) {
                 return;
             }
 
             if(!innerQSet.validators
-                .map(validator => this.getNodeByPublicKey(validator)!)
-                .every((validator, index, validators) => validator.organizationId === validators[0].organizationId)
+                .every((validator, index, validators) => validator.organization && validators[0].organization && validator.organization.id === validators[0].organization.id)
             ){
                 return;
             }
 
-            trustedOrganizations.push(this.getOrganizationById(organizationId)!);
+            trustedOrganizations.push(organization);
             trustedOrganizations.push(...this.getTrustedOrganizations(innerQSet));
         })
 
@@ -194,23 +171,7 @@ export class Network {
     }
 
     static fromJSON(network: string | Object): Network {
-        let networkObject: any;
-        if (typeof network === 'string') {
-            networkObject = JSON.parse(network);
-        } else
-            networkObject = network;
-
-        let nodes = networkObject.nodes
-            .map((node: any) => Node.fromJSON(node));
-
-        let organizations = networkObject.organizations
-            .map((organization: any) => Organization.fromJSON(organization));
-
-        let networkStatistics = NetworkStatistics.fromJSON(networkObject.statistics)
-
-        let newNetwork = new Network(nodes, organizations, new Date(networkObject.time), networkStatistics);
-
-        return newNetwork
+        return NetworkHydrator.networkFromJson(network);
     }
 
     toJSON(): Object {

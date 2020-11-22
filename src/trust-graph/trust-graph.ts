@@ -8,40 +8,22 @@ export class Vertex {
     public readonly key: VertexKey;
     public readonly label: string;
     public readonly weight: number; //e.g. trust in the network
-    /*
-    Initial state, detected through crawl. For example:
-    - a validator that did not participate in consensus
-    -- Warning: a validator node that is active, meaning we could connect to it but did not participate in consensus is marked as missing.
-    - an organization where the majority of validators did not participate in consensus
-    - a watcher node that was not active
-     */
-    public missing: boolean; //todo: should be handled at node level
-    /*
-    Not enough trusted vertices to reach threshold. For example:
-    - A validator where the quorumset does not reach threshold
-    - An organization where the majority of validators don't reach their thresholds
-    - Warning: a watcher is never blocked because by definition it has no quorumset with thresholds.
-     */
-    public blocked: boolean = false; //todo: should be handled at node level
+    public failing: boolean;
 
     constructor(
         publicKey: PublicKey,
         label: string,
-        missing: boolean,
+        failing: boolean,
         weight: number,
     ) {
         this.label = label;
         this.key = publicKey;
         this.weight = weight;
-        this.missing = missing;
-    }
-
-    get available(){
-        return !this.missing && !this.blocked;
+        this.failing = failing;
     }
 
     toString() {
-        return `Vertex (publicKey: ${this.key}, label: ${this.label}, available: ${this.available}, missing: ${this.available}, blocked: ${this.blocked})`;
+        return `Vertex (publicKey: ${this.key}, label: ${this.label}, failing: ${this.failing})`;
     }
 }
 
@@ -58,12 +40,12 @@ export class Edge {
         this.child = child;
     }
 
-    get isActive(): boolean {
-        return this.child.available && this.parent.available
+    get failing(): boolean {
+        return this.child.failing || this.parent.failing
     }
 
     toString() {
-        return `Edge (parent: ${this.parent.key}, child: ${this.child.key}, isActive: ${this.isActive})`;
+        return `Edge (parent: ${this.parent.key}, child: ${this.child.key}, failing: ${this.failing})`;
     }
 }
 
@@ -168,6 +150,14 @@ export class TrustGraph {
             throw new Error('Vertex not part of graph: ' + vertex);
         }
         return this.children.get(vertex.key)!;
+    }
+
+    public hasChild(parent: Vertex, child: Vertex): boolean {
+        let children = this.children.get(parent.key);
+        if(!children)
+            return false;
+
+        return children.has(child);
     }
 
     public getParents(vertex: Vertex): Set<Vertex> {

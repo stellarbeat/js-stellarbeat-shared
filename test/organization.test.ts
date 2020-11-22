@@ -1,4 +1,4 @@
-import {Organization} from '../src'
+import {Node, Organization} from '../src'
 
 describe('json', () => {
     let organization = new Organization("1","Organization Name");
@@ -14,7 +14,7 @@ describe('json', () => {
     organization.twitter="orgtweet";
     organization.github="orgcode";
     organization.officialEmail="support@domain.com";
-    organization.validators.push('GA');
+    organization.validators.push(new Node('GA'));
     organization.subQuorum24HoursAvailability=30;
     organization.subQuorum30DaysAvailability=40.9;
     organization.has24HourStats = false;
@@ -46,14 +46,11 @@ describe('json', () => {
     test('OrgToJson', () => {
         expect(JSON.parse(JSON.stringify(organization))).toEqual(organizationObject);
     });
-    test('JsonToOrg', () => {
-        expect(Organization.fromJSON((JSON.stringify(organization)))).toEqual(organization);
-    });
 });
 
 describe('subquorum',() => {
     let organization = new Organization('1', 'me');
-    organization.validators.push(...['1', '2', '3', '4']);
+    organization.validators.push(...[new Node('1'), new Node('2'), new Node('3'), new Node('4')]);
     test('threshold', () => {
         expect(organization.subQuorumThreshold).toEqual(2);
     });
@@ -67,7 +64,7 @@ describe('tierOne', () => {
         let organization = new Organization('1', 'me');
         organization.has30DayStats = true;
         organization.subQuorum30DaysAvailability = 99.5;
-        organization.validators.push(...["1","2","3"]);
+        organization.validators.push(...[new Node('1'), new Node('2'), new Node('3')]);
 
         expect(organization.isTierOneOrganization).toBeTruthy();
     });
@@ -76,7 +73,7 @@ describe('tierOne', () => {
         let organization = new Organization('1', 'me');
         organization.has30DayStats = true;
         organization.subQuorum30DaysAvailability = 99.5;
-        organization.validators.push(...["1","2"]);
+        organization.validators.push(...[new Node('1'), new Node('2')]);
 
         expect(organization.isTierOneOrganization).toBeFalsy();
     });
@@ -85,7 +82,7 @@ describe('tierOne', () => {
         let organization = new Organization('1', 'me');
         organization.has30DayStats = false;
         organization.subQuorum30DaysAvailability = 99.5;
-        organization.validators.push(...["1","2", "3"]);
+        organization.validators.push(...[new Node('1'), new Node('2'), new Node('3')]);
 
         expect(organization.isTierOneOrganization).toBeFalsy();
     });
@@ -94,7 +91,7 @@ describe('tierOne', () => {
         let organization = new Organization('1', 'me');
         organization.has30DayStats = true;
         organization.subQuorum30DaysAvailability = 98;
-        organization.validators.push(...["1","2", "3"]);
+        organization.validators.push(...[new Node('1'), new Node('2'), new Node('3')]);
 
         expect(organization.isTierOneOrganization).toBeFalsy();
     });

@@ -1,24 +1,26 @@
 import {Node, Network, QuorumSet, Organization} from '../src';
 
-let node1 = new Node('localhost', 20, 'a');
+let node1 = new Node('a');
 node1.active = true;
 node1.isValidating = true;
-node1.quorumSet.validators.push('b');
 node1.quorumSet.threshold = 1;
-let node2 = new Node('localhost', 20, 'b');
+let node2 = new Node('b');
+node1.quorumSet.validators.push(node2);
+
 node2.quorumSet.threshold = 1;
-node2.quorumSet.validators.push('a');
+node2.quorumSet.validators.push(node1);
 node2.active = true;
 node2.isValidating = true;
-node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, ['c']));
-let node3 = new Node('localhost', 20, 'c');
-let node4 = new Node('localhost', 20, 'd');
+let node3 = new Node('c');
+let node4 = new Node('d');
 
-node3.quorumSet.validators.push(node1.publicKey!);
-node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
+node3.quorumSet.validators.push(node1);
+node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, [node3]));
+
+node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, [node1]));
 
 let organization = new Organization('id', 'org');
-organization.validators = [node1.publicKey, node2.publicKey, node3.publicKey, node4.publicKey];
+organization.validators = [node1, node2, node3, node4];
 let network:Network;
 
 beforeEach(() => {
@@ -39,7 +41,7 @@ test('isNodeFailing', () => {
     expect(network.isNodeFailing(node2)).toBeFalsy();
     expect(network.isNodeFailing(node3)).toBeTruthy();
     expect(network.isNodeFailing(node4)).toBeTruthy();
-    expect(network.isNodeFailing(new Node('localhost', 11625, 'unknown'))).toBeTruthy();
+    expect(network.isNodeFailing(new Node('unknown'))).toBeTruthy();
 });
 
 test ('isOrganizationFailing', () => {

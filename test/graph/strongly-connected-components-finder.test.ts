@@ -5,36 +5,36 @@ import * as _ from 'lodash';
 
 //https://www.youtube.com/watch?v=TyWtx7q2D7Y
 
-let node1 = new Node('localhost', 20, '1');
+let node1 = new Node('1');
 node1.active = true;
 node1.isValidating = true;
-let node2 = new Node('localhost', 20, '2');
+let node2 = new Node('2');
 node2.active = true;
 node2.isValidating = true;
-let node3 = new Node('localhost', 20, '3');
+let node3 = new Node('3');
 node3.active = true;
 node3.isValidating = true;
-let node4 = new Node('localhost', 20, '4');
+let node4 = new Node('4');
 node4.active = true;
 node4.isValidating = true;
-let node5 = new Node('localhost', 20, '5');
+let node5 = new Node('5');
 node5.active = true;
 node5.isValidating = true;
-let node6 = new Node('localhost', 20, '6');
+let node6 = new Node('6');
 node6.active = true;
 node6.isValidating = true;
-let node7 = new Node('localhost', 20, '7');
+let node7 = new Node('7');
 node7.active = true;
 node7.isValidating = true;
-let node8 = new Node('localhost', 20, '8');
+let node8 = new Node('8');
 node8.active = true;
 node8.isValidating = true;
 
 //another strongly connected component without outgoing _edges, that is not the transitive quorumset
-let node9 = new Node('localhost', 20, '9');
+let node9 = new Node('9');
 node9.active = true;
 node9.isValidating = true;
-let node10 = new Node('localhost', 20, '10');
+let node10 = new Node('10');
 node10.active = true;
 node10.isValidating = true;
 
@@ -49,22 +49,22 @@ node8.quorumSet.threshold = 1;
 node9.quorumSet.threshold = 1;
 node10.quorumSet.threshold = 1;
 
-node1.quorumSet.validators.push(node2.publicKey!);
-node1.quorumSet.validators.push(node5.publicKey!);
-node2.quorumSet.validators.push(node6.publicKey!);
-node3.quorumSet.validators.push(node2.publicKey!);
-node3.quorumSet.validators.push(node4.publicKey!);
-node3.quorumSet.validators.push(node7.publicKey!);
-node4.quorumSet.validators.push(node7.publicKey!);
-node5.quorumSet.validators.push(node1.publicKey!);
-node5.quorumSet.validators.push(node6.publicKey!);
-node6.quorumSet.validators.push(node3.publicKey!);
-node6.quorumSet.validators.push(node7.publicKey!);
-node7.quorumSet.validators.push(node8.publicKey!);
-node8.quorumSet.validators.push(node4.publicKey!);
+node1.quorumSet.validators.push(node2!);
+node1.quorumSet.validators.push(node5);
+node2.quorumSet.validators.push(node6);
+node3.quorumSet.validators.push(node2);
+node3.quorumSet.validators.push(node4);
+node3.quorumSet.validators.push(node7);
+node4.quorumSet.validators.push(node7);
+node5.quorumSet.validators.push(node1);
+node5.quorumSet.validators.push(node6);
+node6.quorumSet.validators.push(node3);
+node6.quorumSet.validators.push(node7);
+node7.quorumSet.validators.push(node8);
+node8.quorumSet.validators.push(node4);
 
-node9.quorumSet.validators.push(node10.publicKey!);
-node10.quorumSet.validators.push(node9.publicKey!);
+node9.quorumSet.validators.push(node10);
+node10.quorumSet.validators.push(node9);
 
 let directedGraphManager = new TrustGraphBuilder();
 

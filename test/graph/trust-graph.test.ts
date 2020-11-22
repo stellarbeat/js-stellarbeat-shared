@@ -1,30 +1,30 @@
 import {Node, QuorumSet} from '../../src';
 import {TrustGraphBuilder} from "../../src";
 
-let nodeA = new Node('localhost', 20, 'a');
+let nodeA = new Node('a');
 nodeA.active = true;
 nodeA.isValidating = true;
-let nodeB = new Node('localhost', 20, 'b');
+let nodeB = new Node('b');
 nodeB.active = true;
 nodeB.isValidating = true;
-let nodeC = new Node('localhost', 20, 'c');
+let nodeC = new Node('c');
 nodeC.active = true;
 nodeC.isValidating = true;
-let nodeD = new Node('localhost', 20, 'd');
+let nodeD = new Node('d');
 nodeD.active = true;
 nodeD.isValidating = true;
-let nodeE = new Node('localhost', 20, 'e');
+let nodeE = new Node('e');
 nodeE.active = true;
 nodeE.isValidating = true;
 
-nodeA.quorumSet.validators.push(nodeB.publicKey!);
+nodeA.quorumSet.validators.push(nodeB);
 nodeA.quorumSet.threshold = 1;
-nodeB.quorumSet.validators.push(nodeA.publicKey!);
+nodeB.quorumSet.validators.push(nodeA);
 nodeB.quorumSet.threshold = 1;
-nodeC.quorumSet.validators.push(nodeA.publicKey!);
+nodeC.quorumSet.validators.push(nodeA);
 nodeC.quorumSet.threshold = 1;
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['e']));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, [nodeA]));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, [nodeE]));
 nodeD.quorumSet.threshold = 1;
 nodeE.quorumSet.threshold = 0;
 
@@ -48,9 +48,9 @@ test('updateGraphWithFailingVertices', () => {
     let graph = trustGraphBuilder.buildGraphFromNodes([nodeA, nodeB, nodeC, nodeD, nodeE]);
     let map = new Map();
     nodes.forEach(node => map.set(node.publicKey, node));
-    trustGraphBuilder.updateGraphWithFailingVertices(map, graph, ['a']);
-    expect(Array.from(graph.vertices.values()).filter(vertex => vertex.available).length).toEqual(2);
-    expect(Array.from(graph.edges.values()).filter(edge => edge.isActive).length).toEqual(1);
+    trustGraphBuilder.updateNodesGraphWithFailingVertices(map, graph, ['a']);
+    expect(Array.from(graph.vertices.values()).filter(vertex => !vertex.failing).length).toEqual(2);
+    expect(Array.from(graph.edges.values()).filter(edge => !edge.failing).length).toEqual(1);
     expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(true);
     expect(graph.networkTransitiveQuorumSet.size).toEqual(2);
 });

@@ -19,7 +19,7 @@ export class OrganizationSnapShot {
         }
     }
 
-    static fromJSON(organizationSnapShot:string|Object):OrganizationSnapShot {
+    /*static fromJSON(organizationSnapShot:string|Object):OrganizationSnapShot {
         let snapShotObject: any;
         if (typeof organizationSnapShot === 'string') {
             snapShotObject = JSON.parse(organizationSnapShot);
@@ -31,5 +31,5 @@ export class OrganizationSnapShot {
             new Date(snapShotObject.endDate),
             Organization.fromJSON(snapShotObject.organization)!
         );
-    }
+    }*/
 }

@@ -1,6 +1,10 @@
 import {OrganizationId} from "./network";
+import {Node} from "./node";
+import {Vertex} from "./trust-graph/trust-graph";
 
-type PublicKey = string;
+export function isOrganization(organization: Organization | undefined): organization is Organization {
+    return organization instanceof Organization;
+}
 
 export class Organization {
     public readonly id:OrganizationId;
@@ -17,7 +21,7 @@ export class Organization {
     public twitter?: string;
     public github?: string;
     public officialEmail?: string;
-    public validators: PublicKey[] = [];
+    public validators: Node[] = [];
     public subQuorumAvailable: boolean = false;
     public has30DayStats:boolean = false;
     public has24HourStats: boolean = false;
@@ -61,7 +65,7 @@ export class Organization {
             twitter: this.twitter,
             github: this.github,
             officialEmail: this.officialEmail,
-            validators: this.validators,
+            validators: this.validators.map(validator => validator.publicKey),
             subQuorumAvailable: this.subQuorumAvailable,
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
             subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
@@ -70,44 +74,6 @@ export class Organization {
             dateDiscovered: this.dateDiscovered,
             isTierOneOrganization: this.isTierOneOrganization
         }
-    }
-
-
-    static fromJSON(organization:string|Object):Organization|undefined {
-        if(organization === undefined) {
-            return undefined;
-        }
-
-        let organizationObject:any;
-
-        if(typeof organization === 'string') {
-            organizationObject = JSON.parse(organization);
-        } else
-            organizationObject = organization;
-
-        let newOrganization = new Organization(organizationObject.id, organizationObject.name);
-        newOrganization.dba=organizationObject.dba;
-        newOrganization.url=organizationObject.url;
-        newOrganization.logo=organizationObject.logo;
-        newOrganization.description=organizationObject.description;
-        newOrganization.physicalAddress=organizationObject.physicalAddress;
-        newOrganization.physicalAddressAttestation=organizationObject.physicalAddressAttestation;
-        newOrganization.phoneNumber=organizationObject.phoneNumber;
-        newOrganization.phoneNumberAttestation=organizationObject.phoneNumberAttestation;
-        newOrganization.keybase=organizationObject.keybase;
-        newOrganization.twitter=organizationObject.twitter;
-        newOrganization.github=organizationObject.github;
-        newOrganization.officialEmail=organizationObject.officialEmail;
-        if(organizationObject.validators !== undefined)
-            newOrganization.validators=organizationObject.validators;
-        newOrganization.subQuorum24HoursAvailability=organizationObject.subQuorum24HoursAvailability;
-        newOrganization.subQuorum30DaysAvailability=organizationObject.subQuorum30DaysAvailability;
-        newOrganization.dateDiscovered = organizationObject.dateDiscovered;
-        newOrganization.subQuorumAvailable = organizationObject.subQuorumAvailable;
-        newOrganization.has30DayStats = organizationObject.has30DayStats;
-        newOrganization.has24HourStats = organizationObject.has24HourStats;
-
-        return newOrganization;
     }
 
     toString(){

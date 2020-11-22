@@ -1,13 +1,15 @@
+import {Node} from "./node";
+
 export class QuorumSet {
 
     public hashKey?: string;
     public threshold: number;
-    public validators: Array<string>;
+    public validators: Array<Node>;
     public innerQuorumSets: Array<QuorumSet>;
 
     constructor(hashKey?:string,
                 threshold: number = Number.MAX_SAFE_INTEGER,
-                validators: Array<string> = [],
+                validators: Array<Node> = [],
                 innerQuorumSets: Array<QuorumSet> = []
     ) {
         this.hashKey = hashKey;
@@ -20,7 +22,7 @@ export class QuorumSet {
         return this.validators.length > 0 || this.innerQuorumSets.length > 0;
     }
 
-    static getAllValidators(qs:QuorumSet): Array<string> {
+    static getAllValidators(qs:QuorumSet): Array<Node> {
         return qs.innerQuorumSets.reduce(
             (allValidators, innerQS) => allValidators.concat(QuorumSet.getAllValidators(innerQS)),
             qs.validators
@@ -31,31 +33,8 @@ export class QuorumSet {
         return {
             hashKey: this.hashKey,
             threshold: this.threshold,
-            validators: Array.from(this.validators),
-            innerQuorumSets: Array.from(this.innerQuorumSets)
+            validators: this.validators.map(validator => validator.publicKey),
+            innerQuorumSets: this.innerQuorumSets
         };
     }
-
-
-    static fromJSON(quorumSet: any): QuorumSet {
-        let quorumSetObject;
-        if(typeof quorumSet === 'string') {
-            quorumSetObject = JSON.parse(quorumSet);
-        } else
-            quorumSetObject = quorumSet;
-        if(!quorumSetObject){
-            return new QuorumSet();
-        }
-
-        let innerQuorumSets = quorumSetObject.innerQuorumSets.map(
-            (innerQuorumSet:QuorumSet) => this.fromJSON(innerQuorumSet)
-        );
-
-        return new QuorumSet(
-            quorumSetObject.hashKey,
-            quorumSetObject.threshold,
-            quorumSetObject.validators,
-            innerQuorumSets
-        );
-    };
 }

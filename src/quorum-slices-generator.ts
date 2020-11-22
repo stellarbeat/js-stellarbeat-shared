@@ -33,7 +33,7 @@ export class QuorumSlicesGenerator {
 
         let slices = this.getCombinationsOfSizeK(
             quorumSet.threshold,
-            ([] as any).concat(quorumSet.validators).concat(quorumSet.innerQuorumSets)
+            ([] as any).concat(quorumSet.validators.map(validator => validator.publicKey)).concat(quorumSet.innerQuorumSets)
         );
 
         cache.set(quorumSet.hashKey, slices);

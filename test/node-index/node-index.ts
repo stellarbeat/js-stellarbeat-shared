@@ -7,17 +7,17 @@ jest.mock('./../../src/node-index/index/version-index');
 jest.mock('./../../src/node-index/index/trust-index');
 jest.mock('./../../src/node-index/index/age-index');
 
-let node1 = new Node('localhost', 20, 'a');
+let node1 = new Node('a');
 node1.versionStr = "1.0.0";
-let node2 = new Node('localhost', 20, 'b');
+let node2 = new Node('b');
 node2.versionStr = "2.0.0rc1";
-let node3 = new Node('localhost', 20, 'c');
+let node3 = new Node('c');
 node3.versionStr = "3.0.0 (1fc018b4f52e8c7e716b023ccf30600af5b4f66d)";
-let node4 = new Node('localhost', 20, 'c');
+let node4 = new Node('c');
 node4.versionStr = "2.0.0";
-let node5 = new Node('localhost', 20, 'c');
+let node5 = new Node('c');
 node5.versionStr = "stellar-core 2.0.0";
-let node6 = new Node('localhost', 20, 'c');
+let node6 = new Node('c');
 node6.versionStr = "v2.0.0";
 
 let nodes =[node1, node2, node3, node4, node5, node6];

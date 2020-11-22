@@ -1,12 +1,52 @@
-import {PublicKey} from "../network";
+import {OrganizationId, PublicKey} from "../network";
 import {Node} from "../node";
 import {QuorumSet} from "../quorum-set";
 import {StronglyConnectedComponentsFinder, StronglyConnectedComponent} from "./strongly-connected-components-finder";
 import {NetworkTransitiveQuorumSetFinder} from "./network-transitive-quorum-set-finder";
 import {TrustGraph, Edge, Vertex, isVertex} from "./trust-graph";
 import {QuorumSetService} from "../quorum-set-service";
+import {isOrganization, Organization} from "../organization";
 
 export class TrustGraphBuilder {
+
+    buildGraphFromOrganizations(organizations: Organization[]) {
+        let graph = new TrustGraph(new StronglyConnectedComponentsFinder(), new NetworkTransitiveQuorumSetFinder());
+        let idToOrganizationsMap = new Map<OrganizationId, Organization>();
+
+        //add vertices
+        organizations.forEach(organization => {
+            idToOrganizationsMap.set(organization.id, organization);
+            graph.addVertex(new Vertex(
+                organization.id,
+                organization.name,
+                organization.subQuorumAvailable,
+                1 //todo: index
+            ))
+        })
+
+        //add edges
+        graph.vertices.forEach(organizationVertex => {
+            let organization = idToOrganizationsMap.get(organizationVertex.key);
+            if (!organization)
+                return;
+
+            organization.validators.forEach(validator => {
+                QuorumSet.getAllValidators(validator.quorumSet)
+                    .map(validator => validator.organization)
+                    .filter(isOrganization)
+                    .forEach(trustedOrganization => {
+                        let trustedOrganizationVertex = graph.getVertex(trustedOrganization.id);
+                        if (!isVertex(trustedOrganizationVertex))
+                            return;
+                        if(!graph.hasChild(organizationVertex, trustedOrganizationVertex))
+                            graph.addEdge(new Edge(organizationVertex, trustedOrganizationVertex!))
+                    })
+            })
+        });
+
+        return graph;
+
+    }
 
     buildGraphFromNodes(nodes: Node[], includeWatchers: boolean = false): TrustGraph {
         let graph = new TrustGraph(new StronglyConnectedComponentsFinder(), new NetworkTransitiveQuorumSetFinder());
@@ -32,33 +72,32 @@ export class TrustGraphBuilder {
             this.addNodeEdges(vertex, node!.quorumSet, graph);
         });
 
-        this.updateBlockedVertices(publicKeyToNodesMap, graph);
+        this.updateFailedVertices(publicKeyToNodesMap, graph);
         graph.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
 
         return graph;
     }
 
-    public updateGraphWithFailingVertices(publicKeyToNodesMap: Map<PublicKey, Node>, graph: TrustGraph, failingPublicKeys: PublicKey[]): void {
+    public updateNodesGraphWithFailingVertices(publicKeyToNodesMap: Map<PublicKey, Node>, graph: TrustGraph, failingPublicKeys: PublicKey[]): void {
         failingPublicKeys
             .map(publicKey => graph.getVertex(publicKey))
             .filter(isVertex)
-            .map(vertex => vertex.missing = true);
+            .map(vertex => vertex.failing = true);
 
-        this.updateBlockedVertices(publicKeyToNodesMap, graph);
-        graph.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
+        this.updateFailedVertices(publicKeyToNodesMap, graph);
     }
 
     protected addNodeEdges(parent: Vertex, quorumSet: QuorumSet, graph: TrustGraph) {
         let validators = QuorumSet.getAllValidators(quorumSet);
         validators
-            .map(validator => graph.getVertex(validator))
+            .map(validator => graph.getVertex(validator.publicKey))
             .filter(isVertex)
             .forEach(validatorVertex => graph.addEdge(new Edge(parent!, validatorVertex)));
     }
 
-    protected updateBlockedVertices(publicKeyToNodesMap: Map<PublicKey, Node>, graph: TrustGraph, verticesToCheck: Array<Vertex> = []) { //should be handled at node level, but requires major refactoring
+    protected updateFailedVertices(publicKeyToNodesMap: Map<PublicKey, Node>, graph: TrustGraph, verticesToCheck: Array<Vertex> = []) {
         if (verticesToCheck.length === 0) {
-            verticesToCheck = Array.from(graph.vertices.values()).filter(vertex => vertex.available);
+            verticesToCheck = Array.from(graph.vertices.values()).filter(vertex => !vertex.failing);
             //no reason to check already failing vertices
         }
 
@@ -70,7 +109,7 @@ export class TrustGraphBuilder {
             let vertexToCheck = verticesToCheck.pop()!;
             inVerticesToCheckQueue.set(vertexToCheck.key, false);
 
-            if (!vertexToCheck.available) {
+            if (vertexToCheck.failing) {
                 continue; //already failing
             }
 
@@ -80,7 +119,7 @@ export class TrustGraphBuilder {
             }
 
             //node is failing
-            vertexToCheck.blocked = true;
+            vertexToCheck.failing = true;
 
             Array.from(graph.getParents(vertexToCheck))
                 .filter(vertex => inVerticesToCheckQueue.get(vertex.key) === false)

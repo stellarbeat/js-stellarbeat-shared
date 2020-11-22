@@ -6,13 +6,6 @@ let network!: Network;
 
 beforeAll(async () => {
  let nodesJSON = await fs.readFile('./test/data/nodes.json');
- let nodesRaw = JSON.parse(nodesJSON);
-
- let nodes = nodesRaw.map((node:any):Node => {
-  return Node.fromJSON(node);
- });
-
- network = new Network(nodes);
 });
 
 test('hasQuorumIntersection', function () {
@@ -25,7 +18,7 @@ test('containsQuorum', function () {
     /*let innerQuorumSet = new QuorumSet('hash', 2);
     innerQuorumSet.validators.push(...['c', 'd']);
 
-    let nodeA = new Node('localhost', 11625, "a");
+    let nodeA = new Node("a");
     nodeA.active = true;
     nodeA.isValidating = true;
     nodeA.quorumSet.threshold = 3;
@@ -35,7 +28,7 @@ test('containsQuorum', function () {
     nodeA.quorumSet.validators.push('e');
     nodeA.quorumSet.validators.push('f');
 
-    let nodeB = new Node('localhost', 11625, "b");
+    let nodeB = new Node("b");
     nodeB.active = true;
     nodeB.isValidating = true;
     nodeB.quorumSet.threshold = 3;
@@ -45,7 +38,7 @@ test('containsQuorum', function () {
     nodeB.quorumSet.validators.push('e');
     nodeB.quorumSet.validators.push('f');
 
-    let nodeC = new Node('localhost', 11625, "c");
+    let nodeC = new Node("c");
     nodeC.active = true;
     nodeC.isValidating = true;
     nodeC.quorumSet.threshold = 3;
@@ -55,7 +48,7 @@ test('containsQuorum', function () {
     nodeC.quorumSet.validators.push('e');
     nodeC.quorumSet.validators.push('f');
 
-    let nodeD = new Node('localhost', 11625, "d");
+    let nodeD = new Node("d");
     nodeD.active = true;
     nodeD.isValidating = true;
     nodeD.quorumSet.threshold = 3;
@@ -65,7 +58,7 @@ test('containsQuorum', function () {
     nodeD.quorumSet.validators.push('e');
     nodeD.quorumSet.validators.push('f');
 
-    let nodeE = new Node('localhost', 11625, "e");
+    let nodeE = new Node("e");
     nodeE.active = true;
     nodeE.isValidating = true;
     nodeE.quorumSet.threshold = 3;
@@ -75,7 +68,7 @@ test('containsQuorum', function () {
     nodeE.quorumSet.validators.push('e');
     nodeE.quorumSet.validators.push('f');
 
-    let nodeF = new Node('localhost', 11625, "f");
+    let nodeF = new Node("f");
     nodeF.active = true;
     nodeF.isValidating = true;
     nodeF.quorumSet.threshold = 3;

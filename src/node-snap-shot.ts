@@ -19,7 +19,7 @@ export class NodeSnapShot {
         }
     }
 
-    static fromJSON(nodeSnapShot:string|Object):NodeSnapShot {
+    /*static fromJSON(nodeSnapShot:string|Object):NodeSnapShot {
         let snapShotObject: any;
         if (typeof nodeSnapShot === 'string') {
             snapShotObject = JSON.parse(nodeSnapShot);
@@ -31,5 +31,5 @@ export class NodeSnapShot {
             new Date(snapShotObject.endDate),
             Node.fromJSON(snapShotObject.node)
         );
-    }
+    }*/
 }
