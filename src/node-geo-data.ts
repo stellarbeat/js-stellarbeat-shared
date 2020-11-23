@@ -10,16 +10,6 @@ export class NodeGeoData {
     public longitude?:number;
     public metroCode?:string;
 
-    /*
-    @Deprecated
-     */
-    public dateUpdated!: Date;
-
-    constructor(dateUpdated?: Date) {
-        if(!dateUpdated)
-            this.dateUpdated = new Date();
-    }
-
     toJSON():Object {
         return {
             countryCode: this.countryCode,
@@ -32,7 +22,6 @@ export class NodeGeoData {
             latitude: this.latitude,
             longitude: this.longitude,
             metroCode: this.metroCode,
-            dateUpdated: this.dateUpdated
         };
     };
 
@@ -57,8 +46,6 @@ export class NodeGeoData {
         newNodeGeo.latitude = nodeGeoObject.latitude;
         newNodeGeo.longitude = nodeGeoObject.longitude;
         newNodeGeo.metroCode = nodeGeoObject.metroCode;
-        if(nodeGeoObject.dateUpdated)
-            newNodeGeo.dateUpdated = new Date(nodeGeoObject.dateUpdated);
 
         return newNodeGeo;
     }

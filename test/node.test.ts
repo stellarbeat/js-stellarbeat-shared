@@ -27,6 +27,9 @@ node.quorumSet.hashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
 node.quorumSet.threshold = 2;
 let trustedNode = new Node("GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ");
 trustedNode.isValidator = true;
+trustedNode.unknown = true;
+trustedNode.dateDiscovered = new Date("2018-04-28 14:39:01");
+trustedNode.dateUpdated = new Date("2018-10-12 11:17:39");
 node.quorumSet.validators = [trustedNode];
 node.quorumSet.innerQuorumSets = [];
 node.active = true;
@@ -38,7 +41,6 @@ let organization = new Organization('123', 'org');
 node.organization = organization;
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
-node.geoData.dateUpdated = new Date("2018-10-12T09:17:39.000Z");
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
@@ -57,7 +59,6 @@ nodeObject.geoData.countryName = "United States";
 nodeObject.geoData.countryCode = "US";
 nodeObject.geoData.latitude = 39.0853;
 nodeObject.geoData.longitude = -77.6452;
-nodeObject.geoData.dateUpdated = "2018-10-12T09:17:39.000Z";
 nodeObject.versionStr = "v10.0.0";
 nodeObject.statistics = {};
 nodeObject.statistics.activeInLastCrawl = true;
@@ -88,16 +89,22 @@ nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
 nodeObject.statistics.has30DayStats = true;
 nodeObject.statistics.has24HourStats = true;
+let trustedNodeObject:any = {};
+trustedNodeObject.publicKey = 'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ';
+trustedNodeObject.unknown = true;
+trustedNodeObject.dateDiscovered = "2018-04-28 14:39:01";
+trustedNodeObject.dateUpdated = "2018-10-12 11:17:39";
 
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
 });
-/**test('JsonToNode', () => {
-    let nodesAndOrganizations = NetworkHydrator.nodesAndOrganizationsFromJSON(JSON.parse(JSON.stringify([nodeObject])), [{id: '123', 'name': 'org'}]);
+test('hydrateNodesAndOrganizations', () => {
+    let nodesAndOrganizations = NetworkHydrator.hydrateNodesAndOrganizations([nodeObject, trustedNodeObject], [{id: '123', 'name': 'org'}]);
     let parsedNode = nodesAndOrganizations.nodes[0];
-    console.log(parsedNode.dateDiscovered);
+
+    //todo check organizations and move to dedicated network hydrator test
     expect(parsedNode).toEqual(node);
-});*/
+});
 
 let node3 = new Node("a");
 test('testDefaultPort', () => {

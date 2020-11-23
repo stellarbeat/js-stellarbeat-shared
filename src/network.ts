@@ -171,7 +171,7 @@ export class Network {
     }
 
     static fromJSON(network: string | Object): Network {
-        return NetworkHydrator.networkFromJson(network);
+        return NetworkHydrator.hydrateNetwork(network);
     }
 
     toJSON(): Object {

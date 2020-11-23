@@ -7,22 +7,16 @@ import {NodeGeoData} from "./node-geo-data";
 import {NodeStatistics} from "./node-statistics";
 
 export default class NetworkHydrator {
-    static networkFromJson(network: string | Object): Network {
-        //todo add json schema or something to validate. Could be reused in import/export
-        let networkDTO: any;
-        if (typeof network === 'string') {
-            networkDTO = JSON.parse(network);
-        } else
-            networkDTO = network;
+    static hydrateNetwork(networkDTO: any): Network {
 
-        let nodesAndOrganizations = NetworkHydrator.nodesAndOrganizationsFromJSON(networkDTO.nodes, networkDTO.organizations);
+        let nodesAndOrganizations = NetworkHydrator.hydrateNodesAndOrganizations(networkDTO.nodes, networkDTO.organizations);
 
         let networkStatistics = NetworkStatistics.fromJSON(networkDTO.statistics);
 
         return new Network(nodesAndOrganizations.nodes, nodesAndOrganizations.organizations, new Date(networkDTO.time), networkStatistics);
     }
 
-    static nodesAndOrganizationsFromJSON(nodesDTO: any, organizationsDTO: any){
+    static hydrateNodesAndOrganizations(nodesDTO: any, organizationsDTO: any){
         //hydrate the organizations without validators
         let organizationsMap: Map<OrganizationId, Organization> = new Map();
         organizationsDTO
@@ -64,6 +58,7 @@ export default class NetworkHydrator {
                     let validator = nodesMap.get(publicKey);
                     if (!validator) {
                         validator = new Node(publicKey);
+                        validator.unknown = true;
                         validator.organization = organization;
                         nodesMap.set(publicKey, validator);
                     }
@@ -78,19 +73,22 @@ export default class NetworkHydrator {
     }
 
     protected static hydrateQuorumSet(quorumSet: QuorumSet, quorumSetDTO: any, publicKeyToNodeMap: Map<PublicKey, Node>) {
+        if(quorumSetDTO === undefined)
+            return;
+
         quorumSet.threshold = quorumSetDTO.threshold;
         quorumSet.hashKey = quorumSetDTO.hashKey;
         quorumSetDTO.validators.forEach((publicKey: string) => {
+
             let validator = publicKeyToNodeMap.get(publicKey);
             if (!validator) {
                 validator = new Node(publicKey);
-                validator.isValidator = true;
+                validator.unknown = true;
                 publicKeyToNodeMap.set(publicKey, validator);
-            } else {
-                validator.isValidator = true;
-                //it could be a node is trusted by other nodes, or defined in a toml file of the org as a validator, but we have not yet picked up any quorumsets
-                //todo: doesn't belong here, but have to figure out the right place
             }
+
+            validator.isValidator = true; //because it is included in a quorumset, we classify it as a validator
+
             quorumSet.validators.push(validator);
         });
         quorumSetDTO.innerQuorumSets.forEach((innerQuorumSetDTO: any) => {
@@ -104,61 +102,40 @@ export default class NetworkHydrator {
             throw new Error("nodeDTO missing public key");
         }
 
-        let node = new Node(nodeDTO.publicKey,nodeDTO.ip, nodeDTO.port);
-        node.ledgerVersion = nodeDTO.ledgerVersion;
-        node.overlayVersion = nodeDTO.overlayVersion;
-        node.overlayMinVersion = nodeDTO.overlayMinVersion;
-        node.networkId = nodeDTO.networkId;
-        node.versionStr = nodeDTO.versionStr;
-        if(nodeDTO.isValidator !== undefined)
-            node.isValidator = nodeDTO.isValidator;
-        if(nodeDTO.active !== undefined)
-            node.active = nodeDTO.active;
-        if(nodeDTO.overLoaded !== undefined)
-            node.overLoaded = nodeDTO.overLoaded;
-        node.name = nodeDTO.name;
-        node.host = nodeDTO.host;
-        node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
-        node.dateUpdated = new Date(nodeDTO.dateUpdated);
-        if(node.isFullValidator !== undefined)
-            node.isFullValidator = nodeDTO.isFullValidator;
-        node.index = nodeDTO.index;
-        node.homeDomain = nodeDTO.homeDomain;
-        if(nodeDTO.isValidating !== undefined)
-            node.isValidating = nodeDTO.isValidating;
-        node.historyUrl = nodeDTO.historyUrl;
-        node.alias = nodeDTO.alias;
-        node.isp = nodeDTO.isp;
+        let node = new Node(nodeDTO.publicKey);
+
+        NetworkHydrator.mapBasicProperties(nodeDTO, node, ['publicKey', 'geoData', 'quorumSet', 'organizationId', 'statistics', 'dateDiscovered', 'dateUpdated']);
+        if(nodeDTO.dateDiscovered !== undefined)
+            node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
+        if(nodeDTO.dateUpdated !== undefined)
+            node.dateUpdated = new Date(nodeDTO.dateUpdated);
 
         return node;
     }
 
     static organizationBasefromDTO(organizationDTO: any): Organization {
         let organization = new Organization(organizationDTO.id, organizationDTO.name);
-        organization.dba = organizationDTO.dba;
-        organization.url = organizationDTO.url;
-        organization.logo = organizationDTO.logo;
-        organization.description = organizationDTO.description;
-        organization.physicalAddress = organizationDTO.physicalAddress;
-        organization.physicalAddressAttestation = organizationDTO.physicalAddressAttestation;
-        organization.phoneNumber = organizationDTO.phoneNumber;
-        organization.phoneNumberAttestation = organizationDTO.phoneNumberAttestation;
-        organization.keybase = organizationDTO.keybase;
-        organization.twitter = organizationDTO.twitter;
-        organization.github = organizationDTO.github;
-        organization.officialEmail = organizationDTO.officialEmail;
-        if(organizationDTO.subQuorum24HoursAvailability !== undefined)
-            organization.subQuorum24HoursAvailability = organizationDTO.subQuorum24HoursAvailability;
-        if(organizationDTO.subQuorum30DaysAvailability !== undefined)
-            organization.subQuorum30DaysAvailability = organizationDTO.subQuorum30DaysAvailability;
-        organization.dateDiscovered = organizationDTO.dateDiscovered;
-        if(organizationDTO.subQuorumAvailable !== undefined)
-            organization.subQuorumAvailable = organizationDTO.subQuorumAvailable;
-        if(organizationDTO.has30DayStats !== undefined)
-            organization.has30DayStats = organizationDTO.has30DayStats;
-        if(organizationDTO.has24HourStats !== undefined)
-            organization.has24HourStats = organizationDTO.has24HourStats;
+        NetworkHydrator.mapBasicProperties(organizationDTO, organization, ['id', 'name', 'validators', 'dateDiscovered', 'dateUpdated']);
+
+        if(organizationDTO.dateDiscovered !== undefined)
+            organization.dateDiscovered = new Date(organizationDTO.dateDiscovered);
 
         return organization;
+    }
+
+    static mapBasicProperties(dto: any, domainObject:any, propertiesToSkip: Array<string>){
+        for (const [key, value] of Object.entries(dto)) {
+            if(!propertiesToSkip.includes(key))
+            {
+                NetworkHydrator.mapProperty(key, dto, domainObject);
+            }
+        }
+    }
+
+    static mapProperty(property: string, dto: any, domainObject:any){
+        if(dto[property] === undefined)
+            return;
+
+        domainObject[property] = dto[property];
     }
 }

@@ -30,6 +30,7 @@ export class Node {
     public alias?: string;
     public isp?: string;
     public organization?: Organization;
+    public unknown:boolean = false; //a node is unknown if it is not crawled or maybe archived
 
     constructor(publicKey:string, ip:string = '127.0.0.1', port:number = 11625) {
         this.ip = ip;
