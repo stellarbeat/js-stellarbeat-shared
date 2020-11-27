@@ -45,7 +45,7 @@ export class TrustGraphBuilder {
                         let trustedOrganizationVertex = graph.getVertex(trustedOrganization.id);
                         if (!isVertex(trustedOrganizationVertex))
                             return;
-                        if(!graph.hasChild(organizationVertex, trustedOrganizationVertex))
+                        if (!graph.hasChild(organizationVertex, trustedOrganizationVertex))
                             graph.addEdge(new Edge(organizationVertex, trustedOrganizationVertex!))
                     })
             })
@@ -85,9 +85,17 @@ export class TrustGraphBuilder {
 
     protected addNodeEdges(parent: Vertex, quorumSet: QuorumSet, graph: TrustGraph) {
         let validators = QuorumSet.getAllValidators(quorumSet);
-        validators
-            .map(validator => graph.getVertex(validator))
-            .filter(isVertex)
-            .forEach(validatorVertex => graph.addEdge(new Edge(parent!, validatorVertex)));
+        validators.forEach(validator => {
+            let vertex = graph.getVertex(validator);
+            if (!vertex) {//it could be that a node is not yet detected validating, but is included in quorumsets.
+                let node = this.network.getNodeByPublicKey(validator);//perhaps we already discovered it as a watcher
+                if (!node)//if not let's add an unknown node
+                    node = new Node(validator);
+
+                vertex = new Vertex(validator, node.displayName, node.index);
+                graph.addVertex(vertex);
+            }
+            graph.addEdge(new Edge(parent, vertex));
+        })
     }
 }

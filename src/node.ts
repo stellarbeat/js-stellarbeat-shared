@@ -78,6 +78,7 @@ export class Node {
             dateUpdated: this.dateUpdated,
             isFullValidator: this.isFullValidator,
             isValidating: this.isValidating,
+            isValidator: this.isValidator,
             index: this.index,
             homeDomain: this.homeDomain,
             organizationId: this.organizationId,
