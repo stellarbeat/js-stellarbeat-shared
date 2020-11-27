@@ -40,6 +40,6 @@ test('getNodeIndex', () => {
         };
     });
 
-    let nodeIndex = new NodeIndex(nodes);
+    let nodeIndex = new NodeIndex(new Network(nodes));
     expect(nodeIndex.getIndex(node1)).toEqual(0.6);
 });

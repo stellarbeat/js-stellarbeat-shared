@@ -1,6 +1,5 @@
-import {OrganizationId} from "./network";
-import {Node} from "./node";
-import {Vertex} from "./trust-graph/trust-graph";
+import {OrganizationId, PublicKey} from "./network";
+import PropertyMapper from "./PropertyMapper";
 
 export function isOrganization(organization: Organization | undefined): organization is Organization {
     return organization instanceof Organization;
@@ -21,12 +20,13 @@ export class Organization {
     public twitter?: string;
     public github?: string;
     public officialEmail?: string;
-    public validators: Node[] = [];
+    public validators: PublicKey[] = [];
     public subQuorumAvailable: boolean = false;
     public has30DayStats:boolean = false;
     public has24HourStats: boolean = false;
     public subQuorum24HoursAvailability: number = 0;
     public subQuorum30DaysAvailability: number = 0;
+    public unknown:boolean = false;
 
     public dateDiscovered?: Date;
 
@@ -65,7 +65,7 @@ export class Organization {
             twitter: this.twitter,
             github: this.github,
             officialEmail: this.officialEmail,
-            validators: this.validators.map(validator => validator.publicKey),
+            validators: this.validators,
             subQuorumAvailable: this.subQuorumAvailable,
             subQuorum24HoursAvailability: this.subQuorum24HoursAvailability,
             subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
@@ -74,6 +74,26 @@ export class Organization {
             dateDiscovered: this.dateDiscovered,
             isTierOneOrganization: this.isTierOneOrganization
         }
+    }
+
+    static fromJSON(organizationJSON:string|Object):Organization {
+        let organizationDTO:any;
+        if(typeof organizationJSON === 'string') {
+            organizationDTO = JSON.parse(organizationJSON);
+        } else
+            organizationDTO = organizationJSON;
+
+        if (!organizationDTO.id) {
+            throw new Error("organizationDTO missing id");
+        }
+
+        let organization = new Organization(organizationDTO.id, organizationDTO.name);
+        PropertyMapper.mapProperties(organizationDTO, organization, ['id', 'name', 'dateDiscovered', 'dateUpdated', 'isTierOneOrganization']);
+
+        if(organizationDTO.dateDiscovered !== undefined)
+            organization.dateDiscovered = new Date(organizationDTO.dateDiscovered);
+
+        return organization;
     }
 
     toString(){

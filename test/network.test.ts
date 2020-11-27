@@ -5,22 +5,22 @@ node1.active = true;
 node1.isValidating = true;
 node1.quorumSet.threshold = 1;
 let node2 = new Node('b');
-node1.quorumSet.validators.push(node2);
+node1.quorumSet.validators.push('b');
 
 node2.quorumSet.threshold = 1;
-node2.quorumSet.validators.push(node1);
+node2.quorumSet.validators.push('a');
 node2.active = true;
 node2.isValidating = true;
 let node3 = new Node('c');
 let node4 = new Node('d');
 
-node3.quorumSet.validators.push(node1);
-node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, [node3]));
+node3.quorumSet.validators.push('a');
+node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, ['c']));
 
-node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, [node1]));
+node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
 
 let organization = new Organization('id', 'org');
-organization.validators = [node1, node2, node3, node4];
+organization.validators = ['a', 'b', 'c', 'd'];
 let network:Network;
 
 beforeEach(() => {

@@ -1,5 +1,4 @@
 import {Node, Organization} from '../src'
-import NetworkHydrator from "../src/network-hydrator";
 
 let node = new Node("GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
 node.name = "SDF validator 2";
@@ -26,11 +25,10 @@ node.dateUpdated = new Date("2018-10-12 11:17:39");
 node.quorumSet.hashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
 node.quorumSet.threshold = 2;
 let trustedNode = new Node("GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ");
-trustedNode.isValidator = true;
 trustedNode.unknown = true;
 trustedNode.dateDiscovered = new Date("2018-04-28 14:39:01");
 trustedNode.dateUpdated = new Date("2018-10-12 11:17:39");
-node.quorumSet.validators = [trustedNode];
+node.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ"];
 node.quorumSet.innerQuorumSets = [];
 node.active = true;
 node.overLoaded = false;
@@ -38,13 +36,12 @@ node.isFullValidator = true;
 node.homeDomain = 'my-domain';
 node.isValidating = false;
 let organization = new Organization('123', 'org');
-node.organization = organization;
+node.organizationId = '123';
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
-node.isValidator = true;
 
 let nodeObject:any = {};
 nodeObject.name = "SDF validator 2";
@@ -79,7 +76,6 @@ nodeObject.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWK
 nodeObject.quorumSet.innerQuorumSets = [];
 nodeObject.active = true;
 nodeObject.overLoaded = false;
-nodeObject.isValidator = true;
 nodeObject.isFullValidator = true;
 nodeObject.homeDomain = 'my-domain';
 nodeObject.isValidating = false;
@@ -98,14 +94,9 @@ trustedNodeObject.dateUpdated = "2018-10-12 11:17:39";
 test('nodeToJson', () => {
     expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
 });
-test('hydrateNodesAndOrganizations', () => {
-    let nodesAndOrganizations = NetworkHydrator.hydrateNodesAndOrganizations([nodeObject, trustedNodeObject], [{id: '123', 'name': 'org'}]);
-    let parsedNode = nodesAndOrganizations.nodes[0];
-
-    //todo check organizations and move to dedicated network hydrator test
-    expect(parsedNode).toEqual(node);
+test('JsonToNode', () => {
+    expect(Node.fromJSON((JSON.stringify(nodeObject)))).toEqual(node);
 });
-
 let node3 = new Node("a");
 test('testDefaultPort', () => {
     expect(node3.port).toEqual(11625);

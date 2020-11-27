@@ -4,34 +4,29 @@ import {Network, Node, Organization, QuorumSet} from "../src";
 test("quorumSetToToml", ()=>{
     let node = new Node("a");
     node.name = 'a';
-
-
+    node.quorumSet.validators.push('b');
+    node.quorumSet.validators.push('d');
+    let innerQSet = new QuorumSet();
+    innerQSet.validators.push('c');
+    node.quorumSet.innerQuorumSets.push(innerQSet);
     let nodeB = new Node("b");
     nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
+    nodeB.organizationId = 'orgHighQuality';
     nodeB.historyUrl = 'myHistory.org';
     let orgHighQuality = new Organization('orgHighQuality', 'orgHighQuality');
-    nodeB.organization = orgHighQuality;
-
     orgHighQuality.has30DayStats = true;
     orgHighQuality.subQuorum30DaysAvailability = 100;
-
+    orgHighQuality.validators.push(...['b', 'e', 'f']);
     let orgLowQuality = new Organization('orgLowQuality', 'orgLowQuality');
     let nodeC = new Node("c");
     nodeC.name = 'c';
-    nodeC.organization = orgLowQuality;
+    nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
 
     let nodeD = new Node( "d");
     nodeD.name = 'd';
-    let nodeE = new Node("e");
-    let nodeF = new Node("f");
-    node.quorumSet.validators.push(nodeB);
-    node.quorumSet.validators.push(nodeD);
-    let innerQSet = new QuorumSet();
-    innerQSet.validators.push(nodeC);
-    node.quorumSet.innerQuorumSets.push(innerQSet);
-    orgHighQuality.validators.push(...[nodeB, nodeE, nodeF]);
+
     let nodes:Node[] = [node, nodeB, nodeC, nodeD];
     let organizations:Organization[] = [orgHighQuality, orgLowQuality];
     let network = new Network(nodes, organizations);
@@ -69,21 +64,20 @@ test("nodesToToml", ()=>{
     let nodeB = new Node("b");
     nodeB.name = 'b';
     nodeB.homeDomain = 'highQuality.com'
-    let orgHighQuality = new Organization('orgHighQuality', 'orgHighQuality');
-
-    nodeB.organization = orgHighQuality;
+    nodeB.organizationId = 'orgHighQuality';
     nodeB.historyUrl = 'myHistory.org';
+    let orgHighQuality = new Organization('orgHighQuality', 'orgHighQuality');
     orgHighQuality.has30DayStats = true;
     orgHighQuality.subQuorum30DaysAvailability = 100;
-    orgHighQuality.validators.push(...[nodeB, new Node("e"), new Node("f")]);
+    orgHighQuality.validators.push(...['b', 'e', 'f']);
     let orgLowQuality = new Organization('orgLowQuality', 'orgLowQuality');
     let nodeC = new Node("c");
-    nodeC.organization = orgLowQuality;
+    nodeC.organizationId = 'orgLowQuality';
     nodeC.homeDomain = 'lowQuality.com';
     nodeC.name = 'c'
     let network = new Network([nodeB, nodeC], [orgHighQuality, orgLowQuality]);
     let quorumSetCoreConfiguration = new StellarCoreConfigurationGenerator(network);
-   expect(quorumSetCoreConfiguration.nodesToToml([nodeB, nodeC])).toEqual(`[[HOME_DOMAINS]]
+    expect(quorumSetCoreConfiguration.nodesToToml([nodeB, nodeC])).toEqual(`[[HOME_DOMAINS]]
 HOME_DOMAIN = "highQuality.com"
 QUALITY = "HIGH"
 

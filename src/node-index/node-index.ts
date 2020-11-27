@@ -1,17 +1,17 @@
-import {TypeIndex, ActiveIndex, Node, VersionIndex, TrustIndex, AgeIndex} from "./../index";
+import {TypeIndex, ActiveIndex, Node, VersionIndex, TrustIndex, AgeIndex, Network} from "./../index";
 import {ValidatingIndex} from "./index/validating-index";
 
 //todo: extract to separate package (version detection packages don't need to be included in frontend
 export class NodeIndex {
 
-    _nodes: Node[];
+    _network: Network;
     _versionIndex: VersionIndex;
     _trustIndex: TrustIndex;
 
-    constructor(nodes: Node[]) {
-        this._nodes = nodes;
-        this._versionIndex = new VersionIndex(this._nodes);
-        this._trustIndex = new TrustIndex(this._nodes);
+    constructor(network: Network) {
+        this._network = network;
+        this._versionIndex = new VersionIndex(this._network.nodes);
+        this._trustIndex = new TrustIndex(this._network);
     }
 
     getIndex(node: Node): number {//index two digits after comma

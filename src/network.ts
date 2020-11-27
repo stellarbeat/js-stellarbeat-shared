@@ -1,12 +1,5 @@
-import {
-    QuorumSet,
-    Node,
-    QuorumSetService,
-    Organization,
-    TrustGraphBuilder, TrustGraph
-} from "./index";
+import {Node, Organization, QuorumSet, QuorumSetService, TrustGraph, TrustGraphBuilder} from "./index";
 import NetworkStatistics from "./network-statistics";
-import NetworkHydrator from "./network-hydrator";
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -56,7 +49,7 @@ export class Network {
     }
 
     initializeNodesTrustGraph() {
-        this._nodesTrustGraph = this._trustGraphBuilder.buildGraphFromNodes(this.nodes, false);
+        this._nodesTrustGraph = this._trustGraphBuilder.buildGraphFromNodes(this, false);
     }
 
     initializeOrganizationsMap() {
@@ -91,7 +84,8 @@ export class Network {
 
     isOrganizationFailing(organization: Organization) {
         let nrOfValidatingNodes = organization.validators
-            .filter(node => !this.isNodeFailing(node)).length;
+            .map(validator => this.getNodeByPublicKey(validator))
+            .filter(validator => !this.isNodeFailing(validator)).length;
 
         return nrOfValidatingNodes - organization.subQuorumThreshold < 0;
     }
@@ -109,16 +103,30 @@ export class Network {
         return this._nodes;
     }
 
-    getNodeByPublicKey(publicKey: PublicKey) {
-        return this._nodesMap.get(publicKey)
+    getNodeByPublicKey(publicKey: PublicKey): Node {
+        if (this._nodesMap.has(publicKey))
+            return this._nodesMap.get(publicKey)!;
+        else {
+            let unknownNode = new Node(publicKey);
+            unknownNode.unknown = true;
+
+            return unknownNode;
+        }
     }
 
     get organizations(): Array<Organization> {
         return this._organizations;
     }
 
-    getOrganizationById(id: OrganizationId) {
-        return this._organizationsMap.get(id);
+    getOrganizationById(id: OrganizationId): Organization {
+        if(this._organizationsMap.has(id))
+            return this._organizationsMap.get(id)!;
+        else {
+            let unknownOrganization = new Organization(id, id);
+            unknownOrganization.unknown = true;
+
+            return unknownOrganization;
+        }
     }
 
     get nodesTrustGraph() {
@@ -144,19 +152,19 @@ export class Network {
             if (innerQSet.validators.length === 0) {
                 return;
             }
-
-            let organization = innerQSet.validators[0].organization;
-            if (!organization) {
+            let organizationId = this.getNodeByPublicKey(innerQSet.validators[0])!.organizationId;
+            if ( organizationId === undefined || this.getOrganizationById(organizationId) === undefined) {
                 return;
             }
 
             if(!innerQSet.validators
-                .every((validator, index, validators) => validator.organization && validators[0].organization && validator.organization.id === validators[0].organization.id)
+                .map(validator => this.getNodeByPublicKey(validator)!)
+                .every((validator, index, validators) => validator.organizationId === validators[0].organizationId)
             ){
                 return;
             }
 
-            trustedOrganizations.push(organization);
+            trustedOrganizations.push(this.getOrganizationById(organizationId)!);
             trustedOrganizations.push(...this.getTrustedOrganizations(innerQSet));
         })
 
@@ -170,8 +178,22 @@ export class Network {
         );
     }
 
-    static fromJSON(network: string | Object): Network {
-        return NetworkHydrator.hydrateNetwork(network);
+    static fromJSON(networkJSON: string | Object): Network {
+        let networkDTO: any;
+        if (typeof networkJSON === 'string') {
+            networkDTO = JSON.parse(networkJSON);
+        } else
+            networkDTO = networkJSON;
+
+        let nodes = networkDTO.nodes
+            .map((node: any) => Node.fromJSON(node));
+
+        let organizations = networkDTO.organizations
+            .map((organization: any) => Organization.fromJSON(organization));
+
+        let networkStatistics = NetworkStatistics.fromJSON(networkDTO.statistics);
+
+        return new Network(nodes, organizations, new Date(networkDTO.time), networkStatistics);
     }
 
     toJSON(): Object {

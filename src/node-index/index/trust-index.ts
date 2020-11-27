@@ -1,32 +1,29 @@
-import {TrustGraph, TrustGraphBuilder, Network, Node} from "./../../index";
+import {Network, Node} from "./../../index";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
  */
 export class TrustIndex {
 
-    protected _graph!: TrustGraph;
-    protected _nodes:Node[];
+    protected _network:Network;
 
-    constructor(nodes: Node[]) {
-        this._nodes = nodes;
-        let manager = new TrustGraphBuilder();
-        this._graph = manager.buildGraphFromNodes(nodes);
+    constructor(network: Network) {
+        this._network = network;
     }
 
     get(node: Node): number {
-        let vertex = this._graph.getVertex(node.publicKey!);
+        let vertex = this._network.nodesTrustGraph.getVertex(node.publicKey!);
 
         if(!vertex)
             return 0;
 
         return (
-                Array.from(this._graph.getParents(vertex))
+                Array.from(this._network.nodesTrustGraph.getParents(vertex))
                 .filter((trustingVertex) => trustingVertex.key !== vertex!.key).length
             )
             /
             (
-                Array.from(this._graph.vertices.values()).filter(vertex => this._graph.getOutDegree(vertex) > 0).length - 1
+                Array.from(this._network.nodesTrustGraph.vertices.values()).filter(vertex => this._network.nodesTrustGraph.getOutDegree(vertex) > 0).length - 1
             );//exclude the node itself
     }
 }

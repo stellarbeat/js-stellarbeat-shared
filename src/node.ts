@@ -2,6 +2,7 @@ import {NodeGeoData} from "./node-geo-data";
 import {NodeStatistics} from "./node-statistics";
 import {QuorumSet} from "./quorum-set";
 import {Organization} from "./organization";
+import PropertyMapper from "./PropertyMapper";
 
 export class Node {
     public ip:string;
@@ -22,14 +23,13 @@ export class Node {
     public dateUpdated: Date = new Date();
     public overLoaded: boolean = false;
     public isFullValidator: boolean = false;
-    protected _isValidator: boolean = false;
     public isValidating: boolean = false;
     public homeDomain?:string;
     public index: number = 0.0;
     public historyUrl?: string;
     public alias?: string;
     public isp?: string;
-    public organization?: Organization;
+    public organizationId?: string;
     public unknown:boolean = false; //a node is unknown if it is not crawled or maybe archived
 
     constructor(publicKey:string, ip:string = '127.0.0.1', port:number = 11625) {
@@ -54,14 +54,7 @@ export class Node {
     }
 
     get isValidator(): boolean {
-        if(!this._isValidator)
-            return this.isValidating || this.quorumSet.hasValidators();
-
-        return this._isValidator;
-    }
-
-    set isValidator(value:boolean) {
-        this._isValidator = value
+        return this.isValidating || this.quorumSet.hasValidators();
     }
 
     toJSON():Object {
@@ -83,12 +76,11 @@ export class Node {
             statistics: this.statistics,
             dateDiscovered: this.dateDiscovered,
             dateUpdated: this.dateUpdated,
-            isValidator: this.isValidator,
             isFullValidator: this.isFullValidator,
             isValidating: this.isValidating,
             index: this.index,
             homeDomain: this.homeDomain,
-            organizationId: this.organization ? this.organization.id : undefined,
+            organizationId: this.organizationId,
             historyUrl: this.historyUrl,
             alias: this.alias,
             isp: this.isp
@@ -97,5 +89,30 @@ export class Node {
 
     toString(){
         return `Node (key: ${this.key}, publicKey: ${this.publicKey})`;
+    }
+
+    static fromJSON(nodeJSON:string|Object):Node {
+        let nodeDTO:any;
+        if(typeof nodeJSON === 'string') {
+            nodeDTO = JSON.parse(nodeJSON);
+        } else
+            nodeDTO = nodeJSON;
+
+        if (!nodeDTO.publicKey) {
+            throw new Error("nodeDTO missing public key");
+        }
+
+        let node = new Node(nodeDTO.publicKey);
+        node.quorumSet = QuorumSet.fromJSON(nodeDTO.quorumSet);
+        node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
+        node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
+
+        PropertyMapper.mapProperties(nodeDTO, node, ['publicKey', 'geoData', 'quorumSet', 'statistics', 'dateDiscovered', 'dateUpdated']);
+        if(nodeDTO.dateDiscovered !== undefined)
+            node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
+        if(nodeDTO.dateUpdated !== undefined)
+            node.dateUpdated = new Date(nodeDTO.dateUpdated);
+
+        return node;
     }
 }
