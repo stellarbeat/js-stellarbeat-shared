@@ -51,6 +51,8 @@ export class TrustGraphBuilder {
             })
         });
 
+        graph.updateStronglyConnectedComponentsAndNetworkTransitiveQuorumSet();
+
         return graph;
 
     }

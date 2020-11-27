@@ -53,4 +53,6 @@ test('buildGraphs', () => {
     expect(organizationsGraph.edges.size).toEqual(2);
     expect(Array.from(organizationsGraph.edges).filter(edge => edge.parent.key === 'A' && edge.child.key === 'B')).toHaveLength(1);
     expect(Array.from(organizationsGraph.edges).filter(edge => edge.parent.key === 'B' && edge.child.key === 'A')).toHaveLength(1);
+
+    expect(Array.from(organizationsGraph.networkTransitiveQuorumSet)).toEqual(['B', 'A']);
 });
