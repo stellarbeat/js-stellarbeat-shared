@@ -80,6 +80,7 @@ nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
 nodeObject.statistics.has30DayStats = true;
 nodeObject.statistics.has24HourStats = true;
+nodeObject.isValidator = true;
 let trustedNodeObject:any = {};
 trustedNodeObject.publicKey = 'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ';
 trustedNodeObject.unknown = true;

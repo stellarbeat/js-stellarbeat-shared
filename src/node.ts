@@ -107,7 +107,7 @@ export class Node {
         node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
         node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
 
-        PropertyMapper.mapProperties(nodeDTO, node, ['publicKey', 'geoData', 'quorumSet', 'statistics', 'dateDiscovered', 'dateUpdated']);
+        PropertyMapper.mapProperties(nodeDTO, node, ['publicKey', 'isValidator', 'geoData', 'quorumSet', 'statistics', 'dateDiscovered', 'dateUpdated']);
         if(nodeDTO.dateDiscovered !== undefined)
             node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
         if(nodeDTO.dateUpdated !== undefined)
