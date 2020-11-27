@@ -28,10 +28,10 @@ nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['e']));
 nodeD.quorumSet.threshold = 1;
 nodeE.quorumSet.threshold = 0;
 
-let trustGraphBuilder = new TrustGraphBuilder();
+let network = new Network([nodeA, nodeB, nodeC, nodeD, nodeE]);
+let trustGraphBuilder = new TrustGraphBuilder(network);
 
 test('buildGraphFromNodes', () => {
-    let network = new Network([nodeA, nodeB, nodeC, nodeD, nodeE]);
     let graph = network.nodesTrustGraph;
     expect(graph.vertices.size).toEqual(5);
     expect(graph.edges.size).toEqual(5);
@@ -42,17 +42,4 @@ test('buildGraphFromNodes', () => {
     expect(Array.from(graph.edges).filter(
         edge => graph.isEdgePartOfStronglyConnectedComponent(edge)).length
     ).toEqual(2);
-});
-
-test('updateGraphWithFailingVertices', () => {
-    let nodes = [nodeA, nodeB, nodeC, nodeD, nodeE];
-    let network = new Network(nodes);
-    let graph = trustGraphBuilder.buildGraphFromNodes(network);
-    let map = new Map();
-    nodes.forEach(node => map.set(node.publicKey, node));
-    trustGraphBuilder.updateNodesGraphWithFailingVertices(network, graph, ['a']);
-    expect(Array.from(graph.vertices.values()).filter(vertex => !vertex.failing).length).toEqual(2);
-    expect(Array.from(graph.edges.values()).filter(edge => !edge.failing).length).toEqual(1);
-    expect(graph.hasNetworkTransitiveQuorumSet()).toEqual(true);
-    expect(graph.networkTransitiveQuorumSet.size).toEqual(2);
 });

@@ -1,7 +1,4 @@
 export class NodeStatistics {
-    public activeInLastCrawl: boolean = false;
-    public overLoadedInLastCrawl: boolean = false;
-    public validatingInLastCrawl: boolean = false;
     public active30DaysPercentage: number = 0;
     public overLoaded30DaysPercentage: number = 0;
     public validating30DaysPercentage: number = 0;
@@ -14,9 +11,6 @@ export class NodeStatistics {
 
     toJSON():Object {
         return {
-            activeInLastCrawl: this.activeInLastCrawl,
-            overLoadedInLastCrawl: this.overLoadedInLastCrawl,
-            validatingInLastCrawl: this.validatingInLastCrawl,
             active30DaysPercentage: this.active30DaysPercentage,
             overLoaded30DaysPercentage: this.overLoaded30DaysPercentage,
             validating30DaysPercentage: this.validating30DaysPercentage,
@@ -40,13 +34,6 @@ export class NodeStatistics {
             nodeStatisticsObject = nodeStatistics;
 
         let newNodeStatistics = new NodeStatistics();
-        if(nodeStatisticsObject.overLoadedInLastCrawl !== undefined && nodeStatisticsObject.overLoadedInLastCrawl !== null)
-            newNodeStatistics.overLoadedInLastCrawl = nodeStatisticsObject.overLoadedInLastCrawl;
-        if(nodeStatisticsObject.activeInLastCrawl !== undefined && nodeStatisticsObject.activeInLastCrawl !== null)
-            newNodeStatistics.activeInLastCrawl = nodeStatisticsObject.activeInLastCrawl;
-
-        if(nodeStatisticsObject.validatingInLastCrawl !== undefined && nodeStatisticsObject.validatingInLastCrawl !== null)
-            newNodeStatistics.validatingInLastCrawl = nodeStatisticsObject.validatingInLastCrawl;
 
         if(nodeStatisticsObject.active30DaysPercentage)
             newNodeStatistics.active30DaysPercentage = nodeStatisticsObject.active30DaysPercentage;

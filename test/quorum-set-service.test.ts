@@ -23,16 +23,16 @@ let graph = network.nodesTrustGraph;
 describe('canReachThreshold', () => {
     test('basic true', () => {
         let qs = new QuorumSet('a', 2, ["1", "2"]);
-        expect(QuorumSetService.quorumSetCanReachThreshold(qs, graph)).toBeTruthy();
+        expect(QuorumSetService.quorumSetCanReachThreshold(qs, network, network.blockedNodes)).toBeTruthy();
     });
     test('true with self included', () => {
         let qs = new QuorumSet('a', 3, ["0","1", "2"]);
-        expect(QuorumSetService.quorumSetCanReachThreshold(qs, graph)).toBeTruthy();
+        expect(QuorumSetService.quorumSetCanReachThreshold(qs, network, network.blockedNodes)).toBeTruthy();
     });
 
     test('basic false', () => {
         let qs = new QuorumSet('a', 4, ["0","1", "2"]);
-        expect(QuorumSetService.quorumSetCanReachThreshold(qs, graph)).toBeFalsy();
+        expect(QuorumSetService.quorumSetCanReachThreshold(qs, network, network.blockedNodes)).toBeFalsy();
     });
 
     test('innerQS', () => {
@@ -40,7 +40,7 @@ describe('canReachThreshold', () => {
             new QuorumSet('b', 2, ["0", "1", "2"]),
             new QuorumSet('c', 1, ["1"])
         ] );
-        expect(QuorumSetService.quorumSetCanReachThreshold(qs, graph)).toBeTruthy();
+        expect(QuorumSetService.quorumSetCanReachThreshold(qs, network, network.blockedNodes)).toBeTruthy();
     });
     test('innerInnerQS', () => {
         let qs = new QuorumSet('a', 2,[], [
@@ -51,6 +51,6 @@ describe('canReachThreshold', () => {
             ),
             new QuorumSet('c', 1, ["1"])
         ] );
-        expect(QuorumSetService.quorumSetCanReachThreshold(qs, graph)).toBeTruthy();
+        expect(QuorumSetService.quorumSetCanReachThreshold(qs, network, network.blockedNodes)).toBeTruthy();
     });
 });

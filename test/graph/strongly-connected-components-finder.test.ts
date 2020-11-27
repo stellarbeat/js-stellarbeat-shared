@@ -66,11 +66,12 @@ node8.quorumSet.validators.push(node4.publicKey);
 node9.quorumSet.validators.push(node10.publicKey);
 node10.quorumSet.validators.push(node9.publicKey);
 
-let directedGraphManager = new TrustGraphBuilder();
+let network = new Network([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]);
+let directedGraphManager = new TrustGraphBuilder(network);
 
 
 test('findTarjan', function () {
-    let graph = directedGraphManager.buildGraphFromNodes(new Network([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]));
+    let graph = directedGraphManager.buildGraphFromNodes();
     let dfs = new StronglyConnectedComponentsFinder();
     let results = dfs.findTarjan(graph);
 
@@ -89,7 +90,7 @@ test('findTarjanFailingNodes', function () {
 
     node7.isValidating = false;
     node8.isValidating = false;
-    let graph = directedGraphManager.buildGraphFromNodes(new Network([node7, node1, node2, node3, node4, node5, node6, node8, node9, node10]));
+    let graph = directedGraphManager.buildGraphFromNodes();
     let dfs = new StronglyConnectedComponentsFinder();
     let results = dfs.findTarjan(graph);
 

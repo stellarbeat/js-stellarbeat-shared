@@ -21,6 +21,7 @@ node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
 
 let organization = new Organization('id', 'org');
 organization.validators = ['a', 'b', 'c', 'd'];
+organization.subQuorumAvailable = true;
 let network:Network;
 
 beforeEach(() => {
@@ -45,9 +46,9 @@ test('isNodeFailing', () => {
 });
 
 test ('isOrganizationFailing', () => {
-    expect(network.isOrganizationFailing(organization)).toBeFalsy();
+    expect(organization.subQuorumAvailable).toBeTruthy();
     node1.isValidating = false;
-    network.updateNetwork();
-    expect(network.isOrganizationFailing(organization)).toBeTruthy();
+    network.modifyNetwork();
+    expect(organization.subQuorumAvailable).toBeFalsy();
 
 })

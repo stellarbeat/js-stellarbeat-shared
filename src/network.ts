@@ -7,28 +7,37 @@ export type PublicKey = string;
 export class Network {
     protected _nodes: Array<Node>;
     protected _organizations: Array<Organization>;
-    protected _nodesMap: Map<PublicKey, Node>;
-    protected _organizationsMap: Map<OrganizationId, Organization> = new Map();
-    protected _trustGraphBuilder: TrustGraphBuilder = new TrustGraphBuilder();
+    protected _trustGraphBuilder: TrustGraphBuilder;
     protected _nodesTrustGraph!: TrustGraph;
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
 
+    //a blocked node is a node that cannot reach its threshold.
+    //todo: this could become a property of a node, but seeing as the network is the aggregate that controls this property, we keep it here for now.
+    public blockedNodes: Set<PublicKey> = new Set();
+
+    //todo should be abstracted to a database
+    protected nodesMap: Map<PublicKey, Node>;
+    protected organizationsMap: Map<OrganizationId, Organization> = new Map();
+
     constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date(), networkStatistics?: NetworkStatistics) {
         this._nodes = nodes;
         this._organizations = organizations;
-        this._nodesMap = this.getPublicKeyToNodeMap(nodes);
+        this.nodesMap = this.getPublicKeyToNodeMap(nodes);
         this.initializeOrganizationsMap();
         this._quorumSetService = new QuorumSetService();
         this._crawlDate = crawlDate;
+        this._trustGraphBuilder = new TrustGraphBuilder(this);
         this.initializeNodesTrustGraph();
+
         if (networkStatistics)
             this._networkStatistics = networkStatistics;
         else {
             this._networkStatistics = new NetworkStatistics();
             this.updateNetworkStatistics();
         }
+
     }
 
     get networkStatistics() {
@@ -39,7 +48,7 @@ export class Network {
         this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(node => !node.isValidator && node.active).length;
         this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
-        this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => !this.isOrganizationFailing(organization)).length;
+        this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => organization.subQuorumAvailable).length;
         this.networkStatistics.transitiveQuorumSetSize = this.nodesTrustGraph.networkTransitiveQuorumSet.size;
         this.networkStatistics.hasTransitiveQuorumSet = this.nodesTrustGraph.hasNetworkTransitiveQuorumSet();
 
@@ -49,20 +58,25 @@ export class Network {
     }
 
     initializeNodesTrustGraph() {
-        this._nodesTrustGraph = this._trustGraphBuilder.buildGraphFromNodes(this, false);
+        this._nodesTrustGraph = this._trustGraphBuilder.buildGraphFromNodes(false);
     }
 
     initializeOrganizationsMap() {
-        this._organizations.forEach(organization => this._organizationsMap.set(organization.id, organization));
+        this._organizations.forEach(organization => this.organizationsMap.set(organization.id, organization));
     }
 
-    updateNetwork(nodes?: Array<Node>) {
+    modifyNetwork(nodes?: Array<Node>) {
         if (nodes) {
             this._nodes = nodes;
         }
-        this._nodesMap = this.getPublicKeyToNodeMap(this._nodes);
+        this.nodesMap = this.getPublicKeyToNodeMap(this._nodes);
         this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
+
+        //determine if nodes and organizations are failing due to the changes
+        this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
+        this.updateOrganizationSubQuorumAvailabilityStates();
+
         this.updateNetworkStatistics();
     }
 
@@ -74,20 +88,26 @@ export class Network {
         if (!node.isValidator)
             return !node.active;
 
-        let vertex = this._nodesTrustGraph.getVertex(node.publicKey!);
-        if (!vertex) {
+        if(this.blockedNodes.has(node.publicKey))
             return true;
-        }
 
-        return vertex.failing;
+        return !node.isValidating
     }
 
-    isOrganizationFailing(organization: Organization) {
-        let nrOfValidatingNodes = organization.validators
-            .map(validator => this.getNodeByPublicKey(validator))
-            .filter(validator => !this.isNodeFailing(validator)).length;
+    isValidatorBlocked(validator: Node){
+        return this.blockedNodes.has(validator.publicKey);
+    }
 
-        return nrOfValidatingNodes - organization.subQuorumThreshold < 0;
+    updateOrganizationSubQuorumAvailabilityStates(){
+        this.organizations.forEach(organization => {
+            let nrOfValidatingNodes = organization.validators
+                .map(validator => this.getNodeByPublicKey(validator))
+                .filter(validator => !this.isNodeFailing(validator)).length;
+
+            if(nrOfValidatingNodes - organization.subQuorumThreshold < 0)
+                organization.subQuorumAvailable = false;
+            else organization.subQuorumAvailable = true;
+        })
     }
 
     isQuorumSetFailing(node: Node, innerQuorumSet?: QuorumSet) {//todo should pass graphQuorumSet
@@ -96,7 +116,7 @@ export class Network {
             quorumSet = node.quorumSet;
         }
 
-        return !QuorumSetService.quorumSetCanReachThreshold(quorumSet, this._nodesTrustGraph);
+        return !QuorumSetService.quorumSetCanReachThreshold(quorumSet, this, this.blockedNodes);
     }
 
     get nodes(): Array<Node> {
@@ -104,8 +124,8 @@ export class Network {
     }
 
     getNodeByPublicKey(publicKey: PublicKey): Node {
-        if (this._nodesMap.has(publicKey))
-            return this._nodesMap.get(publicKey)!;
+        if (this.nodesMap.has(publicKey))
+            return this.nodesMap.get(publicKey)!;
         else {
             let unknownNode = new Node(publicKey);
             unknownNode.unknown = true;
@@ -119,8 +139,8 @@ export class Network {
     }
 
     getOrganizationById(id: OrganizationId): Organization {
-        if(this._organizationsMap.has(id))
-            return this._organizationsMap.get(id)!;
+        if(this.organizationsMap.has(id))
+            return this.organizationsMap.get(id)!;
         else {
             let unknownOrganization = new Organization(id, id);
             unknownOrganization.unknown = true;
@@ -146,6 +166,7 @@ export class Network {
             .map(vertex => this.getNodeByPublicKey(vertex.key)!)
     }
 
+    //todo => get data from organizationTrustGraph
     getTrustedOrganizations(quorumSet:QuorumSet):Organization[] {
         let trustedOrganizations:Organization[] = [];
         quorumSet.innerQuorumSets.forEach(innerQSet => {

@@ -7,23 +7,20 @@ export type VertexKey = string;
 export class Vertex {
     public readonly key: VertexKey;
     public readonly label: string;
-    public readonly weight: number; //e.g. trust in the network
-    public failing: boolean;
+    public readonly weight: number;
 
     constructor(
         publicKey: PublicKey,
         label: string,
-        failing: boolean,
         weight: number,
     ) {
         this.label = label;
         this.key = publicKey;
         this.weight = weight;
-        this.failing = failing;
     }
 
     toString() {
-        return `Vertex (publicKey: ${this.key}, label: ${this.label}, failing: ${this.failing})`;
+        return `Vertex (publicKey: ${this.key}, label: ${this.label})`;
     }
 }
 
@@ -40,12 +37,8 @@ export class Edge {
         this.child = child;
     }
 
-    get failing(): boolean {
-        return this.child.failing || this.parent.failing
-    }
-
     toString() {
-        return `Edge (parent: ${this.parent.key}, child: ${this.child.key}, failing: ${this.failing})`;
+        return `Edge (parent: ${this.parent.key}, child: ${this.child.key})`;
     }
 }
 

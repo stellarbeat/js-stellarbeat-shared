@@ -33,11 +33,12 @@ nodeBB.quorumSet.threshold = 1;
 organizationA.validators.push(...['a', 'aa']);
 organizationB.validators.push(...['b', 'bb']);
 
-let trustGraphBuilder = new TrustGraphBuilder();
+let network = new Network([nodeA, nodeAA, nodeB, nodeBB], [organizationA, organizationB]);
+let trustGraphBuilder = new TrustGraphBuilder(network);
 
 test('buildGraphs', () => {
-    let nodesGraph = trustGraphBuilder.buildGraphFromNodes(new Network([nodeA, nodeAA, nodeB, nodeBB]));
-    let organizationsGraph = trustGraphBuilder.buildGraphFromOrganizations(new Network([nodeA, nodeAA, nodeB, nodeBB], [organizationA, organizationB]));
+    let nodesGraph = trustGraphBuilder.buildGraphFromNodes();
+    let organizationsGraph = trustGraphBuilder.buildGraphFromOrganizations(nodesGraph);
 
     expect(nodesGraph.vertices.size).toEqual(4);
     expect(nodesGraph.edges.size).toEqual(4);
