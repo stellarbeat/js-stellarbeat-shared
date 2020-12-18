@@ -35,7 +35,7 @@ export class QuorumSetService {
 
         while (nodesToCheck.length > 0) {
             let nodeToCheck = nodesToCheck.pop()!;
-            inNodesToCheckQueue.set(nodeToCheck.key, false);
+            inNodesToCheckQueue.set(nodeToCheck.publicKey, false);
 
             if(blockedNodes.has(nodeToCheck.publicKey)){
                 continue; //already blocked
