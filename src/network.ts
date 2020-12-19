@@ -199,6 +199,18 @@ export class Network {
         );
     }
 
+    getTrustedOrganizationsByOrganization(organization: Organization) {
+        let trustedOrganizations:Organization[] = [];
+        organization.validators.forEach(publicKey => {
+            let validator = this.getNodeByPublicKey(publicKey)!;
+            this.getTrustedOrganizations(validator.quorumSet).forEach(org => {
+                if(org.id !== organization.id)
+                    trustedOrganizations.push(org)
+            });
+        })
+        return Array.from(new Set(trustedOrganizations));//remove doubles
+    }
+
     static fromJSON(networkJSON: string | Object): Network {
         let networkDTO: any;
         if (typeof networkJSON === 'string') {

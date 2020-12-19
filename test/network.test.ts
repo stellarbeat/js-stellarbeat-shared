@@ -13,19 +13,31 @@ node2.active = true;
 node2.isValidating = true;
 let node3 = new Node('c');
 let node4 = new Node('d');
-
+let node5 = new Node('e');
 node3.quorumSet.validators.push('a');
 node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, ['c']));
-
+node4.quorumSet.threshold = 1;
 node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
+node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['e']));
 
-let organization = new Organization('id', 'org');
+let organization = new Organization('orgId', 'org');
 organization.validators = ['a', 'b', 'c', 'd'];
+node1.organizationId = 'orgId';
+node2.organizationId = 'orgId';
+node3.organizationId = 'orgId';
+node4.organizationId = 'orgId';
 organization.subQuorumAvailable = true;
+organization.subQuorumAvailable = true;
+organization.subQuorumAvailable = true;
+organization.subQuorumAvailable = true;
+let otherOrganization = new Organization('otherId', 'otherOrg');
+otherOrganization.validators = ['e'];
+node5.organizationId = 'otherId';
+
 let network:Network;
 
 beforeEach(() => {
-    network = new Network([node1, node2, node3, node4], [organization]);
+    network = new Network([node1, node2, node3, node4, node5], [organization, otherOrganization]);
 } )
 test('getTrustingNodes', () => {
     expect(network.getTrustingNodes(node1)).toEqual([node2, node3, node4]);
@@ -51,4 +63,7 @@ test ('isOrganizationFailing', () => {
     network.modifyNetwork();
     expect(organization.subQuorumAvailable).toBeFalsy();
 
+})
+test('getTrustedOrganizationsByOrganization', () => {
+    expect(network.getTrustedOrganizationsByOrganization(organization)).toEqual([otherOrganization]);
 })
