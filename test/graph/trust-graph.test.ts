@@ -43,3 +43,7 @@ test('buildGraphFromNodes', () => {
         edge => graph.isEdgePartOfStronglyConnectedComponent(edge)).length
     ).toEqual(2);
 });
+test('getTransitiveChildren', () => {
+    let vertexC = network.nodesTrustGraph.getVertex(nodeC.publicKey)!;
+    expect(Array.from(network.nodesTrustGraph.getTransitiveChildren(vertexC)).map(vertex => vertex.key)).toEqual(['a', 'b']);
+})
