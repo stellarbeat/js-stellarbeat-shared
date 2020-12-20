@@ -37,8 +37,8 @@ export class QuorumSetService {
             let nodeToCheck = nodesToCheck.pop()!;
             inNodesToCheckQueue.set(nodeToCheck.publicKey, false);
 
-            if(blockedNodes.has(nodeToCheck.publicKey)){
-                continue; //already blocked
+            if(blockedNodes.has(nodeToCheck.publicKey) || !nodeToCheck.isValidating){
+                continue; //already blocked or not validating, thus no change in situation that could cause other nodes to fail
             }
 
             if (QuorumSetService.quorumSetCanReachThreshold(nodeToCheck.quorumSet, network, blockedNodes)
