@@ -39,6 +39,17 @@ let network:Network;
 beforeEach(() => {
     network = new Network([node1, node2, node3, node4, node5], [organization, otherOrganization]);
 } )
+test('isOrganizationBlocked', () => {
+    expect(network.isOrganizationBlocked(organization)).toBeFalsy();
+    organization.subQuorumAvailable = false;
+    expect(network.isOrganizationBlocked(organization)).toBeFalsy();
+    expect(network.isOrganizationFailing(organization)).toBeTruthy();
+    network.blockedNodes.add(node1.publicKey);
+    network.blockedNodes.add(node2.publicKey);
+    expect(network.isOrganizationBlocked(organization)).toBeFalsy();
+    network.blockedNodes.add(node3.publicKey);
+    expect(network.isOrganizationBlocked(organization)).toBeTruthy();
+})
 test('getTrustingNodes', () => {
     expect(network.getTrustingNodes(node1)).toEqual([node2, node3, node4]);
 });

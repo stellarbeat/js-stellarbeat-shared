@@ -98,6 +98,19 @@ export class Network {
         return this.blockedNodes.has(validator.publicKey);
     }
 
+    //convenience method
+    isOrganizationFailing(organization: Organization){
+        return !organization.subQuorumAvailable;
+    }
+    //if the organization is failing and there aren't enough 'non-blocked' nodes to possibly re-enable it, the organization is blocked.
+    isOrganizationBlocked(organization: Organization){
+        if(organization.subQuorumAvailable)
+            return false;
+
+        return organization.validators.filter(validator => !this.blockedNodes.has(validator)).length < organization.subQuorumThreshold;
+
+    }
+
     updateOrganizationSubQuorumAvailabilityStates(){
         this.organizations.forEach(organization => {
             let nrOfValidatingNodes = organization.validators
