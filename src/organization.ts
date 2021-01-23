@@ -10,6 +10,7 @@ export class Organization {
     public readonly name:string;
     public dba?: string;
     public url?: string;
+    public horizonUrl?: string;
     public logo?: string;
     public description?: string;
     public physicalAddress?: string;
@@ -55,6 +56,7 @@ export class Organization {
             name: this.name,
             dba: this.dba,
             url: this.url,
+            horizonUrl: this.horizonUrl,
             logo: this.logo,
             description: this.description,
             physicalAddress: this.physicalAddress,

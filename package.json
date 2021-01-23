@@ -27,14 +27,14 @@
     "to-semver": "^2.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
+    "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.136",
     "@types/node": "^10.12.12",
     "@types/semver": "^6.0.2",
     "await-fs": "^1.0.0",
-    "jest": "^26.0.1",
+    "jest": "^26.6.3",
     "merge": ">=1.2.1",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^26.4.4",
     "typescript": "^3.9.3"
   }
 }

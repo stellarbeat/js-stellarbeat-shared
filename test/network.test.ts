@@ -49,6 +49,7 @@ test('isOrganizationBlocked', () => {
     expect(network.isOrganizationBlocked(organization)).toBeFalsy();
     network.blockedNodes.add(node3.publicKey);
     expect(network.isOrganizationBlocked(organization)).toBeTruthy();
+    organization.subQuorumAvailable = true;//needs refactoring
 })
 test('getTrustingNodes', () => {
     expect(network.getTrustingNodes(node1)).toEqual([node2, node3, node4]);
@@ -73,6 +74,7 @@ test ('isOrganizationFailing', () => {
     node1.isValidating = false;
     network.modifyNetwork();
     expect(organization.subQuorumAvailable).toBeFalsy();
+    node1.isValidating = true;//needs refactoring
 
 })
 test('getTrustedOrganizationsByOrganization', () => {
