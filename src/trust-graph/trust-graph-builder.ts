@@ -87,15 +87,16 @@ export class TrustGraphBuilder {
         let validators = QuorumSet.getAllValidators(quorumSet);
         validators.forEach(validator => {
             let vertex = graph.getVertex(validator);
-            if (!vertex) {//it could be that a node is not yet detected validating, but is included in quorumsets.
+            /*if (!vertex) {//it could be that a node is not yet detected validating, but is included in quorumsets.
                 let node = this.network.getNodeByPublicKey(validator);//perhaps we already discovered it as a watcher
                 if (!node)//if not let's add an unknown node
                     node = new Node(validator);
 
                 vertex = new Vertex(validator, node.displayName, node.index);
                 graph.addVertex(vertex);
-            }
-            graph.addEdge(new Edge(parent, vertex));
+            }*/ //if we add a node where we have no quorumset information, adding that node could break transitive quorumset calculation (outgoing edges?). Another solution is to introduce an 'unknown' property to vertex and filter it out in sensitive calculations. For now we remove it from the graph.
+            if(vertex)
+                graph.addEdge(new Edge(parent, vertex));
         })
     }
 }
