@@ -30,7 +30,7 @@ export class Network {
         this._crawlDate = crawlDate;
         this._trustGraphBuilder = new TrustGraphBuilder(this);
         this.initializeNodesTrustGraph();
-        this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
+        //this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
 
         if (networkStatistics)
             this._networkStatistics = networkStatistics;

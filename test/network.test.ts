@@ -15,6 +15,7 @@ let node3 = new Node('c');
 let node4 = new Node('d');
 let node5 = new Node('e');
 node3.quorumSet.validators.push('a');
+node3.quorumSet.threshold = 1;
 node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, ['c']));
 node4.quorumSet.threshold = 1;
 node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
@@ -58,7 +59,7 @@ test('getTrustingNodes', () => {
 test('isQuorumSetFailing', () => {
     expect(network.isQuorumSetFailing(node2)).toBeFalsy();
     expect(network.isQuorumSetFailing(node2, node2.quorumSet.innerQuorumSets[0])).toBeTruthy();
-    expect(network.isQuorumSetFailing(node3)).toBeTruthy();
+    expect(network.isQuorumSetFailing(node3)).toBeFalsy();
 });
 
 test('isNodeFailing', () => {
