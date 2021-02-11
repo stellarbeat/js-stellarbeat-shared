@@ -36,7 +36,7 @@ export class Organization {
         this.name = name;
     }
 
-    get subQuorumFailAt(): number {
+    get subQuorumBlockedAt(): number {
         return this.validators.length - this.subQuorumThreshold + 1;
     }
 

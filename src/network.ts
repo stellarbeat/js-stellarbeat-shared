@@ -47,8 +47,8 @@ export class Network {
 
     updateNetworkStatistics(fbasAnalysisResult?: any) {
         this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(node => !node.isValidator && node.active).length;
-        this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeMissing(node)).length;
-        this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeMissing(node)).length;
+        this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
+        this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
         this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => organization.subQuorumAvailable).length;
         this.networkStatistics.transitiveQuorumSetSize = this.nodesTrustGraph.networkTransitiveQuorumSet.size;
         this.networkStatistics.hasTransitiveQuorumSet = this.nodesTrustGraph.hasNetworkTransitiveQuorumSet();
@@ -85,26 +85,59 @@ export class Network {
         return this._crawlDate;
     }
 
+    /*
+     By crawling we know if nodes are watchers (never sent any SCP message) or validators (participating in SCP)
+     We mark validators that are not sending SCP externalize messages as missing.
+     We mark watchers that are not live as missing.
+     */
     isNodeMissing(node: Node) {
-        if (!node.isValidator)
+        if (!node.isValidator)//watchers are marked missing when we cannot connect to them
             return !node.active;
 
-        //if a node is blocked, we mark it as missing for simulation purposes
+        return !node.isValidating;
+    }
+
+    /**
+     * A node can fail for various reasons. See Fig. 5.   Venn diagram of node failures of the original SCP paper.
+     * When a node is missing we mark it as failed.
+     * If we modify the network for simulation purposes, we mark validators that are blocked as failed.
+     */
+    isNodeFailing(node: Node) {
+        //if a node is blocked, we mark it as failed for simulation purposes
         if(this.blockedNodes.has(node.publicKey))
             return true;
 
-        return !node.isValidating
+        return this.isNodeMissing(node);
     }
 
+    /*
+    Everytime the network is modified for simulation purposes we check if validators can reach their quorumset thresholds.
+    If not we mark them as 'blocked'.
+     */
     isValidatorBlocked(validator: Node){
         return this.blockedNodes.has(validator.publicKey);
     }
 
-    //convenience method
+    /*
+    An organization is missing if a simple majority of it's validators are missing.
+     */
     isOrganizationMissing(organization: Organization){
         return !organization.subQuorumAvailable;
     }
-    //if the organization is missing in scp and there aren't enough 'non-blocked' nodes to possibly re-enable it, the organization is blocked.
+
+    /*
+    An organization is failing if it is blocked or missing.
+     */
+    isOrganizationFailing(organization: Organization){
+        if(this.isOrganizationBlocked(organization))
+            return true;
+
+        return this.isOrganizationMissing(organization);
+    }
+
+    /*
+      An organization is blocked if due to simulation changes of the network, there aren't enough 'non-blocked' nodes to possibly re-enable it.
+     */
     isOrganizationBlocked(organization: Organization){
         if(organization.subQuorumAvailable)
             return false;
@@ -117,7 +150,7 @@ export class Network {
         this.organizations.forEach(organization => {
             let nrOfValidatingNodes = organization.validators
                 .map(validator => this.getNodeByPublicKey(validator))
-                .filter(validator => !this.isNodeMissing(validator)).length;
+                .filter(validator => !this.isNodeFailing(validator)).length;
 
             if(nrOfValidatingNodes - organization.subQuorumThreshold < 0)
                 organization.subQuorumAvailable = false;

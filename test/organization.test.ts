@@ -58,7 +58,7 @@ describe('subquorum',() => {
         expect(organization.subQuorumThreshold).toEqual(2);
     });
     test('failAt', () => {
-        expect(organization.subQuorumFailAt).toEqual(3);
+        expect(organization.subQuorumBlockedAt).toEqual(3);
     });
 });
 
