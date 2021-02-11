@@ -47,8 +47,8 @@ export class Network {
 
     updateNetworkStatistics(fbasAnalysisResult?: any) {
         this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(node => !node.isValidator && node.active).length;
-        this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeFailing(node)).length;
-        this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeFailing(node)).length;
+        this.networkStatistics.nrOfActiveValidators = this.nodes.filter(node => node.active && node.isValidating && !this.isNodeMissing(node)).length;
+        this.networkStatistics.nrOfActiveFullValidators = this.nodes.filter(node => node.isFullValidator && !this.isNodeMissing(node)).length;
         this.networkStatistics.nrOfActiveOrganizations = this.organizations.filter(organization => organization.subQuorumAvailable).length;
         this.networkStatistics.transitiveQuorumSetSize = this.nodesTrustGraph.networkTransitiveQuorumSet.size;
         this.networkStatistics.hasTransitiveQuorumSet = this.nodesTrustGraph.hasNetworkTransitiveQuorumSet();
@@ -74,7 +74,7 @@ export class Network {
         this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
 
-        //determine if nodes and organizations are failing due to the changes
+        //determine if nodes and organizations are blocked due to the changes
         this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
         this.updateOrganizationSubQuorumAvailabilityStates();
 
@@ -85,10 +85,11 @@ export class Network {
         return this._crawlDate;
     }
 
-    isNodeFailing(node: Node) {
+    isNodeMissing(node: Node) {
         if (!node.isValidator)
             return !node.active;
 
+        //if a node is blocked, we mark it as missing for simulation purposes
         if(this.blockedNodes.has(node.publicKey))
             return true;
 
@@ -100,10 +101,10 @@ export class Network {
     }
 
     //convenience method
-    isOrganizationFailing(organization: Organization){
+    isOrganizationMissing(organization: Organization){
         return !organization.subQuorumAvailable;
     }
-    //if the organization is failing and there aren't enough 'non-blocked' nodes to possibly re-enable it, the organization is blocked.
+    //if the organization is missing in scp and there aren't enough 'non-blocked' nodes to possibly re-enable it, the organization is blocked.
     isOrganizationBlocked(organization: Organization){
         if(organization.subQuorumAvailable)
             return false;
@@ -116,7 +117,7 @@ export class Network {
         this.organizations.forEach(organization => {
             let nrOfValidatingNodes = organization.validators
                 .map(validator => this.getNodeByPublicKey(validator))
-                .filter(validator => !this.isNodeFailing(validator)).length;
+                .filter(validator => !this.isNodeMissing(validator)).length;
 
             if(nrOfValidatingNodes - organization.subQuorumThreshold < 0)
                 organization.subQuorumAvailable = false;
@@ -124,7 +125,7 @@ export class Network {
         })
     }
 
-    isQuorumSetFailing(node: Node, innerQuorumSet?: QuorumSet) {//todo should pass graphQuorumSet
+    isQuorumSetBlocked(node: Node, innerQuorumSet?: QuorumSet) {//todo should pass graphQuorumSet
         let quorumSet = innerQuorumSet;
         if (quorumSet === undefined) {
             quorumSet = node.quorumSet;

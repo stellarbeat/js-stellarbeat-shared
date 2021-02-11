@@ -44,7 +44,7 @@ test('isOrganizationBlocked', () => {
     expect(network.isOrganizationBlocked(organization)).toBeFalsy();
     organization.subQuorumAvailable = false;
     expect(network.isOrganizationBlocked(organization)).toBeFalsy();
-    expect(network.isOrganizationFailing(organization)).toBeTruthy();
+    expect(network.isOrganizationMissing(organization)).toBeTruthy();
     network.blockedNodes.add(node1.publicKey);
     network.blockedNodes.add(node2.publicKey);
     expect(network.isOrganizationBlocked(organization)).toBeFalsy();
@@ -57,17 +57,17 @@ test('getTrustingNodes', () => {
 });
 
 test('isQuorumSetFailing', () => {
-    expect(network.isQuorumSetFailing(node2)).toBeFalsy();
-    expect(network.isQuorumSetFailing(node2, node2.quorumSet.innerQuorumSets[0])).toBeTruthy();
-    expect(network.isQuorumSetFailing(node3)).toBeFalsy();
+    expect(network.isQuorumSetBlocked(node2)).toBeFalsy();
+    expect(network.isQuorumSetBlocked(node2, node2.quorumSet.innerQuorumSets[0])).toBeTruthy();
+    expect(network.isQuorumSetBlocked(node3)).toBeFalsy();
 });
 
 test('isNodeFailing', () => {
-    expect(network.isNodeFailing(node1)).toBeFalsy();
-    expect(network.isNodeFailing(node2)).toBeFalsy();
-    expect(network.isNodeFailing(node3)).toBeTruthy();
-    expect(network.isNodeFailing(node4)).toBeTruthy();
-    expect(network.isNodeFailing(new Node('unknown'))).toBeTruthy();
+    expect(network.isNodeMissing(node1)).toBeFalsy();
+    expect(network.isNodeMissing(node2)).toBeFalsy();
+    expect(network.isNodeMissing(node3)).toBeTruthy();
+    expect(network.isNodeMissing(node4)).toBeTruthy();
+    expect(network.isNodeMissing(new Node('unknown'))).toBeTruthy();
 });
 
 test ('isOrganizationFailing', () => {
