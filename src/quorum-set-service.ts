@@ -90,6 +90,15 @@ export class QuorumSetService {
         return 'None';
     }
 
+    public static getQuorumSetDangers(node:Node, quorumSet: QuorumSet, network:Network){
+            if(quorumSet.hasValidators())
+                return 'Quorumset not yet detected by crawler';
+
+            if(network.isQuorumSetBlocked(node, quorumSet))
+                return 'Quorumset not reaching threshold';
+
+            return 'None';
+    }
     public static getQuorumSetWarnings(quorumSet: QuorumSet, network:Network){
         if(QuorumSetService.quorumSetHasFailingValidators(quorumSet, network))
             return 'Some validators are failing';
