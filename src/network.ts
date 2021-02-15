@@ -288,6 +288,11 @@ export class Network {
                 description: 'Unable to connect to node during latest crawl'
             };
 
+        if(node.isValidator && !node.quorumSet.hasValidators())
+            return {
+                label: 'Failing',
+                description: 'Quorum set not yet detected by crawler'
+            }
         if(node.isValidator && this.isNodeMissing(node))
             return {
                 label: 'Failing',

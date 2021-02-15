@@ -91,11 +91,11 @@ export class QuorumSetService {
     }
 
     public static getQuorumSetDangers(node:Node, quorumSet: QuorumSet, network:Network){
-            if(quorumSet.hasValidators())
-                return 'Quorumset not yet detected by crawler';
+            if(!quorumSet.hasValidators())
+                return 'Quorum set not yet detected by crawler';
 
             if(network.isQuorumSetBlocked(node, quorumSet))
-                return 'Quorumset not reaching threshold';
+                return 'Quorum set not reaching threshold';
 
             return 'None';
     }
