@@ -85,38 +85,6 @@ export class Network {
         return this._crawlDate;
     }
 
-    /*
-     By crawling we know if nodes are watchers (never sent any SCP message) or validators (participating in SCP)
-     We mark validators that are not sending SCP externalize messages as missing.
-     We mark watchers that are not live as missing.
-     */
-    isNodeMissing(node: Node) {
-        if (!node.isValidator)//watchers are marked missing when we cannot connect to them
-            return !node.active;
-
-        return !node.isValidating;
-    }
-
-    /**
-     * A node can fail for various reasons. See Fig. 5.   Venn diagram of node failures of the original SCP paper.
-     * When a node is missing we mark it as failed.
-     * If we modify the network for simulation purposes, we mark validators that are blocked as failed.
-     */
-    isNodeFailing(node: Node) {
-        //if a node is blocked, we mark it as failed for simulation purposes
-        if(this.blockedNodes.has(node.publicKey))
-            return true;
-
-        return this.isNodeMissing(node);
-    }
-
-    /*
-    Everytime the network is modified for simulation purposes we check if validators can reach their quorumset thresholds.
-    If not we mark them as 'blocked'.
-     */
-    isValidatorBlocked(validator: Node){
-        return this.blockedNodes.has(validator.publicKey);
-    }
 
     /*
     An organization is missing if a simple majority of it's validators are missing.
@@ -257,6 +225,85 @@ export class Network {
             });
         })
         return Array.from(new Set(trustedOrganizations));//remove doubles
+    }
+
+    /*
+         By crawling we know if nodes are watchers (never sent any SCP message) or validators (participating in SCP)
+         We mark validators that are not sending SCP externalize messages as missing.
+         We mark watchers that are not live as missing.
+         TODO: should only be missing when not participating in consensus.
+          When participating in consensus but not sending externalize messages, they could be blocked based on quorumset blocking status
+         */
+    isNodeMissing(node: Node) {
+        if (!node.isValidator)//watchers are marked missing when we cannot connect to them
+            return !node.active;
+
+        return !node.isValidating;
+    }
+
+    /**
+     * A node can fail for various reasons. See Fig. 5.   Venn diagram of node failures of the original SCP paper.
+     * When a node is missing we mark it as failed.
+     * If we modify the network for simulation purposes, we mark validators that are blocked as failed.
+     */
+    isNodeFailing(node: Node) {
+        //if a node is blocked, we mark it as failed for simulation purposes
+        if(this.blockedNodes.has(node.publicKey))
+            return true;
+
+        return this.isNodeMissing(node);
+    }
+
+    /*
+    Everytime the network is modified for simulation purposes we check if validators can reach their quorumset thresholds.
+    If not we mark them as 'blocked'.
+     */
+    isValidatorBlocked(validator: Node){
+        return this.blockedNodes.has(validator.publicKey);
+    }
+
+    someNodesHaveWarnings(nodes:Node[]){
+        return nodes.some(node => this.nodeHasWarnings(node));
+    }
+
+    nodeHasWarnings(node:Node){
+        return this.isFullValidatorWithOutOfDateArchive(node);
+    }
+
+    getNodeWarningReasons(node:Node){
+        if(this.isFullValidatorWithOutOfDateArchive(node))
+            return 'History archive not up-to-date';
+
+        return 'None';
+    }
+
+    isFullValidatorWithOutOfDateArchive(node: Node){
+        return node.historyUrl && !node.isFullValidator;
+    }
+
+    getNodeFailingReason(node: Node): {label: string, description: string}{
+        if(!node.active && !node.isValidator)
+            return {
+                label: 'Failing',
+                description: 'Unable to connect to node during latest crawl'
+            };
+
+        if(node.isValidator && this.isNodeMissing(node))
+            return {
+                label: 'Failing',
+                description: 'Not validating in latest consensus rounds'
+            };
+
+        if(node.isValidator && this.isValidatorBlocked(node))
+            return {
+                label: 'Blocked',
+                description: 'Quorum set not reaching threshold'
+            }
+
+        return {
+            label: 'Live',
+            description: 'Live'
+        }
     }
 
     static fromJSON(networkJSON: string | Object): Network {
