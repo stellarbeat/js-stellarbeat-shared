@@ -119,4 +119,21 @@ export class QuorumSetService {
                     .some(validator => network.nodeHasWarnings(validator) || network.isNodeFailing(validator))
             })
     }
+
+    public static isOrganizationQuorumSet(quorumSet: QuorumSet, network:Network): boolean {
+        if (quorumSet.validators.length === 0) {
+            return false;
+        }
+
+        let organizationId = network.getNodeByPublicKey(quorumSet.validators[0])!.organizationId;
+        if ( organizationId === undefined || network.getOrganizationById(organizationId) === undefined) {
+            return false;
+        }
+
+        return quorumSet.validators
+            .map(validator => network.getNodeByPublicKey(validator)!)
+            .every(
+                (validator, index, validators) => validator.organizationId === validators[0].organizationId
+            );
+    }
 }
