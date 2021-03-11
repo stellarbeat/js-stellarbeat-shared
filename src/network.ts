@@ -5,8 +5,7 @@ export type OrganizationId = string;
 export type PublicKey = string;
 
 export class Network {
-    protected _nodes: Array<Node>;
-    protected _organizations: Array<Organization>;
+
     protected _trustGraphBuilder: TrustGraphBuilder;
     protected _nodesTrustGraph!: TrustGraph;
     //todo: move organization trust graph to network and only calculate when requested
@@ -14,6 +13,8 @@ export class Network {
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
 
+    public nodes: Array<Node>;
+    public organizations: Array<Organization>;
     public name?: string;
     public id?: string;
 
@@ -26,8 +27,8 @@ export class Network {
     protected organizationsMap: Map<OrganizationId, Organization> = new Map();
 
     constructor(nodes: Array<Node>, organizations: Array<Organization> = [], crawlDate: Date = new Date(), networkStatistics?: NetworkStatistics) {
-        this._nodes = nodes;
-        this._organizations = organizations;
+        this.nodes = nodes;
+        this.organizations = organizations;
         this.nodesMap = this.getPublicKeyToNodeMap(nodes);
         this.initializeOrganizationsMap();
         this._quorumSetService = new QuorumSetService();
@@ -67,12 +68,12 @@ export class Network {
     }
 
     initializeOrganizationsMap() {
-        this._organizations.forEach(organization => this.organizationsMap.set(organization.id, organization));
+        this.organizations.forEach(organization => this.organizationsMap.set(organization.id, organization));
     }
 
     //call this method when the network was changed externally
     recalculateNetwork() {
-        this.nodesMap = this.getPublicKeyToNodeMap(this._nodes);
+        this.nodesMap = this.getPublicKeyToNodeMap(this.nodes);
         this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
 
@@ -137,10 +138,6 @@ export class Network {
         return !QuorumSetService.quorumSetCanReachThreshold(quorumSet, this, this.blockedNodes);
     }
 
-    get nodes(): Array<Node> {
-        return this._nodes;
-    }
-
     getNodeByPublicKey(publicKey: PublicKey): Node {
         if (this.nodesMap.has(publicKey))
             return this.nodesMap.get(publicKey)!;
@@ -150,10 +147,6 @@ export class Network {
 
             return unknownNode;
         }
-    }
-
-    get organizations(): Array<Organization> {
-        return this._organizations;
     }
 
     getOrganizationById(id: OrganizationId): Organization {
