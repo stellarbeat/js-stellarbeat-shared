@@ -13,6 +13,9 @@ export class Network {
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
 
+    public name?: string;
+    public id?: string;
+
     //a blocked node is a node that cannot reach its threshold.
     //todo: this could become a property of a node, but seeing as the network is the aggregate that controls this property, we keep it here for now.
     public blockedNodes: Set<PublicKey> = new Set();
@@ -331,6 +334,8 @@ export class Network {
 
     toJSON(): Object {
         return {
+            id: this.id,
+            name: this.name,
             time: this._crawlDate,
             transitiveQuorumSet: Array.from(this.nodesTrustGraph.networkTransitiveQuorumSet),
             scc: this.nodesTrustGraph.stronglyConnectedComponents
