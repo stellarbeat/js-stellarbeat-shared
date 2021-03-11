@@ -73,7 +73,7 @@ test('isNodeFailing', () => {
 test ('isOrganizationFailing', () => {
     expect(organization.subQuorumAvailable).toBeTruthy();
     node1.isValidating = false;
-    network.modifyNetwork();
+    network.recalculateNetwork();
     expect(organization.subQuorumAvailable).toBeFalsy();
     node1.isValidating = true;//needs refactoring
 

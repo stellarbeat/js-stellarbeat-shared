@@ -9,6 +9,7 @@ export class Network {
     protected _organizations: Array<Organization>;
     protected _trustGraphBuilder: TrustGraphBuilder;
     protected _nodesTrustGraph!: TrustGraph;
+    //todo: move organization trust graph to network and only calculate when requested
     protected _crawlDate: Date;
     protected _quorumSetService: QuorumSetService;
     protected _networkStatistics: NetworkStatistics;
@@ -69,10 +70,8 @@ export class Network {
         this._organizations.forEach(organization => this.organizationsMap.set(organization.id, organization));
     }
 
-    modifyNetwork(nodes?: Array<Node>) {
-        if (nodes) {
-            this._nodes = nodes;
-        }
+    //call this method when the network was changed externally
+    recalculateNetwork() {
         this.nodesMap = this.getPublicKeyToNodeMap(this._nodes);
         this.initializeNodesTrustGraph();
         this.initializeOrganizationsMap();
