@@ -4,12 +4,12 @@
     "definitions": {
         "Network": {
             "properties": {
-                "crawlDate": {
+                "time": {
                     "format": "date-time",
                     "type": "string"
                 },
-                "networkStatistics": {
-                    "$ref": "#/definitions/default"
+                "statistics": {
+                    "$ref": "#/definitions/NetworkStatistics"
                 },
                 "id": {
                     "type": "string"
@@ -28,9 +28,27 @@
                         "$ref": "#/definitions/Organization"
                     },
                     "type": "array"
+                },
+                "transitiveQuorumSet": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "scc": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "array"
                 }
             },
-            "type": "object"
+            "type": "object",
+            "required": [
+                "nodes"
+            ]
         },
         "Node": {
             "properties": {
@@ -298,7 +316,71 @@
                 "innerQuorumSets"
             ]
         },
-        "QuorumSetService": {
+        "NetworkStatistics": {
+            "properties": {
+                "hasQuorumIntersection": {
+                    "type": "boolean"
+                },
+                "hasTransitiveQuorumSet": {
+                    "default": false,
+                    "type": "boolean"
+                },
+                "minBlockingSetFilteredSize": {
+                    "default": 0,
+                    "type": "number"
+                },
+                "minBlockingSetOrgsFilteredSize": {
+                    "type": "number"
+                },
+                "minBlockingSetOrgsSize": {
+                    "type": "number"
+                },
+                "minBlockingSetSize": {
+                    "type": "number"
+                },
+                "minSplittingSetOrgsSize": {
+                    "type": "number"
+                },
+                "minSplittingSetSize": {
+                    "type": "number"
+                },
+                "nrOfActiveFullValidators": {
+                    "default": 0,
+                    "type": "number"
+                },
+                "nrOfActiveOrganizations": {
+                    "default": 0,
+                    "type": "number"
+                },
+                "nrOfActiveValidators": {
+                    "default": 0,
+                    "type": "number"
+                },
+                "nrOfActiveWatchers": {
+                    "default": 0,
+                    "type": "number"
+                },
+                "time": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "topTierFilteredSize": {
+                    "type": "number"
+                },
+                "topTierOrgsFilteredSize": {
+                    "type": "number"
+                },
+                "topTierOrgsSize": {
+                    "type": "number"
+                },
+                "topTierSize": {
+                    "type": "number"
+                },
+                "transitiveQuorumSetSize": {
+                    "default": 0,
+                    "type": "number"
+                }
+            },
             "type": "object"
         },
 
