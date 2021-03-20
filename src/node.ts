@@ -1,7 +1,6 @@
 import {NodeGeoData} from "./node-geo-data";
 import {NodeStatistics} from "./node-statistics";
 import {QuorumSet} from "./quorum-set";
-import {Organization} from "./organization";
 import PropertyMapper from "./PropertyMapper";
 
 export class Node {
