@@ -16,9 +16,7 @@ export default class NetworkStatistics {
     minSplittingSetSize?: number;
     minSplittingSetOrgsSize?: number;
     topTierSize?: number;
-    topTierFilteredSize?: number;
     topTierOrgsSize?: number;
-    topTierOrgsFilteredSize?: number;
 
     static fromJSON(networkStats:string|Object):NetworkStatistics {
         let networkStatsObject: any;
