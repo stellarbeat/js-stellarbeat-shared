@@ -283,9 +283,7 @@
             },
             "type": "object",
             "required": [
-                "id",
-                "name",
-                "validators"
+                "id"
             ]
         },
         "QuorumSet": {
@@ -311,9 +309,6 @@
             },
             "type": "object",
             "required": [
-                "threshold",
-                "validators",
-                "innerQuorumSets"
             ]
         },
         "NetworkStatistics": {
