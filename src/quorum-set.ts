@@ -5,7 +5,7 @@ export class QuorumSet {
     public validators: Array<string>;
     public innerQuorumSets: Array<QuorumSet>;
 
-    constructor(hashKey?:string,
+    constructor(hashKey?: string,
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
                 innerQuorumSets: Array<QuorumSet> = []
@@ -20,7 +20,7 @@ export class QuorumSet {
         return this.validators.length > 0 || this.innerQuorumSets.length > 0;
     }
 
-    static getAllValidators(qs:QuorumSet): Array<string> {
+    static getAllValidators(qs: QuorumSet): Array<string> {
         return qs.innerQuorumSets.reduce(
             (allValidators, innerQS) => allValidators.concat(QuorumSet.getAllValidators(innerQS)),
             qs.validators
@@ -39,18 +39,19 @@ export class QuorumSet {
 
     static fromJSON(quorumSet: any): QuorumSet {
         let quorumSetObject;
-        if(typeof quorumSet === 'string') {
+        if (typeof quorumSet === 'string') {
             quorumSetObject = JSON.parse(quorumSet);
         } else
             quorumSetObject = quorumSet;
-        if(!quorumSetObject){
+        if (!quorumSetObject) {
             return new QuorumSet();
         }
-
-        let innerQuorumSets = quorumSetObject.innerQuorumSets.map(
-            (innerQuorumSet:QuorumSet) => this.fromJSON(innerQuorumSet)
-        );
-
+        let innerQuorumSets = [];
+        if (quorumSetObject.innerQuorumSets) {
+            innerQuorumSets = quorumSetObject.innerQuorumSets.map(
+                (innerQuorumSet: QuorumSet) => this.fromJSON(innerQuorumSet)
+            );
+        }
         return new QuorumSet(
             quorumSetObject.hashKey,
             quorumSetObject.threshold,
