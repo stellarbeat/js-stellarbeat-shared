@@ -1,5 +1,4 @@
 {
-    "$id": "https://stellarbeat.io/schemas/network.json",
     "$ref": "#/definitions/Network",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {

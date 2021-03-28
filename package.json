@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "2.21.8",
+  "version": "2.21.9",
   "description": "Domain classes for stellarbeat. Code reuse between frontend and backend",
   "repository": {
     "type": "git",
@@ -8,9 +8,8 @@
   },
   "scripts": {
     "prepublish": "yarn run build",
-    "build": "node_modules/typescript/bin/tsc  --declaration; yarn generate-validators-from-schema",
-    "test": "jest",
-    "generate-validators-from-schema": "ajv compile -s schemas/network.json -o src/json-validator/network-schema.js -c ajv-formats --code-optimize=true --code-lines"
+    "build": "node_modules/typescript/bin/tsc  --declaration; ajv compile -s schemas/network.json -o lib/network-schema.js -c ajv-formats --code-optimize=true --code-lines",
+    "test": "jest"
   },
   "author": "pieterjan84@github",
   "license": "MIT",
