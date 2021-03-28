@@ -46,6 +46,7 @@
                     "type": "array"
                 }
             },
+            "additionalProperties": false,
             "type": "object",
             "required": [
                 "nodes"
@@ -149,7 +150,8 @@
             "type": "object",
             "required": [
                 "publicKey"
-            ]
+            ],
+            "additionalProperties": false
         },
         "NodeGeoData": {
             "properties": {
@@ -166,7 +168,8 @@
                     "type": "number"
                 }
            },
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false
         },
         "NodeStatistics": {
             "properties": {
@@ -203,7 +206,8 @@
                     "type": "number"
                 }
             },
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false
         },
         "Organization": {
             "properties": {
@@ -285,7 +289,8 @@
             "type": "object",
             "required": [
                 "id"
-            ]
+            ],
+            "additionalProperties": false
         },
         "QuorumSet": {
             "properties": {
@@ -310,7 +315,8 @@
             },
             "type": "object",
             "required": [
-            ]
+            ],
+            "additionalProperties": false
         },
         "NetworkStatistics": {
             "properties": {
@@ -377,7 +383,8 @@
                     "type": "number"
                 }
             },
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false
         }
     }
 }
