@@ -1,191 +1,190 @@
 {
-    "$id": "node.json",
-    "$ref": "#/definitions/Node",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-        "Node": {
-            "properties": {
-                "active": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "alias": {
-                    "type": "string"
-                },
-                "dateDiscovered": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "dateUpdated": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "displayName": {
-                    "type": "string"
-                },
-                "geoData": {
-                    "$ref": "#/definitions/NodeGeoData"
-                },
-                "historyUrl": {
-                    "type": "string"
-                },
-                "homeDomain": {
-                    "type": "string"
-                },
-                "host": {
-                    "type": "string"
-                },
-                "index": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "ip": {
-                    "default": "127.0.0.1",
-                    "type": "string"
-                },
-                "isFullValidator": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "isValidating": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "isValidator": {
-                    "type": "boolean"
-                },
-                "isp": {
-                    "type": "string"
-                },
-                "key": {
-                    "type": "string"
-                },
-                "ledgerVersion": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "networkId": {
-                    "type": "string"
-                },
-                "organizationId": {
-                    "type": "string"
-                },
-                "overLoaded": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "overlayMinVersion": {
-                    "type": "string"
-                },
-                "overlayVersion": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "number"
-                },
-                "publicKey": {
-                    "type": "string"
-                },
-                "quorumSet": {
-                    "$ref": "#/definitions/QuorumSet"
-                },
-                "statistics": {
-                    "$ref": "#/definitions/NodeStatistics"
-                },
-                "versionStr": {
-                    "type": "string"
-                }
-            },
-            "type": "object",
-            "required": [
-                "publicKey"
-            ],
-            "additionalProperties": true
+  "$id": "node.json",
+  "$ref": "#/definitions/Node",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Node": {
+      "properties": {
+        "active": {
+          "default": false,
+          "type": "boolean"
         },
-        "NodeGeoData": {
-            "properties": {
-                "countryCode": {
-                    "type": "string"
-                },
-                "countryName": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                }
-           },
-            "type": "object",
-            "additionalProperties": true
+        "alias": {
+          "type": "string"
         },
-        "NodeStatistics": {
-            "properties": {
-                "active24HoursPercentage": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "active30DaysPercentage": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "has24HourStats": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "has30DayStats": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "overLoaded24HoursPercentage": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "overLoaded30DaysPercentage": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "validating24HoursPercentage": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "validating30DaysPercentage": {
-                    "default": 0,
-                    "type": "number"
-                }
-            },
-            "type": "object",
-            "additionalProperties": true
+        "dateDiscovered": {
+          "format": "date-time",
+          "type": "string"
         },
-        "QuorumSet": {
-            "properties": {
-                "hashKey": {
-                    "type": "string"
-                },
-                "innerQuorumSets": {
-                    "items": {
-                        "$ref": "#/definitions/QuorumSet"
-                    },
-                    "type": "array"
-                },
-                "threshold": {
-                    "type": "number"
-                },
-                "validators": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                }
-            },
-            "type": "object",
-            "required": [
-            ],
-            "additionalProperties": true
+        "dateUpdated": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "geoData": {
+          "$ref": "#/definitions/NodeGeoData"
+        },
+        "historyUrl": {
+          "type": "string"
+        },
+        "homeDomain": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "index": {
+          "default": 0,
+          "type": "number"
+        },
+        "ip": {
+          "default": "127.0.0.1",
+          "type": "string"
+        },
+        "isFullValidator": {
+          "default": false,
+          "type": "boolean"
+        },
+        "isValidating": {
+          "default": false,
+          "type": "boolean"
+        },
+        "isValidator": {
+          "type": "boolean"
+        },
+        "isp": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "ledgerVersion": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "networkId": {
+          "type": "string"
+        },
+        "organizationId": {
+          "type": "string"
+        },
+        "overLoaded": {
+          "default": false,
+          "type": "boolean"
+        },
+        "overlayMinVersion": {
+          "type": "string"
+        },
+        "overlayVersion": {
+          "type": "string"
+        },
+        "port": {
+          "type": "number"
+        },
+        "publicKey": {
+          "type": "string"
+        },
+        "quorumSet": {
+          "$ref": "#/definitions/QuorumSet"
+        },
+        "statistics": {
+          "$ref": "#/definitions/NodeStatistics"
+        },
+        "versionStr": {
+          "type": "string"
         }
+      },
+      "type": "object",
+      "required": [
+        "publicKey"
+      ],
+      "additionalProperties": true
+    },
+    "NodeGeoData": {
+      "properties": {
+        "countryCode": {
+          "type": "string"
+        },
+        "countryName": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        }
+      },
+      "type": "object",
+      "additionalProperties": true
+    },
+    "NodeStatistics": {
+      "properties": {
+        "active24HoursPercentage": {
+          "default": 0,
+          "type": "number"
+        },
+        "active30DaysPercentage": {
+          "default": 0,
+          "type": "number"
+        },
+        "has24HourStats": {
+          "default": false,
+          "type": "boolean"
+        },
+        "has30DayStats": {
+          "default": false,
+          "type": "boolean"
+        },
+        "overLoaded24HoursPercentage": {
+          "default": 0,
+          "type": "number"
+        },
+        "overLoaded30DaysPercentage": {
+          "default": 0,
+          "type": "number"
+        },
+        "validating24HoursPercentage": {
+          "default": 0,
+          "type": "number"
+        },
+        "validating30DaysPercentage": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      "type": "object",
+      "additionalProperties": true
+    },
+    "QuorumSet": {
+      "properties": {
+        "hashKey": {
+          "type": "string"
+        },
+        "innerQuorumSets": {
+          "items": {
+            "$ref": "#/definitions/QuorumSet"
+          },
+          "type": "array"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "validators": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "required": [],
+      "additionalProperties": true
     }
+  }
 }
 

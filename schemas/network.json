@@ -1,125 +1,124 @@
 {
-    "$id": "network.json",
-    "$ref": "#/definitions/Network",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-        "Network": {
-            "properties": {
-                "time": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "statistics": {
-                    "$ref": "#/definitions/NetworkStatistics"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nodes": {
-                    "items": {
-                        "$ref": "node.json#/definitions/Node"
-                    },
-                    "type": "array"
-                },
-                "organizations": {
-                    "items": {
-                        "$ref": "organization.json#/definitions/Organization"
-                    },
-                    "type": "array"
-                },
-                "transitiveQuorumSet": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "scc": {
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "type": "array"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "required": [
-                "nodes"
-            ]
+  "$id": "network.json",
+  "$ref": "#/definitions/Network",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Network": {
+      "properties": {
+        "time": {
+          "format": "date-time",
+          "type": "string"
         },
-        "NetworkStatistics": {
-            "properties": {
-                "hasQuorumIntersection": {
-                    "type": "boolean"
-                },
-                "hasTransitiveQuorumSet": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "minBlockingSetFilteredSize": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "minBlockingSetOrgsFilteredSize": {
-                    "type": "number"
-                },
-                "minBlockingSetOrgsSize": {
-                    "type": "number"
-                },
-                "minBlockingSetSize": {
-                    "type": "number"
-                },
-                "minSplittingSetOrgsSize": {
-                    "type": "number"
-                },
-                "minSplittingSetSize": {
-                    "type": "number"
-                },
-                "nrOfActiveFullValidators": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "nrOfActiveOrganizations": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "nrOfActiveValidators": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "nrOfActiveWatchers": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "time": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "topTierFilteredSize": {
-                    "type": "number"
-                },
-                "topTierOrgsFilteredSize": {
-                    "type": "number"
-                },
-                "topTierOrgsSize": {
-                    "type": "number"
-                },
-                "topTierSize": {
-                    "type": "number"
-                },
-                "transitiveQuorumSetSize": {
-                    "default": 0,
-                    "type": "number"
-                }
-            },
-            "type": "object",
-            "additionalProperties": true
+        "statistics": {
+          "$ref": "#/definitions/NetworkStatistics"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "node.json"
+          },
+          "type": "array"
+        },
+        "organizations": {
+          "items": {
+            "$ref": "organization.json"
+          },
+          "type": "array"
+        },
+        "transitiveQuorumSet": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scc": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": "array"
         }
+      },
+      "additionalProperties": true,
+      "type": "object",
+      "required": [
+        "nodes"
+      ]
+    },
+    "NetworkStatistics": {
+      "properties": {
+        "hasQuorumIntersection": {
+          "type": "boolean"
+        },
+        "hasTransitiveQuorumSet": {
+          "default": false,
+          "type": "boolean"
+        },
+        "minBlockingSetFilteredSize": {
+          "default": 0,
+          "type": "number"
+        },
+        "minBlockingSetOrgsFilteredSize": {
+          "type": "number"
+        },
+        "minBlockingSetOrgsSize": {
+          "type": "number"
+        },
+        "minBlockingSetSize": {
+          "type": "number"
+        },
+        "minSplittingSetOrgsSize": {
+          "type": "number"
+        },
+        "minSplittingSetSize": {
+          "type": "number"
+        },
+        "nrOfActiveFullValidators": {
+          "default": 0,
+          "type": "number"
+        },
+        "nrOfActiveOrganizations": {
+          "default": 0,
+          "type": "number"
+        },
+        "nrOfActiveValidators": {
+          "default": 0,
+          "type": "number"
+        },
+        "nrOfActiveWatchers": {
+          "default": 0,
+          "type": "number"
+        },
+        "time": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "topTierFilteredSize": {
+          "type": "number"
+        },
+        "topTierOrgsFilteredSize": {
+          "type": "number"
+        },
+        "topTierOrgsSize": {
+          "type": "number"
+        },
+        "topTierSize": {
+          "type": "number"
+        },
+        "transitiveQuorumSetSize": {
+          "default": 0,
+          "type": "number"
+        }
+      },
+      "type": "object",
+      "additionalProperties": true
     }
+  }
 }
-
