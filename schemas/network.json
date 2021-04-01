@@ -1,16 +1,17 @@
 {
-    "$id": "network",
-    "$ref": "#/definitions/Network",
+    "$id": "network.json",
+    "$ref": "#network",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "Network": {
+            "$id": "#network",
             "properties": {
                 "time": {
                     "format": "date-time",
                     "type": "string"
                 },
                 "statistics": {
-                    "$ref": "#/definitions/NetworkStatistics"
+                    "$ref": "#network-statistics"
                 },
                 "id": {
                     "type": "string"
@@ -52,90 +53,8 @@
                 "nodes"
             ]
         },
-        "Organization": {
-            "properties": {
-                "dateDiscovered": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "dba": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "github": {
-                    "type": "string"
-                },
-                "has24HourStats": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "has30DayStats": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "horizonUrl": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "isTierOneOrganization": {
-                    "type": "boolean"
-                },
-                "keybase": {
-                    "type": "string"
-                },
-                "logo": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "officialEmail": {
-                    "type": "string"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "physicalAddress": {
-                    "type": "string"
-                },
-               "subQuorum24HoursAvailability": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "subQuorum30DaysAvailability": {
-                    "default": 0,
-                    "type": "number"
-                },
-                "subQuorumAvailable": {
-                    "default": false,
-                    "type": "boolean"
-                },
-                "twitter": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                },
-                "validators": {
-                    "default": [
-                    ],
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                }
-            },
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "additionalProperties": true
-        },
         "NetworkStatistics": {
+            "$id": "#network-statistics",
             "properties": {
                 "hasQuorumIntersection": {
                     "type": "boolean"
