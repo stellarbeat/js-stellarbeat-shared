@@ -4,7 +4,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "Organization": {
-      "$id": "#organization",
       "properties": {
         "dateDiscovered": {
           "format": "date-time",

@@ -1,17 +1,16 @@
 {
     "$id": "network.json",
-    "$ref": "#network",
+    "$ref": "#/definitions/Network",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "Network": {
-            "$id": "#network",
             "properties": {
                 "time": {
                     "format": "date-time",
                     "type": "string"
                 },
                 "statistics": {
-                    "$ref": "#network-statistics"
+                    "$ref": "#/definitions/NetworkStatistics"
                 },
                 "id": {
                     "type": "string"
@@ -21,13 +20,13 @@
                 },
                 "nodes": {
                     "items": {
-                        "$ref": "node.json#node"
+                        "$ref": "node.json#/definitions/Node"
                     },
                     "type": "array"
                 },
                 "organizations": {
                     "items": {
-                        "$ref": "organization.json#organization"
+                        "$ref": "organization.json#/definitions/Organization"
                     },
                     "type": "array"
                 },
@@ -54,7 +53,6 @@
             ]
         },
         "NetworkStatistics": {
-            "$id": "#network-statistics",
             "properties": {
                 "hasQuorumIntersection": {
                     "type": "boolean"
