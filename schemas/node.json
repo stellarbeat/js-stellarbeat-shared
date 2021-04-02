@@ -1,109 +1,106 @@
 {
   "$id": "node.json",
-  "$ref": "#/definitions/Node",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "Node": {
-      "properties": {
-        "active": {
-          "default": false,
-          "type": "boolean"
-        },
-        "alias": {
-          "type": "string"
-        },
-        "dateDiscovered": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "dateUpdated": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "displayName": {
-          "type": "string"
-        },
-        "geoData": {
-          "$ref": "#/definitions/NodeGeoData"
-        },
-        "historyUrl": {
-          "type": "string"
-        },
-        "homeDomain": {
-          "type": "string"
-        },
-        "host": {
-          "type": "string"
-        },
-        "index": {
-          "default": 0,
-          "type": "number"
-        },
-        "ip": {
-          "default": "127.0.0.1",
-          "type": "string"
-        },
-        "isFullValidator": {
-          "default": false,
-          "type": "boolean"
-        },
-        "isValidating": {
-          "default": false,
-          "type": "boolean"
-        },
-        "isValidator": {
-          "type": "boolean"
-        },
-        "isp": {
-          "type": "string"
-        },
-        "key": {
-          "type": "string"
-        },
-        "ledgerVersion": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "networkId": {
-          "type": "string"
-        },
-        "organizationId": {
-          "type": "string"
-        },
-        "overLoaded": {
-          "default": false,
-          "type": "boolean"
-        },
-        "overlayMinVersion": {
-          "type": "string"
-        },
-        "overlayVersion": {
-          "type": "string"
-        },
-        "port": {
-          "type": "number"
-        },
-        "publicKey": {
-          "type": "string"
-        },
-        "quorumSet": {
-          "$ref": "#/definitions/QuorumSet"
-        },
-        "statistics": {
-          "$ref": "#/definitions/NodeStatistics"
-        },
-        "versionStr": {
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "required": [
-        "publicKey"
-      ],
-      "additionalProperties": true
+  "properties": {
+    "active": {
+      "default": false,
+      "type": "boolean"
     },
+    "alias": {
+      "type": "string"
+    },
+    "dateDiscovered": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "dateUpdated": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "geoData": {
+      "$ref": "#/definitions/NodeGeoData"
+    },
+    "historyUrl": {
+      "type": "string"
+    },
+    "homeDomain": {
+      "type": "string"
+    },
+    "host": {
+      "type": "string"
+    },
+    "index": {
+      "default": 0,
+      "type": "number"
+    },
+    "ip": {
+      "default": "127.0.0.1",
+      "type": "string"
+    },
+    "isFullValidator": {
+      "default": false,
+      "type": "boolean"
+    },
+    "isValidating": {
+      "default": false,
+      "type": "boolean"
+    },
+    "isValidator": {
+      "type": "boolean"
+    },
+    "isp": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "ledgerVersion": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "networkId": {
+      "type": "string"
+    },
+    "organizationId": {
+      "type": "string"
+    },
+    "overLoaded": {
+      "default": false,
+      "type": "boolean"
+    },
+    "overlayMinVersion": {
+      "type": "string"
+    },
+    "overlayVersion": {
+      "type": "string"
+    },
+    "port": {
+      "type": "number"
+    },
+    "publicKey": {
+      "type": "string"
+    },
+    "quorumSet": {
+      "$ref": "#/definitions/QuorumSet"
+    },
+    "statistics": {
+      "$ref": "#/definitions/NodeStatistics"
+    },
+    "versionStr": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "publicKey"
+  ],
+  "additionalProperties": true,
+  "definitions": {
     "NodeGeoData": {
       "properties": {
         "countryCode": {

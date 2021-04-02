@@ -1,57 +1,54 @@
 {
   "$id": "network.json",
-  "$ref": "#/definitions/Network",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "Network": {
-      "properties": {
-        "time": {
-          "format": "date-time",
+  "properties": {
+    "time": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "statistics": {
+      "$ref": "#/definitions/NetworkStatistics"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "node.json"
+      },
+      "type": "array"
+    },
+    "organizations": {
+      "items": {
+        "$ref": "organization.json"
+      },
+      "type": "array"
+    },
+    "transitiveQuorumSet": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "scc": {
+      "items": {
+        "type": "array",
+        "items": {
           "type": "string"
-        },
-        "statistics": {
-          "$ref": "#/definitions/NetworkStatistics"
-        },
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "nodes": {
-          "items": {
-            "$ref": "node.json"
-          },
-          "type": "array"
-        },
-        "organizations": {
-          "items": {
-            "$ref": "organization.json"
-          },
-          "type": "array"
-        },
-        "transitiveQuorumSet": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "scc": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "type": "array"
         }
       },
-      "additionalProperties": true,
-      "type": "object",
-      "required": [
-        "nodes"
-      ]
-    },
+      "type": "array"
+    }
+  },
+  "additionalProperties": true,
+  "type": "object",
+  "required": [
+    "nodes"
+  ],
+  "definitions": {
     "NetworkStatistics": {
       "properties": {
         "hasQuorumIntersection": {
