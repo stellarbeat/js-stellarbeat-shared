@@ -4,7 +4,8 @@
   "properties": {
     "active": {
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Node accepts connections from other nodes"
     },
     "alias": {
       "type": "string"
@@ -34,7 +35,8 @@
     },
     "index": {
       "default": 0,
-      "type": "number"
+      "type": "number",
+      "description": "Used to compare nodes. The more trustworthy, the higher the index."
     },
     "ip": {
       "default": "127.0.0.1",
@@ -46,7 +48,8 @@
     },
     "isValidating": {
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Participating in consensus"
     },
     "isValidator": {
       "type": "boolean"
@@ -55,7 +58,9 @@
       "type": "string"
     },
     "key": {
-      "type": "string"
+      "type": "string",
+      "description": "ip:port pair",
+      "default": "127.0.0.1:11625"
     },
     "ledgerVersion": {
       "type": "string"
@@ -71,7 +76,8 @@
     },
     "overLoaded": {
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "description": "When node disconnects with err_load"
     },
     "overlayMinVersion": {
       "type": "string"
