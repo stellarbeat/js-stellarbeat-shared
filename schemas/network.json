@@ -128,7 +128,7 @@
         "transitiveQuorumSetSize": {
           "default": 0,
           "type": "number",
-          "Number of nodes in the transitive quorum set"
+          "description": "Number of nodes in the transitive quorum set"
         }
       },
       "type": "object",
