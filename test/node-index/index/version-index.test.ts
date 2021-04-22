@@ -14,8 +14,12 @@ let node6 = new Node('f');
 node6.versionStr = "v9.3.0-44-g80ce920";
 let node7 = new Node('g');
 node7.versionStr = "796f08a5-dirty"; //invalid version
+let node8 = new Node('i');
+node8.versionStr = "stellar-core 17.0.0.rc1 (a6c4bf72984711e3da4ade849dfaec5ce1f8d489)";
+let node9 = new Node('i');
+node9.versionStr = "stellar-core 17.0.0-rc1 (a6c4bf72984711e3da4ade849dfaec5ce1f8d489)";
 
-let nodes =[node1, node2, node3, node4, node5, node6, node7];
+let nodes =[node1, node2, node3, node4, node5, node6, node7, node8];
 
 let versionIndex = new VersionIndex(nodes);
 

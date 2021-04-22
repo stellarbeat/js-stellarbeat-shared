@@ -20,8 +20,9 @@ export class VersionIndex {
         let versions = nodes
             .map(node => node.versionStr)
             .filter(version => version!==undefined)
+            .filter(version => version!.match(/[.-]rc/) === null)
             .map(versionDirty => findVersions(versionDirty!, {"loose": false})[0])
-            .filter(node => node !== undefined);
+            .filter(version => version !== undefined);
         //release candidates get filtered out.
 
         let sortedVersions = versions.sort(semverCompare);
