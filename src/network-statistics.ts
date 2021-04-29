@@ -13,6 +13,10 @@ export default class NetworkStatistics {
     minBlockingSetFilteredSize:number = 0;
     minBlockingSetOrgsSize?: number;
     minBlockingSetOrgsFilteredSize?: number;
+    minBlockingSetCountrySize?: number;
+    minBlockingSetCountryFilteredSize?: number;
+    minBlockingSetISPSize?: number;
+    minBlockingSetISPFilteredSize?: number;
     minSplittingSetSize?: number;
     minSplittingSetOrgsSize?: number;
     topTierSize?: number;
