@@ -100,6 +100,22 @@ export default class NetworkStatisticsAggregation {
         return this.getAverage(this.minBlockingSetOrgsFilteredSum);
     }
 
+    get minBlockingSetCountryAverage() {
+        return this.getAverage(this.minBlockingSetCountrySum);
+    }
+
+    get minBlockingSetCountryFilteredAverage() {
+        return this.getAverage(this.minBlockingSetCountryFilteredSum);
+    }
+
+    get minBlockingSetISPAverage() {
+        return this.getAverage(this.minBlockingSetISPSum);
+    }
+
+    get minBlockingSetISPFilteredAverage() {
+        return this.getAverage(this.minBlockingSetISPFilteredSum);
+    }
+
     get minSplittingSetAverage() {
         return this.getAverage(this.minSplittingSetSum);
     }
