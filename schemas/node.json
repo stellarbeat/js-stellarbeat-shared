@@ -105,7 +105,6 @@
   "required": [
     "publicKey"
   ],
-  "additionalProperties": true,
   "definitions": {
     "NodeGeoData": {
       "properties": {
@@ -122,8 +121,7 @@
           "type": "number"
         }
       },
-      "type": "object",
-      "additionalProperties": true
+      "type": "object"
     },
     "NodeStatistics": {
       "properties": {
@@ -160,8 +158,7 @@
           "type": "number"
         }
       },
-      "type": "object",
-      "additionalProperties": true
+      "type": "object"
     },
     "QuorumSet": {
       "properties": {
@@ -185,8 +182,7 @@
         }
       },
       "type": "object",
-      "required": [],
-      "additionalProperties": true
+      "required": []
     }
   }
 }

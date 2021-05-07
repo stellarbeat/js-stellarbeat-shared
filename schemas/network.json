@@ -50,7 +50,6 @@
       "description": "Strongly connected components in the trust graph"
     }
   },
-  "additionalProperties": true,
   "type": "object",
   "required": [
     "nodes"
@@ -131,8 +130,7 @@
           "description": "Number of nodes in the transitive quorum set"
         }
       },
-      "type": "object",
-      "additionalProperties": true
+      "type": "object"
     }
   }
 }
