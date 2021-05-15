@@ -63,7 +63,7 @@
       "default": "127.0.0.1:11625"
     },
     "ledgerVersion": {
-      "type": "string"
+      "type": "number"
     },
     "name": {
       "type": "string"
@@ -80,10 +80,10 @@
       "description": "When node disconnects with err_load"
     },
     "overlayMinVersion": {
-      "type": "string"
+      "type": "number"
     },
     "overlayVersion": {
-      "type": "string"
+      "type": "number"
     },
     "port": {
       "type": "number"

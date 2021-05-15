@@ -9,9 +9,9 @@ export class Node {
     public publicKey:string;
     public name?:string;
     public host?:string;
-    public ledgerVersion?:string;
-    public overlayVersion?:string;
-    public overlayMinVersion?:string;
+    public ledgerVersion?:number;
+    public overlayVersion?:number;
+    public overlayMinVersion?:number;
     public networkId?:string;
     public versionStr?:string;
     public quorumSet: QuorumSet = new QuorumSet();

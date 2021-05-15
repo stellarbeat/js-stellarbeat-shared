@@ -1,6 +1,7 @@
 {
   "$id": "network.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
   "properties": {
     "time": {
       "format": "date-time",
@@ -56,6 +57,7 @@
   ],
   "definitions": {
     "NetworkStatistics": {
+      "additionalProperties": false,
       "properties": {
         "hasQuorumIntersection": {
           "type": "boolean",
