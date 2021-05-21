@@ -46,6 +46,12 @@ export default class NetworkStatisticsAggregation {
     minSplittingSetOrgsMin: number = 0;
     minSplittingSetOrgsMax: number = 0;
     minSplittingSetOrgsSum: number = 0;
+    minSplittingSetCountryMin: number = 0;
+    minSplittingSetCountryMax: number = 0;
+    minSplittingSetCountrySum: number = 0;
+    minSplittingSetISPMin: number = 0;
+    minSplittingSetISPMax: number = 0;
+    minSplittingSetISPSum: number = 0;
     crawlCount: number = 0;
 
     get nrOfActiveWatchersAverage() {
@@ -122,6 +128,14 @@ export default class NetworkStatisticsAggregation {
 
     get minSplittingSetOrgsAverage() {
         return this.getAverage(this.minSplittingSetOrgsSum);
+    }
+
+    get minSplittingSetCountryAverage() {
+        return this.getAverage(this.minSplittingSetCountrySum);
+    }
+
+    get minSplittingSetISPAverage() {
+        return this.getAverage(this.minSplittingSetISPSum);
     }
 
     protected getAverage(value: number) {
