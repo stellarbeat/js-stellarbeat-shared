@@ -87,6 +87,14 @@
           "type": "number",
           "description": "The size of the smallest network splitting set, grouped by organizations"
         },
+        "minSplittingSetCountrySize": {
+          "type": "number",
+          "description": "The size of the smallest network splitting set, grouped by countries"
+        },
+        "minSplittingSetISPSize": {
+          "type": "number",
+          "description": "The size of the smallest network splitting set, grouped by ISP's"
+        },
         "minSplittingSetSize": {
           "type": "number",
           "description": "The size of the smallest network splitting set"
