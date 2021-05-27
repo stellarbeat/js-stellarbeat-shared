@@ -52,6 +52,7 @@ export default class NetworkStatisticsAggregation {
     minSplittingSetISPMin: number = 0;
     minSplittingSetISPMax: number = 0;
     minSplittingSetISPSum: number = 0;
+    topTierIsSymmetricCount: number = 0;
     crawlCount: number = 0;
 
     get nrOfActiveWatchersAverage() {
@@ -80,6 +81,10 @@ export default class NetworkStatisticsAggregation {
 
     get hasQuorumIntersectionAverage() {
         return +((this.hasQuorumIntersectionCount / this.crawlCount).toFixed(2));
+    }
+
+    get topTierIsSymmetricAverage() {
+        return +((this.topTierIsSymmetricCount / this.crawlCount).toFixed(2));
     }
 
     get topTierAverage() {
