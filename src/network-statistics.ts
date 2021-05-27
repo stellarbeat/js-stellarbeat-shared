@@ -23,7 +23,7 @@ export default class NetworkStatistics {
     minSplittingSetISPSize?: number;
     topTierSize?: number;
     topTierOrgsSize?: number;
-    topTierIsSymmetric: boolean = false;
+    hasSymmetricTopTier: boolean = false;
 
     static fromJSON(networkStats:string|Object):NetworkStatistics {
         let networkStatsObject: any;
