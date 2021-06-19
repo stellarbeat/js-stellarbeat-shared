@@ -1,6 +1,6 @@
 export {Network, PublicKey, OrganizationId} from './network';
 export {Node} from './node';
-export {default as QuorumService} from './quorum-service';
+export {default as QuorumService} from './quorum-service-old';
 export {QuorumSlicesGenerator} from './quorum-slices-generator'
 export {QuorumSet} from './quorum-set';
 export {QuorumSetService} from './quorum-set-service';
@@ -19,3 +19,6 @@ export {TrustGraph, Edge, Vertex, isVertex} from './trust-graph/trust-graph';
 export {TrustGraphBuilder} from './trust-graph/trust-graph-builder';
 export {OrganizationSnapShot} from './organization-snap-shot';
 export {NodeSnapShot} from './node-snap-shot';
+export * from './quorum/containsSlice';
+export * from './quorum/isQuorum';
+export * from './quorum/detectQuorum';
