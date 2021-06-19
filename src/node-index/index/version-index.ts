@@ -1,7 +1,7 @@
 import {Node} from "./../../index";
 import * as semverCompare from "semver-compare";
 import * as findVersions from "find-versions";
-import * as semver from "semver";
+import {gt, diff} from "semver";
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
@@ -45,11 +45,11 @@ export class VersionIndex {
             return 0;
         }
 
-        if(semver.gt(version, this._highestStellarCoreVersion)) { //release candidates higher then current stable
+        if(gt(version, this._highestStellarCoreVersion)) { //release candidates higher then current stable
             return 1;
         }
 
-        switch (semver.diff(version, this._highestStellarCoreVersion)) {
+        switch (diff(version, this._highestStellarCoreVersion)) {
             case undefined:
                 return 1;
             case null:

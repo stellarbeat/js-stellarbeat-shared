@@ -5,7 +5,6 @@ import containsSlice from "./containsSlice";
  * detects if the nodes array contains a quorum and returns the first detected.
  */
 export default function detectQuorum(nodes:Node[]):Node[] {
-    console.log("detect: " + nodes.map(node => node.publicKey))
     let nodesThatContainSlice = nodes.filter(node => containsSlice(node.quorumSet, new Set(nodes.map(node => node.publicKey))));
     if(nodesThatContainSlice.length === nodes.length) //all the nodes contain a slice, we have a quorum!
         return nodesThatContainSlice;

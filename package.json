@@ -19,26 +19,26 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "dependencies": {
-    "@iarna/toml": "^2.2.3",
-    "find-versions": "^3.1.0",
-    "latest-semver": "^2.0.0",
-    "semver": "^6.3.0",
+    "@iarna/toml": "^2.2.5",
+    "find-versions": "^4.0.0",
+    "latest-semver": "^3.0.0",
+    "semver": "^7.3.5",
     "semver-compare": "^1.0.0",
-    "to-semver": "^2.0.0"
+    "to-semver": "^4.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
-    "@types/lodash": "^4.14.136",
-    "@types/node": "^10.12.12",
-    "@types/semver": "^6.0.2",
-    "ajv": "^7.2.3",
-    "ajv-cli": "^4.2.0",
-    "ajv-formats": "^1.5.1",
+    "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.170",
+    "@types/node": "^15.12.4",
+    "@types/semver": "^7.3.6",
+    "ajv": "^8.6.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-formats": "^2.1.0",
     "await-fs": "^1.0.0",
-    "jest": "^26.6.3",
-    "merge": ">=1.2.1",
-    "ts-jest": "^26.4.4",
-    "typescript": "^3.9.3",
+    "jest": "^27.0.4",
+    "merge": "^2.1.1",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.4",
     "typescript-json-schema": "^0.50.0"
   }
 }
