@@ -2838,14 +2838,6 @@ to-semver@^3.0.0:
     clean-semver "^2.1.0"
     semver "^7.3.2"
 
-to-semver@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/to-semver/-/to-semver-4.0.0.tgz#c7bb507315f32373134e663299f5454faa9d47af"
-  integrity sha512-qARDZe0teB+/7EXkXE2cWnQddhLzunD72n+LGvSOHvti21kk9YHUSOjJpWDTLJ44MP7VNWFzo5n10PUwr2r3zA==
-  dependencies:
-    clean-semver "^2.1.0"
-    semver "^7.3.5"
-
 tough-cookie@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-4.0.0.tgz#d822234eeca882f991f0f908824ad2622ddbece4"

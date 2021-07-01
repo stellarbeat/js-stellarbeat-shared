@@ -24,7 +24,7 @@
     "latest-semver": "^3.0.0",
     "semver": "^7.3.5",
     "semver-compare": "^1.0.0",
-    "to-semver": "^4.0.0"
+    "to-semver": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
