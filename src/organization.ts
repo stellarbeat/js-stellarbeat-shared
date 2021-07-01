@@ -28,6 +28,7 @@ export class Organization {
     public subQuorum24HoursAvailability: number = 0;
     public subQuorum30DaysAvailability: number = 0;
     public unknown:boolean = false;
+    public homeDomain?: string;
 
     public dateDiscovered?: Date;
 
@@ -74,7 +75,8 @@ export class Organization {
             has30DayStats: this.has30DayStats,
             has24HourStats: this.has24HourStats,
             dateDiscovered: this.dateDiscovered,
-            isTierOneOrganization: this.isTierOneOrganization
+            isTierOneOrganization: this.isTierOneOrganization,
+            homeDomain: this.homeDomain
         }
     }
 
