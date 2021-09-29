@@ -16,6 +16,7 @@ export class Node {
     public versionStr?:string;
     public quorumSet: QuorumSet = new QuorumSet();
     public active: boolean = false;
+    public activeInScp: boolean = false;
     public geoData: NodeGeoData = new NodeGeoData();
     public statistics: NodeStatistics = new NodeStatistics();
     public dateDiscovered: Date = new Date();
@@ -69,6 +70,7 @@ export class Node {
             networkId: this.networkId,
             versionStr: this.versionStr,
             active: this.active,
+            activeInScp: this.activeInScp,
             overLoaded: this.overLoaded,
             quorumSet: this.quorumSet,
             geoData: this.geoData,

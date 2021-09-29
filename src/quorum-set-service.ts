@@ -2,7 +2,6 @@ import {QuorumSet} from "./quorum-set";
 import {TrustGraph} from "./trust-graph/trust-graph";
 import {Network, PublicKey} from "./network";
 import {Node} from "./node";
-import * as net from "net";
 
 export class QuorumSetService {
     /*

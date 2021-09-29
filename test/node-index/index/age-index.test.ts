@@ -12,7 +12,7 @@ test('get', () => {
     expect(AgeIndex.get(node1)).toEqual(2/6);
 
     newDate = new Date();
-    newDate.setMonth(newDate.getMonth() - 7);
+    newDate.setMonth(newDate.getMonth() - 8);
     node1.dateDiscovered = newDate;
     expect(AgeIndex.get(node1)).toEqual(1);
 });
