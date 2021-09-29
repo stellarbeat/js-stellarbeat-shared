@@ -1,13 +1,13 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "2.24.1",
+  "version": "2.24.2",
   "description": "Domain classes for stellarbeat. Code reuse between frontend and backend",
   "repository": {
     "type": "git",
     "url": "https://github.com/stellarbeat/js-stellar-domain.git"
   },
   "scripts": {
-    "prepublish": "yarn run build",
+    "prepare": "yarn run build",
     "build": "node_modules/typescript/bin/tsc  --declaration; ajv compile -s \"schemas/*(network).json\" -r \"schemas/*(node|organization).json\" -o lib/network-schema.js -c ajv-formats --code-optimize=true --code-lines",
     "test": "jest"
   },
