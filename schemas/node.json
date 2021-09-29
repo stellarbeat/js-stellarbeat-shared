@@ -7,6 +7,11 @@
       "type": "boolean",
       "description": "Node accepts connections from other nodes"
     },
+    "activeInScp": {
+      "default": false,
+      "type": "boolean",
+      "description": "Node is active in SCP"
+    },
     "alias": {
       "type": "string"
     },
@@ -49,7 +54,7 @@
     "isValidating": {
       "default": false,
       "type": "boolean",
-      "description": "Participating in consensus"
+      "description": "Participating in SCP and externalizing new values"
     },
     "isValidator": {
       "type": "boolean"
