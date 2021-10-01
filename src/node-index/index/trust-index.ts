@@ -17,6 +17,10 @@ export class TrustIndex {
         if(!vertex)
             return 0;
 
+        if((
+            Array.from(this._network.nodesTrustGraph.vertices.values()).filter(vertex => this._network.nodesTrustGraph.getOutDegree(vertex) > 0).length - 1 === 0
+        ))
+            return 0;
         return (
                 Array.from(this._network.nodesTrustGraph.getParents(vertex))
                 .filter((trustingVertex) => trustingVertex.key !== vertex!.key).length
