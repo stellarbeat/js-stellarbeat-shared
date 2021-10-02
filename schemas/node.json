@@ -99,6 +99,9 @@
     "quorumSet": {
       "$ref": "#/definitions/QuorumSet"
     },
+    "quorumSetHashKey": {
+      "type": "string"
+    },
     "statistics": {
       "$ref": "#/definitions/NodeStatistics"
     },
@@ -167,10 +170,7 @@
     },
     "QuorumSet": {
       "properties": {
-        "hashKey": {
-          "type": "string"
-        },
-        "innerQuorumSets": {
+       "innerQuorumSets": {
           "items": {
             "$ref": "#/definitions/QuorumSet"
           },
@@ -191,4 +191,3 @@
     }
   }
 }
-
