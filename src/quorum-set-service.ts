@@ -125,7 +125,7 @@ export class QuorumSetService {
         }
 
         let organizationId = network.getNodeByPublicKey(quorumSet.validators[0])!.organizationId;
-        if ( organizationId === undefined || network.getOrganizationById(organizationId) === undefined) {
+        if ( organizationId === null || network.getOrganizationById(organizationId) === undefined) {
             return false;
         }
 

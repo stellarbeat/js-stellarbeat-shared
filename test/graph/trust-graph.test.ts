@@ -23,8 +23,8 @@ nodeB.quorumSet.validators.push('a');
 nodeB.quorumSet.threshold = 1;
 nodeC.quorumSet.validators.push('a');
 nodeC.quorumSet.threshold = 1;
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['e']));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['a']));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['e']));
 nodeD.quorumSet.threshold = 1;
 nodeE.quorumSet.threshold = 0;
 

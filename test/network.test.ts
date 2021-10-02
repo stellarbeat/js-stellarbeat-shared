@@ -16,10 +16,10 @@ let node4 = new Node('d');
 let node5 = new Node('e');
 node3.quorumSet.validators.push('a');
 node3.quorumSet.threshold = 1;
-node2.quorumSet.innerQuorumSets.push(new QuorumSet('failingqset', 5, ['c']));
+node2.quorumSet.innerQuorumSets.push(new QuorumSet( 5, ['c']));
 node4.quorumSet.threshold = 1;
-node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['a']));
-node4.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['e']));
+node4.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['a']));
+node4.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['e']));
 
 let organization = new Organization('orgId', 'org');
 organization.validators = ['a', 'b', 'c', 'd'];

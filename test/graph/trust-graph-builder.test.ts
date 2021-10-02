@@ -27,7 +27,7 @@ nodeAA.quorumSet.validators.push('bb');
 nodeAA.quorumSet.threshold = 1;
 nodeB.quorumSet.validators.push('a');
 nodeB.quorumSet.threshold = 1;
-nodeBB.quorumSet.innerQuorumSets.push(new QuorumSet('hashkey', 1, ['aa']));
+nodeBB.quorumSet.innerQuorumSets.push(new QuorumSet(1, ['aa']));
 nodeBB.quorumSet.threshold = 1;
 
 organizationA.validators.push(...['a', 'aa']);

@@ -185,7 +185,7 @@ export class Network {
                 return;
             }
             let organizationId = this.getNodeByPublicKey(innerQSet.validators[0])!.organizationId;
-            if ( organizationId === undefined || this.getOrganizationById(organizationId) === undefined) {
+            if ( organizationId === null || this.getOrganizationById(organizationId) === undefined) {
                 return;
             }
 

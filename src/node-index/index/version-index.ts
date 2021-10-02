@@ -19,7 +19,7 @@ export class VersionIndex {
     getHighestStellarCoreVersion(nodes:Node[]) {
         let versions = nodes
             .map(node => node.versionStr)
-            .filter(version => version!==undefined)
+            .filter(version => version!==null)
             .filter(version => version!.match(/[.-]rc/) === null)
             .map(versionDirty => findVersions(versionDirty!, {"loose": false})[0])
             .filter(version => version !== undefined);
@@ -35,7 +35,7 @@ export class VersionIndex {
     }
 
     get(node: Node): number {
-        if(node.versionStr === undefined) {
+        if(!node.versionStr) {
             return 0;
         }
 

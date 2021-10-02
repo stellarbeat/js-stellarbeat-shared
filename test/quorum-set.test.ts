@@ -1,10 +1,10 @@
 import {QuorumSet} from '../src';
 
-let qs = new QuorumSet('a', 2, ["0","1", "2", "3"], [
-    new QuorumSet('b', 2, ["4", "5"], [
-        new QuorumSet('c', 2, ["6", "7"])
+let qs = new QuorumSet(2, ["0","1", "2", "3"], [
+    new QuorumSet(2, ["4", "5"], [
+        new QuorumSet(2, ["6", "7"])
     ]),
-    new QuorumSet('d', 2, ["8", "9"])
+    new QuorumSet(2, ["8", "9"])
 ]);
 
 test('getAllValidators', () => {

@@ -1,16 +1,14 @@
 export class QuorumSet {
 
-    public hashKey?: string;
     public threshold: number;
     public validators: Array<string>;
     public innerQuorumSets: Array<QuorumSet>;
 
-    constructor(hashKey?: string,
+    constructor(
                 threshold: number = Number.MAX_SAFE_INTEGER,
                 validators: Array<string> = [],
                 innerQuorumSets: Array<QuorumSet> = []
     ) {
-        this.hashKey = hashKey;
         this.threshold = threshold;
         this.validators = validators;
         this.innerQuorumSets = innerQuorumSets;
@@ -29,7 +27,6 @@ export class QuorumSet {
 
     toJSON(): Object {
         return {
-            hashKey: this.hashKey,
             threshold: this.threshold,
             validators: Array.from(this.validators),
             innerQuorumSets: Array.from(this.innerQuorumSets)
@@ -53,7 +50,6 @@ export class QuorumSet {
             );
         }
         return new QuorumSet(
-            quorumSetObject.hashKey,
             quorumSetObject.threshold,
             quorumSetObject.validators,
             innerQuorumSets

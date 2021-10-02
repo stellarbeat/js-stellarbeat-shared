@@ -7,20 +7,18 @@ export function isOrganization(organization: Organization | undefined): organiza
 
 export class Organization {
     public readonly id:OrganizationId;
-    public readonly name:string;
-    public dba?: string;
-    public url?: string;
-    public horizonUrl?: string;
-    public logo?: string;
-    public description?: string;
-    public physicalAddress?: string;
-    public physicalAddressAttestation?: string;
-    public phoneNumber?: string;
-    public phoneNumberAttestation?:string;
-    public keybase?: string;
-    public twitter?: string;
-    public github?: string;
-    public officialEmail?: string;
+    public name:string;
+    public dba: string|null = null;
+    public url: string|null = null;
+    public horizonUrl: string|null = null;
+    public logo: string|null = null;
+    public description: string|null = null;
+    public physicalAddress: string|null = null;
+    public phoneNumber: string|null = null;
+    public keybase: string|null = null;
+    public twitter: string|null = null;
+    public github: string|null = null;
+    public officialEmail: string|null = null;
     public validators: PublicKey[] = [];
     public subQuorumAvailable: boolean = false;
     public has30DayStats:boolean = false;
@@ -28,11 +26,11 @@ export class Organization {
     public subQuorum24HoursAvailability: number = 0;
     public subQuorum30DaysAvailability: number = 0;
     public unknown:boolean = false;
-    public homeDomain?: string;
+    public homeDomain: string|null = null;//todo: not nullable
 
     public dateDiscovered?: Date;
 
-    constructor(id:string, name:string) {
+    constructor(id:string, name: string) {
         this.id = id;
         this.name = name;
     }
@@ -61,9 +59,7 @@ export class Organization {
             logo: this.logo,
             description: this.description,
             physicalAddress: this.physicalAddress,
-            physicalAddressAttestation: this.physicalAddressAttestation,
             phoneNumber: this.phoneNumber,
-            phoneNumberAttestation: this.phoneNumberAttestation,
             keybase: this.keybase,
             twitter: this.twitter,
             github: this.github,

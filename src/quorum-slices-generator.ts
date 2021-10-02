@@ -1,24 +1,8 @@
-import {Node, QuorumSet} from "./index";
-
-let cache = new Map();
-let cacheEnabled = true;
+import {QuorumSet} from "./index";
 
 export class QuorumSlicesGenerator {
-    _cacheEnabled: boolean;
-    constructor(cacheEnabled = true){
-        this._cacheEnabled = cacheEnabled;
-    }
-
-    disableCache() {
-        this._cacheEnabled = false;
-    };
-
-    enableCache() {
-        this._cacheEnabled = true;
-    }
 
     getSlices(quorumSet:QuorumSet):Array<Array<string>> {
-        //TODO: take validating status into account.
         if (quorumSet.threshold > quorumSet.validators.length + quorumSet.innerQuorumSets.length) {
             return [];
         }
@@ -27,18 +11,10 @@ export class QuorumSlicesGenerator {
             return [];
         }
 
-        if(cache.has(quorumSet.hashKey) && this._cacheEnabled) {
-            return cache.get(quorumSet.hashKey);
-        }
-
-        let slices = this.getCombinationsOfSizeK(
+        return this.getCombinationsOfSizeK(
             quorumSet.threshold,
             ([] as any).concat(quorumSet.validators).concat(quorumSet.innerQuorumSets)
         );
-
-        cache.set(quorumSet.hashKey, slices);
-
-        return slices;
     }
 
     getCombinationsOfSizeK(k:number, nodesOrQSets:Array<string> | Array<QuorumSet>) {

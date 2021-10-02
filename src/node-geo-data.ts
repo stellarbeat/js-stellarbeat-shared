@@ -1,27 +1,15 @@
 export class NodeGeoData {
-    public countryCode?:string;
-    public countryName?:string;
-    public regionCode?:string;
-    public regionName?:string;
-    public city?:string;
-    public zipCode?:string;
-    public timeZone?:string;
-    public latitude?:number;
-    public longitude?:number;
-    public metroCode?:string;
+    public countryCode:string|null = null;
+    public countryName:string|null = null;
+    public latitude:number|null = null;
+    public longitude:number|null = null;
 
     toJSON():Object {
         return {
             countryCode: this.countryCode,
             countryName: this.countryName,
-            regionCode: this.regionCode,
-            regionName: this.regionName,
-            city: this.city,
-            zipCode: this.zipCode,
-            timeZone: this.timeZone,
             latitude: this.latitude,
             longitude: this.longitude,
-            metroCode: this.metroCode,
         };
     };
 
@@ -38,14 +26,8 @@ export class NodeGeoData {
         let newNodeGeo = new NodeGeoData();
         newNodeGeo.countryCode = nodeGeoObject.countryCode;
         newNodeGeo.countryName = nodeGeoObject.countryName;
-        newNodeGeo.regionCode = nodeGeoObject.regionCode;
-        newNodeGeo.regionName = nodeGeoObject.regionName;
-        newNodeGeo.city = nodeGeoObject.city;
-        newNodeGeo.zipCode = nodeGeoObject.zipCode;
-        newNodeGeo.timeZone = nodeGeoObject.timeZone;
         newNodeGeo.latitude = nodeGeoObject.latitude;
         newNodeGeo.longitude = nodeGeoObject.longitude;
-        newNodeGeo.metroCode = nodeGeoObject.metroCode;
 
         return newNodeGeo;
     }

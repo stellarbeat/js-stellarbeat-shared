@@ -15,8 +15,8 @@ nodeC.quorumSet.validators = [nodeA.publicKey, nodeB.publicKey, nodeC.publicKey]
 nodeC.quorumSet.threshold = 3;
 nodeD.quorumSet.validators = [nodeA.publicKey, nodeB.publicKey, nodeE.publicKey];
 nodeD.quorumSet.threshold = 3;
-nodeE.quorumSet.innerQuorumSets.push(new QuorumSet("key", 2, [nodeA.publicKey, nodeB.publicKey]));
-nodeE.quorumSet.innerQuorumSets.push(new QuorumSet("key", 1, [nodeC.publicKey]));
+nodeE.quorumSet.innerQuorumSets.push(new QuorumSet(2, [nodeA.publicKey, nodeB.publicKey]));
+nodeE.quorumSet.innerQuorumSets.push(new QuorumSet( 1, [nodeC.publicKey]));
 nodeE.quorumSet.threshold = 2;
 
 test('isQuorum', () => {
