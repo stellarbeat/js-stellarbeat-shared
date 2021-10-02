@@ -26,7 +26,7 @@ export class Node {
 	public overLoaded = false;
 	public isFullValidator = false;
 	public isValidating = false;
-	public homeDomain?: string;
+	public homeDomain: string | null = null;
 	public index = 0.0;
 	public historyUrl: string | null = null;
 	public alias: string | null = null;

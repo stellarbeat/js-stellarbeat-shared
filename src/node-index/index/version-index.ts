@@ -68,6 +68,8 @@ export class VersionIndex {
 				return 0.3;
 			case 'prerelease':
 				return 0.8;
+			default:
+				return 0;
 		}
 	}
 }
