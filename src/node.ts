@@ -108,14 +108,16 @@ export class Node {
 			throw new Error('nodeDTO missing public key');
 		}
 
-		if (!isObject(nodeDTO.geoData)) throw new Error('Missing geoData');
-
-		if (!isObject(nodeDTO.statistics)) throw new Error('Missing statistics');
-
 		const node = new Node(nodeDTO.publicKey);
-		node.quorumSet = QuorumSet.fromJSON(nodeDTO.quorumSet);
-		node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
-		node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
+
+		if (isObject(nodeDTO.geoData))
+			node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
+
+		if (isObject(nodeDTO.statistics))
+			node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
+
+		if (isObject(nodeDTO.quorumSet))
+			node.quorumSet = QuorumSet.fromJSON(nodeDTO.quorumSet);
 
 		PropertyMapper.mapProperties(nodeDTO, node, [
 			'publicKey',
