@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "3.0.0-0",
+  "version": "3.0.0-1",
   "description": "Domain classes for stellarbeat. Code reuse between frontend and backend",
   "repository": {
     "type": "git",
@@ -31,15 +31,19 @@
     "@types/lodash": "^4.14.170",
     "@types/node": "^15.12.4",
     "@types/semver": "^7.3.6",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "ajv": "^8.6.0",
     "ajv-cli": "^5.0.0",
     "ajv-formats": "^2.1.0",
     "await-fs": "^1.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "jest": "^27.0.4",
     "merge": "^2.1.1",
     "prettier": "^2.4.1",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4",
+    "typescript": "^4.4.3",
     "typescript-json-schema": "^0.50.0"
   }
 }

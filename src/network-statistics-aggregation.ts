@@ -1,58 +1,56 @@
-import { PublicKey } from './network';
-
 export default class NetworkStatisticsAggregation {
 	time: Date = new Date();
-	nrOfActiveWatchersSum: number = 0;
-	nrOfActiveValidatorsSum: number = 0;
-	nrOfActiveFullValidatorsSum: number = 0;
-	nrOfActiveOrganizationsSum: number = 0;
-	transitiveQuorumSetSizeSum: number = 0;
-	hasQuorumIntersectionCount: number = 0;
-	hasTransitiveQuorumSetCount: number = 0;
-	topTierMin: number = 0;
-	topTierMax: number = 0;
-	topTierSum: number = 0;
-	topTierOrgsMin: number = 0;
-	topTierOrgsMax: number = 0;
-	topTierOrgsSum: number = 0;
-	minBlockingSetMin: number = 0;
-	minBlockingSetMax: number = 0;
-	minBlockingSetSum: number = 0;
-	minBlockingSetOrgsMin: number = 0;
-	minBlockingSetOrgsMax: number = 0;
-	minBlockingSetOrgsSum: number = 0;
-	minBlockingCountryOrgsMin: number = 0;
-	minBlockingSetCountryMax: number = 0;
-	minBlockingSetCountrySum: number = 0;
-	minBlockingSetISPMin: number = 0;
-	minBlockingSetISPMax: number = 0;
-	minBlockingSetISPSum: number = 0;
-	minBlockingSetFilteredMin: number = 0;
-	minBlockingSetFilteredMax: number = 0;
-	minBlockingSetFilteredSum: number = 0;
-	minBlockingSetOrgsFilteredMin: number = 0;
-	minBlockingSetOrgsFilteredMax: number = 0;
-	minBlockingSetOrgsFilteredSum: number = 0;
-	minBlockingSetCountryFilteredMin: number = 0;
-	minBlockingSetCountryFilteredMax: number = 0;
-	minBlockingSetCountryFilteredSum: number = 0;
-	minBlockingSetISPFilteredMin: number = 0;
-	minBlockingSetISPFilteredMax: number = 0;
-	minBlockingSetISPFilteredSum: number = 0;
-	minSplittingSetMin: number = 0;
-	minSplittingSetMax: number = 0;
-	minSplittingSetSum: number = 0;
-	minSplittingSetOrgsMin: number = 0;
-	minSplittingSetOrgsMax: number = 0;
-	minSplittingSetOrgsSum: number = 0;
-	minSplittingSetCountryMin: number = 0;
-	minSplittingSetCountryMax: number = 0;
-	minSplittingSetCountrySum: number = 0;
-	minSplittingSetISPMin: number = 0;
-	minSplittingSetISPMax: number = 0;
-	minSplittingSetISPSum: number = 0;
-	hasSymmetricTopTierCount: number = 0;
-	crawlCount: number = 0;
+	nrOfActiveWatchersSum = 0;
+	nrOfActiveValidatorsSum = 0;
+	nrOfActiveFullValidatorsSum = 0;
+	nrOfActiveOrganizationsSum = 0;
+	transitiveQuorumSetSizeSum = 0;
+	hasQuorumIntersectionCount = 0;
+	hasTransitiveQuorumSetCount = 0;
+	topTierMin = 0;
+	topTierMax = 0;
+	topTierSum = 0;
+	topTierOrgsMin = 0;
+	topTierOrgsMax = 0;
+	topTierOrgsSum = 0;
+	minBlockingSetMin = 0;
+	minBlockingSetMax = 0;
+	minBlockingSetSum = 0;
+	minBlockingSetOrgsMin = 0;
+	minBlockingSetOrgsMax = 0;
+	minBlockingSetOrgsSum = 0;
+	minBlockingCountryOrgsMin = 0;
+	minBlockingSetCountryMax = 0;
+	minBlockingSetCountrySum = 0;
+	minBlockingSetISPMin = 0;
+	minBlockingSetISPMax = 0;
+	minBlockingSetISPSum = 0;
+	minBlockingSetFilteredMin = 0;
+	minBlockingSetFilteredMax = 0;
+	minBlockingSetFilteredSum = 0;
+	minBlockingSetOrgsFilteredMin = 0;
+	minBlockingSetOrgsFilteredMax = 0;
+	minBlockingSetOrgsFilteredSum = 0;
+	minBlockingSetCountryFilteredMin = 0;
+	minBlockingSetCountryFilteredMax = 0;
+	minBlockingSetCountryFilteredSum = 0;
+	minBlockingSetISPFilteredMin = 0;
+	minBlockingSetISPFilteredMax = 0;
+	minBlockingSetISPFilteredSum = 0;
+	minSplittingSetMin = 0;
+	minSplittingSetMax = 0;
+	minSplittingSetSum = 0;
+	minSplittingSetOrgsMin = 0;
+	minSplittingSetOrgsMax = 0;
+	minSplittingSetOrgsSum = 0;
+	minSplittingSetCountryMin = 0;
+	minSplittingSetCountryMax = 0;
+	minSplittingSetCountrySum = 0;
+	minSplittingSetISPMin = 0;
+	minSplittingSetISPMax = 0;
+	minSplittingSetISPSum = 0;
+	hasSymmetricTopTierCount = 0;
+	crawlCount = 0;
 
 	get nrOfActiveWatchersAverage() {
 		return +(this.nrOfActiveWatchersSum / this.crawlCount).toFixed(2);
@@ -148,13 +146,15 @@ export default class NetworkStatisticsAggregation {
 		return +(value / this.crawlCount).toFixed(2);
 	}
 
-	static fromJSON(networkStats: string | Object): NetworkStatisticsAggregation {
-		let networkStatsObject: any;
+	static fromJSON(
+		networkStats: string | Record<string, unknown>
+	): NetworkStatisticsAggregation {
+		let networkStatsObject: Record<string, unknown>;
 		if (typeof networkStats === 'string') {
 			networkStatsObject = JSON.parse(networkStats);
 		} else networkStatsObject = networkStats;
 
-		let newNetworkStatsAggregation = new NetworkStatisticsAggregation();
+		const newNetworkStatsAggregation = new NetworkStatisticsAggregation();
 		for (const [key, value] of Object.entries(networkStatsObject)) {
 			//@ts-ignore
 			newNetworkStatsAggregation[key] = value;

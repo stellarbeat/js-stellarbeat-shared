@@ -25,7 +25,7 @@ export class QuorumSet {
 		);
 	}
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			threshold: this.threshold,
 			validators: Array.from(this.validators),

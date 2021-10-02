@@ -35,16 +35,16 @@ export class QuorumSetService {
 	 * @param nodesTrustGraph
 	 */
 	public static getBlockedNodes(network: Network, nodesTrustGraph: TrustGraph) {
-		let nodesToCheck = network.nodes.filter((node) => node.isValidator);
-		let blockedNodes: Set<PublicKey> = new Set();
-		let inNodesToCheckQueue: Map<PublicKey, boolean> = new Map();
+		const nodesToCheck = network.nodes.filter((node) => node.isValidator);
+		const blockedNodes: Set<PublicKey> = new Set();
+		const inNodesToCheckQueue: Map<PublicKey, boolean> = new Map();
 
 		nodesToCheck.forEach((node) =>
 			inNodesToCheckQueue.set(node.publicKey, true)
 		);
 
 		while (nodesToCheck.length > 0) {
-			let nodeToCheck = nodesToCheck.pop()!;
+			const nodeToCheck = nodesToCheck.pop()!;
 			inNodesToCheckQueue.set(nodeToCheck.publicKey, false);
 
 			if (
@@ -67,13 +67,13 @@ export class QuorumSetService {
 			//node is failing
 			blockedNodes.add(nodeToCheck.publicKey);
 
-			let vertexToCheck = nodesTrustGraph.getVertex(nodeToCheck.publicKey);
+			const vertexToCheck = nodesTrustGraph.getVertex(nodeToCheck.publicKey);
 			if (!vertexToCheck) continue; //this should not happen;
 
 			Array.from(nodesTrustGraph.getParents(vertexToCheck))
 				.filter((vertex) => inNodesToCheckQueue.get(vertex.key) === false)
 				.forEach((vertex) => {
-					let node = network.getNodeByPublicKey(vertex.key);
+					const node = network.getNodeByPublicKey(vertex.key);
 					nodesToCheck.push(node);
 					inNodesToCheckQueue.set(node.publicKey, true);
 				});
@@ -166,7 +166,7 @@ export class QuorumSetService {
 			return false;
 		}
 
-		let organizationId = network.getNodeByPublicKey(
+		const organizationId = network.getNodeByPublicKey(
 			quorumSet.validators[0]
 		)!.organizationId;
 		if (

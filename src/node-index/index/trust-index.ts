@@ -11,7 +11,7 @@ export class TrustIndex {
 	}
 
 	get(node: Node): number {
-		let vertex = this._network.nodesTrustGraph.getVertex(node.publicKey!);
+		const vertex = this._network.nodesTrustGraph.getVertex(node.publicKey!);
 
 		if (!vertex) return 0;
 

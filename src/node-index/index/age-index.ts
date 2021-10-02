@@ -5,7 +5,7 @@ import { Node } from '../../node';
  */
 export class AgeIndex {
 	static get(node: Node): number {
-		let monthDifference = AgeIndex.monthDifference(
+		const monthDifference = AgeIndex.monthDifference(
 			node.dateDiscovered,
 			new Date()
 		);

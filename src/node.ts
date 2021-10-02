@@ -2,6 +2,7 @@ import { NodeGeoData } from './node-geo-data';
 import { NodeStatistics } from './node-statistics';
 import { QuorumSet } from './quorum-set';
 import PropertyMapper from './PropertyMapper';
+import { isObject, isString } from './typeguards';
 
 export class Node {
 	public ip: string;
@@ -16,28 +17,24 @@ export class Node {
 	public versionStr: string | null = null;
 	public quorumSet: QuorumSet = new QuorumSet();
 	public quorumSetHashKey: string | null = null;
-	public active: boolean = false;
-	public activeInScp: boolean = false;
+	public active = false;
+	public activeInScp = false;
 	public geoData: NodeGeoData = new NodeGeoData();
 	public statistics: NodeStatistics = new NodeStatistics();
 	public dateDiscovered: Date = new Date();
 	public dateUpdated: Date = new Date();
-	public overLoaded: boolean = false;
-	public isFullValidator: boolean = false;
-	public isValidating: boolean = false;
+	public overLoaded = false;
+	public isFullValidator = false;
+	public isValidating = false;
 	public homeDomain?: string;
-	public index: number = 0.0;
+	public index = 0.0;
 	public historyUrl: string | null = null;
 	public alias: string | null = null;
 	public isp: string | null = null;
 	public organizationId: string | null = null;
-	public unknown: boolean = false; //a node is unknown if it is not crawled or maybe archived
+	public unknown = false; //a node is unknown if it is not crawled or maybe archived
 
-	constructor(
-		publicKey: string,
-		ip: string = '127.0.0.1',
-		port: number = 11625
-	) {
+	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
 		this.port = port;
 		this.publicKey = publicKey;
@@ -64,7 +61,7 @@ export class Node {
 		return this.isValidating || this.quorumSet.hasValidators();
 	}
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			ip: this.ip,
 			port: this.port,
@@ -101,17 +98,21 @@ export class Node {
 		return `Node (key: ${this.key}, publicKey: ${this.publicKey})`;
 	}
 
-	static fromJSON(nodeJSON: string | Object): Node {
-		let nodeDTO: any;
+	static fromJSON(nodeJSON: string | Record<string, unknown>): Node {
+		let nodeDTO: Record<string, unknown>;
 		if (typeof nodeJSON === 'string') {
 			nodeDTO = JSON.parse(nodeJSON);
 		} else nodeDTO = nodeJSON;
 
-		if (!nodeDTO.publicKey) {
+		if (!isString(nodeDTO.publicKey)) {
 			throw new Error('nodeDTO missing public key');
 		}
 
-		let node = new Node(nodeDTO.publicKey);
+		if (!isObject(nodeDTO.geoData)) throw new Error('Missing geoData');
+
+		if (!isObject(nodeDTO.statistics)) throw new Error('Missing statistics');
+
+		const node = new Node(nodeDTO.publicKey);
 		node.quorumSet = QuorumSet.fromJSON(nodeDTO.quorumSet);
 		node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
 		node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
@@ -125,9 +126,9 @@ export class Node {
 			'dateDiscovered',
 			'dateUpdated'
 		]);
-		if (nodeDTO.dateDiscovered !== undefined)
+		if (isString(nodeDTO.dateDiscovered))
 			node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
-		if (nodeDTO.dateUpdated !== undefined)
+		if (isString(nodeDTO.dateUpdated))
 			node.dateUpdated = new Date(nodeDTO.dateUpdated);
 
 		return node;

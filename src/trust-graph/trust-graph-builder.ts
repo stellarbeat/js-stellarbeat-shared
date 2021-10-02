@@ -21,7 +21,7 @@ export class TrustGraphBuilder {
 	}
 
 	buildGraphFromOrganizations(nodesTrustGraph: TrustGraph) {
-		let graph = new TrustGraph(
+		const graph = new TrustGraph(
 			new StronglyConnectedComponentsFinder(),
 			new NetworkTransitiveQuorumSetFinder()
 		);
@@ -39,7 +39,7 @@ export class TrustGraphBuilder {
 
 		//add edges
 		graph.vertices.forEach((organizationVertex) => {
-			let organization = this.network.getOrganizationById(
+			const organization = this.network.getOrganizationById(
 				organizationVertex.key
 			);
 			if (!organization) return;
@@ -57,7 +57,7 @@ export class TrustGraphBuilder {
 						this.network.getOrganizationById(organizationId!)
 					)
 					.forEach((trustedOrganization) => {
-						let trustedOrganizationVertex = graph.getVertex(
+						const trustedOrganizationVertex = graph.getVertex(
 							trustedOrganization.id
 						);
 						if (!isVertex(trustedOrganizationVertex)) return;
@@ -74,8 +74,8 @@ export class TrustGraphBuilder {
 		return graph;
 	}
 
-	buildGraphFromNodes(includeWatchers: boolean = false): TrustGraph {
-		let graph = new TrustGraph(
+	buildGraphFromNodes(includeWatchers = false): TrustGraph {
+		const graph = new TrustGraph(
 			new StronglyConnectedComponentsFinder(),
 			new NetworkTransitiveQuorumSetFinder()
 		);
@@ -90,7 +90,7 @@ export class TrustGraphBuilder {
 
 		graph.vertices.forEach((vertex) => {
 			//now we add the edges, the trust connections
-			let node = this.network.getNodeByPublicKey(vertex.key);
+			const node = this.network.getNodeByPublicKey(vertex.key);
 
 			this.addNodeEdges(vertex, node.quorumSet, graph);
 		});
@@ -104,9 +104,9 @@ export class TrustGraphBuilder {
 		quorumSet: QuorumSet,
 		graph: TrustGraph
 	) {
-		let validators = QuorumSet.getAllValidators(quorumSet);
+		const validators = QuorumSet.getAllValidators(quorumSet);
 		validators.forEach((validator) => {
-			let vertex = graph.getVertex(validator);
+			const vertex = graph.getVertex(validator);
 			/*if (!vertex) {//it could be that a node is not yet detected validating, but is included in quorumsets.
                 let node = this.network.getNodeByPublicKey(validator);//perhaps we already discovered it as a watcher
                 if (!node)//if not let's add an unknown node

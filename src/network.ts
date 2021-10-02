@@ -7,6 +7,7 @@ import {
 	TrustGraphBuilder
 } from './index';
 import NetworkStatistics from './network-statistics';
+import { isObject } from './typeguards';
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -143,7 +144,7 @@ export class Network {
 
 	updateOrganizationSubQuorumAvailabilityStates() {
 		this.organizations.forEach((organization) => {
-			let nrOfValidatingNodes = organization.validators
+			const nrOfValidatingNodes = organization.validators
 				.map((validator) => this.getNodeByPublicKey(validator))
 				.filter((validator) => !this.isNodeFailing(validator)).length;
 
@@ -170,7 +171,7 @@ export class Network {
 	getNodeByPublicKey(publicKey: PublicKey): Node {
 		if (this.nodesMap.has(publicKey)) return this.nodesMap.get(publicKey)!;
 		else {
-			let unknownNode = new Node(publicKey);
+			const unknownNode = new Node(publicKey);
 			unknownNode.unknown = true;
 
 			return unknownNode;
@@ -180,7 +181,7 @@ export class Network {
 	getOrganizationById(id: OrganizationId): Organization {
 		if (this.organizationsMap.has(id)) return this.organizationsMap.get(id)!;
 		else {
-			let unknownOrganization = new Organization(id, id);
+			const unknownOrganization = new Organization(id, id);
 			unknownOrganization.unknown = true;
 
 			return unknownOrganization;
@@ -195,26 +196,26 @@ export class Network {
 	 * Get nodes that have the given node in their quorumSet
 	 */
 	getTrustingNodes(node: Node): Node[] {
-		let vertex = this._nodesTrustGraph.getVertex(node.publicKey!);
+		const vertex = this._nodesTrustGraph.getVertex(node.publicKey);
 		if (!vertex) {
 			return [];
 		}
 
-		return Array.from(this._nodesTrustGraph.getParents(vertex)).map(
-			(vertex) => this.getNodeByPublicKey(vertex.key)!
+		return Array.from(this._nodesTrustGraph.getParents(vertex)).map((vertex) =>
+			this.getNodeByPublicKey(vertex.key)
 		);
 	}
 
 	//todo => get data from organizationTrustGraph
 	getTrustedOrganizations(quorumSet: QuorumSet): Organization[] {
-		let trustedOrganizations: Organization[] = [];
+		const trustedOrganizations: Organization[] = [];
 		quorumSet.innerQuorumSets.forEach((innerQSet) => {
 			if (innerQSet.validators.length === 0) {
 				return;
 			}
-			let organizationId = this.getNodeByPublicKey(
+			const organizationId = this.getNodeByPublicKey(
 				innerQSet.validators[0]
-			)!.organizationId;
+			).organizationId;
 			if (
 				organizationId === null ||
 				this.getOrganizationById(organizationId) === undefined
@@ -249,9 +250,9 @@ export class Network {
 	}
 
 	getTrustedOrganizationsByOrganization(organization: Organization) {
-		let trustedOrganizations: Organization[] = [];
+		const trustedOrganizations: Organization[] = [];
 		organization.validators.forEach((publicKey) => {
-			let validator = this.getNodeByPublicKey(publicKey)!;
+			const validator = this.getNodeByPublicKey(publicKey)!;
 			this.getTrustedOrganizations(validator.quorumSet).forEach((org) => {
 				if (org.id !== organization.id) trustedOrganizations.push(org);
 			});
@@ -343,29 +344,40 @@ export class Network {
 		};
 	}
 
-	static fromJSON(networkJSON: string | Object): Network {
-		let networkDTO: any;
+	static fromJSON(networkJSON: string | Record<string, unknown>): Network {
+		let networkDTO: Record<string, unknown>;
 		if (typeof networkJSON === 'string') {
 			networkDTO = JSON.parse(networkJSON);
 		} else networkDTO = networkJSON;
 
-		let nodes = networkDTO.nodes.map((node: any) => Node.fromJSON(node));
+		if (!Array.isArray(networkDTO.nodes))
+			throw new Error('Node property must be array');
 
-		let organizations = networkDTO.organizations.map((organization: any) =>
+		const nodes = networkDTO.nodes.map((node: any) => Node.fromJSON(node));
+
+		if (!Array.isArray(networkDTO.organizations))
+			throw new Error('organizations property must be array');
+		const organizations = networkDTO.organizations.map((organization: any) =>
 			Organization.fromJSON(organization)
 		);
 
-		let networkStatistics = NetworkStatistics.fromJSON(networkDTO.statistics);
+		if (!isObject(networkDTO.statistics))
+			throw new Error('statistics property missing');
 
-		return new Network(
-			nodes,
-			organizations,
-			new Date(networkDTO.time),
-			networkStatistics
-		);
+		const networkStatistics = NetworkStatistics.fromJSON(networkDTO.statistics);
+
+		const timeValue = networkDTO.time;
+		let time: Date;
+		if (typeof timeValue === 'string') {
+			time = new Date(timeValue);
+		} else {
+			time = new Date();
+		}
+
+		return new Network(nodes, organizations, time, networkStatistics);
 	}
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			id: this.id,
 			name: this.name,

@@ -4,7 +4,7 @@ export class NodeGeoData {
 	public latitude: number | null = null;
 	public longitude: number | null = null;
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			countryCode: this.countryCode,
 			countryName: this.countryName,
@@ -13,7 +13,7 @@ export class NodeGeoData {
 		};
 	}
 
-	static fromJSON(nodeGeo: string | Object): NodeGeoData {
+	static fromJSON(nodeGeo: string | Record<string, unknown>): NodeGeoData {
 		if (nodeGeo === undefined) {
 			return new NodeGeoData();
 		}
@@ -22,7 +22,7 @@ export class NodeGeoData {
 			nodeGeoObject = JSON.parse(nodeGeo);
 		} else nodeGeoObject = nodeGeo;
 
-		let newNodeGeo = new NodeGeoData();
+		const newNodeGeo = new NodeGeoData();
 		newNodeGeo.countryCode = nodeGeoObject.countryCode;
 		newNodeGeo.countryName = nodeGeoObject.countryName;
 		newNodeGeo.latitude = nodeGeoObject.latitude;

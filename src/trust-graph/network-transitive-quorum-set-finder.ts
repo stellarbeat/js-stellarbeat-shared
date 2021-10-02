@@ -6,7 +6,7 @@ export class NetworkTransitiveQuorumSetFinder {
 		stronglyConnectedComponents: Array<StronglyConnectedComponent>,
 		graph: TrustGraph
 	): StronglyConnectedComponent {
-		let scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];
+		const scpNoOutgoingEdges: Array<StronglyConnectedComponent> = [];
 		stronglyConnectedComponents.forEach((scp) => {
 			if (
 				scp.size > 1 &&
@@ -25,12 +25,12 @@ export class NetworkTransitiveQuorumSetFinder {
 		if (scpNoOutgoingEdges.length > 1) {
 			let highestIndexAverage = 0;
 			for (let i = 0; i < scpNoOutgoingEdges.length; i++) {
-				let scp = scpNoOutgoingEdges[i];
-				let weightSum = Array.from(scp)
+				const scp = scpNoOutgoingEdges[i];
+				const weightSum = Array.from(scp)
 					.map((vertexKey) => graph.getVertex(vertexKey))
 					.filter(isVertex)
 					.reduce((accumulator, vertex) => accumulator + vertex.weight, 0);
-				let weightAverage = weightSum / scp.size;
+				const weightAverage = weightSum / scp.size;
 				if (highestIndexAverage < weightAverage) {
 					transitiveQuorumSet = scp;
 					highestIndexAverage = weightAverage;
@@ -50,7 +50,7 @@ export class NetworkTransitiveQuorumSetFinder {
 			.map((publicKey) => graph.getVertex(publicKey))
 			.filter(isVertex)
 			.forEach((vertex) => {
-				let outgoingEdgesNotInComponent = Array.from(
+				const outgoingEdgesNotInComponent = Array.from(
 					graph.getChildren(vertex)
 				).filter((child) => !stronglyConnectedComponent.has(child.key));
 				if (outgoingEdgesNotInComponent.length > 0)

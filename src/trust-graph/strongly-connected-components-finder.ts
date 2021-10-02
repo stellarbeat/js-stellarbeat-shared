@@ -7,7 +7,7 @@ A directed graph is called strongly connected if there is a path in each directi
 That is, a path exists from the first vertex in the pair to the second, and another path exists from the second vertex to the first.
  */
 export class StronglyConnectedComponentsFinder {
-	protected _time: number = 0;
+	protected _time = 0;
 
 	protected depthFirstSearch(
 		atVertex: Vertex,
@@ -41,11 +41,11 @@ export class StronglyConnectedComponentsFinder {
 		});
 
 		if (visitedVertices.get(atVertex) === low.get(atVertex)) {
-			let stronglyConnectedComponent: StronglyConnectedComponent =
+			const stronglyConnectedComponent: StronglyConnectedComponent =
 				new Set<VertexKey>();
 			let done = false;
 			while (!done) {
-				let poppedVertex = stack.pop()!;
+				const poppedVertex = stack.pop()!;
 				onStack.set(poppedVertex, false);
 				stronglyConnectedComponent.add(poppedVertex.key);
 
@@ -60,11 +60,11 @@ export class StronglyConnectedComponentsFinder {
 
 	findTarjan(graph: TrustGraph): Array<StronglyConnectedComponent> {
 		this._time = 0;
-		let visitedVertices = new Map<Vertex, Time>();
-		let low = new Map<Vertex, Time>();
-		let stack: Array<Vertex> = [];
-		let onStack = new Map<Vertex, boolean>();
-		let stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
+		const visitedVertices = new Map<Vertex, Time>();
+		const low = new Map<Vertex, Time>();
+		const stack: Array<Vertex> = [];
+		const onStack = new Map<Vertex, boolean>();
+		const stronglyConnectedComponents: Array<StronglyConnectedComponent> = [];
 
 		Array.from(graph.vertices.values()).forEach((vertex) => {
 			if (visitedVertices.get(vertex) === undefined) {

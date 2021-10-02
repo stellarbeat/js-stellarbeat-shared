@@ -1,4 +1,5 @@
 import { Node } from './node';
+import { isObject, isString } from './typeguards';
 
 export class NodeSnapShot {
 	public startDate: Date;
@@ -11,7 +12,7 @@ export class NodeSnapShot {
 		this.node = node;
 	}
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			startDate: this.startDate,
 			endDate: this.endDate,
@@ -19,11 +20,18 @@ export class NodeSnapShot {
 		};
 	}
 
-	static fromJSON(nodeSnapShot: string | Object): NodeSnapShot {
-		let snapShotObject: any;
+	static fromJSON(
+		nodeSnapShot: string | Record<string, unknown>
+	): NodeSnapShot {
+		let snapShotObject: Record<string, unknown>;
 		if (typeof nodeSnapShot === 'string') {
 			snapShotObject = JSON.parse(nodeSnapShot);
 		} else snapShotObject = nodeSnapShot;
+
+		if (!isString(snapShotObject.startDate))
+			throw new Error('StartDate missing');
+		if (!isString(snapShotObject.endDate)) throw new Error('EndDate missing');
+		if (!isObject(snapShotObject.node)) throw new Error('Node missing');
 
 		return new NodeSnapShot(
 			new Date(snapShotObject.startDate),

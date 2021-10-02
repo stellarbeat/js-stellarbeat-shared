@@ -1,14 +1,14 @@
 export class NodeStatistics {
-	public active30DaysPercentage: number = 0;
-	public overLoaded30DaysPercentage: number = 0;
-	public validating30DaysPercentage: number = 0;
-	public active24HoursPercentage: number = 0;
-	public overLoaded24HoursPercentage: number = 0;
-	public validating24HoursPercentage: number = 0;
-	public has30DayStats: boolean = false;
-	public has24HourStats: boolean = false;
+	public active30DaysPercentage = 0;
+	public overLoaded30DaysPercentage = 0;
+	public validating30DaysPercentage = 0;
+	public active24HoursPercentage = 0;
+	public overLoaded24HoursPercentage = 0;
+	public validating24HoursPercentage = 0;
+	public has30DayStats = false;
+	public has24HourStats = false;
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			active30DaysPercentage: this.active30DaysPercentage,
 			overLoaded30DaysPercentage: this.overLoaded30DaysPercentage,
@@ -21,7 +21,9 @@ export class NodeStatistics {
 		};
 	}
 
-	static fromJSON(nodeStatistics: string | Object): NodeStatistics {
+	static fromJSON(
+		nodeStatistics: string | Record<string, unknown>
+	): NodeStatistics {
 		if (nodeStatistics === undefined) {
 			return new NodeStatistics();
 		}
@@ -31,7 +33,7 @@ export class NodeStatistics {
 			nodeStatisticsObject = JSON.parse(nodeStatistics);
 		} else nodeStatisticsObject = nodeStatistics;
 
-		let newNodeStatistics = new NodeStatistics();
+		const newNodeStatistics = new NodeStatistics();
 
 		if (nodeStatisticsObject.active30DaysPercentage)
 			newNodeStatistics.active30DaysPercentage =

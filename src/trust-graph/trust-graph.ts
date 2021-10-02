@@ -157,9 +157,9 @@ export class TrustGraph {
 	}
 
 	public getTransitiveChildren(vertex: Vertex): Set<Vertex> {
-		let children = new Set<Vertex>();
+		const children = new Set<Vertex>();
 
-		let getChildrenRecursive = (vertex: Vertex, children: Set<Vertex>) => {
+		const getChildrenRecursive = (vertex: Vertex, children: Set<Vertex>) => {
 			this.getChildren(vertex).forEach((child) => {
 				if (!children.has(child)) {
 					children.add(child);
@@ -174,7 +174,7 @@ export class TrustGraph {
 	}
 
 	public hasChild(parent: Vertex, child: Vertex): boolean {
-		let children = this.children.get(parent.key);
+		const children = this.children.get(parent.key);
 		if (!children) return false;
 
 		return children.has(child);

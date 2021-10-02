@@ -23,7 +23,7 @@ export class QuorumSlicesGenerator {
 		k: number,
 		nodesOrQSets: Array<string> | Array<QuorumSet>
 	) {
-		let combinations: any[] = [];
+		const combinations: any[] = [];
 		for (let i = 0; i < nodesOrQSets.length; i++) {
 			let prefixes = [];
 
@@ -37,7 +37,7 @@ export class QuorumSlicesGenerator {
 				prefixes.forEach((prefix) => combinations.push(prefix));
 			} else if (k - 1 <= nodesOrQSets.length - i - 1) {
 				//not enough candidates left
-				let postCombinations = this.getCombinationsOfSizeK(
+				const postCombinations = this.getCombinationsOfSizeK(
 					k - 1,
 					nodesOrQSets.slice(i + 1, nodesOrQSets.length)
 				);

@@ -1,4 +1,5 @@
 import { Organization } from './organization';
+import { isObject } from './typeguards';
 
 export class OrganizationSnapShot {
 	public startDate: Date;
@@ -11,7 +12,7 @@ export class OrganizationSnapShot {
 		this.organization = organization;
 	}
 
-	toJSON(): Object {
+	toJSON(): Record<string, unknown> {
 		return {
 			startDate: this.startDate,
 			endDate: this.endDate,
@@ -19,16 +20,24 @@ export class OrganizationSnapShot {
 		};
 	}
 
-	static fromJSON(organizationSnapShot: string | Object): OrganizationSnapShot {
-		let snapShotObject: any;
+	static fromJSON(
+		organizationSnapShot: string | Record<string, unknown>
+	): OrganizationSnapShot {
+		let snapShotObject: Record<string, unknown>;
 		if (typeof organizationSnapShot === 'string') {
 			snapShotObject = JSON.parse(organizationSnapShot);
 		} else snapShotObject = organizationSnapShot;
 
-		return new OrganizationSnapShot(
-			new Date(snapShotObject.startDate),
-			new Date(snapShotObject.endDate),
-			Organization.fromJSON(snapShotObject.organization)!
-		);
+		if (
+			typeof snapShotObject.startDate === 'string' &&
+			typeof snapShotObject.endDate === 'string' &&
+			isObject(snapShotObject.organization)
+		) {
+			return new OrganizationSnapShot(
+				new Date(snapShotObject.startDate),
+				new Date(snapShotObject.endDate),
+				Organization.fromJSON(snapShotObject.organization)
+			);
+		} else throw new Error('EndDate, startDate or organization missing');
 	}
 }

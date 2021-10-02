@@ -1,5 +1,6 @@
 import { OrganizationId, PublicKey } from './network';
 import PropertyMapper from './PropertyMapper';
+import { isString } from './typeguards';
 
 export function isOrganization(
 	organization: Organization | undefined
@@ -22,12 +23,12 @@ export class Organization {
 	public github: string | null = null;
 	public officialEmail: string | null = null;
 	public validators: PublicKey[] = [];
-	public subQuorumAvailable: boolean = false;
-	public has30DayStats: boolean = false;
-	public has24HourStats: boolean = false;
-	public subQuorum24HoursAvailability: number = 0;
-	public subQuorum30DaysAvailability: number = 0;
-	public unknown: boolean = false;
+	public subQuorumAvailable = false;
+	public has30DayStats = false;
+	public has24HourStats = false;
+	public subQuorum24HoursAvailability = 0;
+	public subQuorum30DaysAvailability = 0;
+	public unknown = false;
 	public homeDomain: string | null = null; //todo: not nullable
 
 	public dateDiscovered?: Date;
@@ -47,14 +48,14 @@ export class Organization {
 		); //simple majority
 	}
 
-	get isTierOneOrganization() {
+	get isTierOneOrganization(): boolean {
 		if (!this.has30DayStats) return false;
 		return (
 			this.subQuorum30DaysAvailability >= 99 && this.validators.length >= 3
 		);
 	}
 
-	public toJSON(): Object {
+	public toJSON(): Record<string, unknown> {
 		return {
 			id: this.id,
 			name: this.name,
@@ -81,20 +82,26 @@ export class Organization {
 		};
 	}
 
-	static fromJSON(organizationJSON: string | Object): Organization {
-		let organizationDTO: any;
+	static fromJSON(
+		organizationJSON: string | Record<string, unknown>
+	): Organization {
+		let organizationDTO: Record<string, unknown>;
 		if (typeof organizationJSON === 'string') {
 			organizationDTO = JSON.parse(organizationJSON);
 		} else organizationDTO = organizationJSON;
 
-		if (!organizationDTO.id) {
+		if (!isString(organizationDTO.id)) {
 			throw new Error('organizationDTO missing id');
 		}
+		if (!isString(organizationDTO.name)) {
+			throw new Error('organizationDTO missing name');
+		}
 
-		let organization = new Organization(
+		const organization = new Organization(
 			organizationDTO.id,
 			organizationDTO.name
 		);
+
 		PropertyMapper.mapProperties(organizationDTO, organization, [
 			'id',
 			'name',
@@ -103,13 +110,14 @@ export class Organization {
 			'isTierOneOrganization'
 		]);
 
-		if (organizationDTO.dateDiscovered !== undefined)
+		if (isString(organizationDTO.dateDiscovered)) {
 			organization.dateDiscovered = new Date(organizationDTO.dateDiscovered);
+		}
 
 		return organization;
 	}
 
-	toString() {
+	toString(): string {
 		return `Organization (id: ${this.id}, name: ${this.name})`;
 	}
 }

@@ -16,7 +16,7 @@ export class VersionIndex {
 	}
 
 	getHighestStellarCoreVersion(nodes: Node[]) {
-		let versions = nodes
+		const versions = nodes
 			.map((node) => node.versionStr)
 			.filter((version) => version !== null)
 			.filter((version) => version!.match(/[.-]rc/) === null)
@@ -24,7 +24,7 @@ export class VersionIndex {
 			.filter((version) => version !== undefined);
 		//release candidates get filtered out.
 
-		let sortedVersions = versions.sort(semverCompare);
+		const sortedVersions = versions.sort(semverCompare);
 
 		if (sortedVersions.length === 0) {
 			return '0.0.0';
@@ -38,7 +38,7 @@ export class VersionIndex {
 			return 0;
 		}
 
-		let version = findVersions(node.versionStr, { loose: true })[0]; //get release candidates
+		const version = findVersions(node.versionStr, { loose: true })[0]; //get release candidates
 
 		if (version === undefined) {
 			return 0;

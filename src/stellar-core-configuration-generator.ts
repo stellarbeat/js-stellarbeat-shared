@@ -35,8 +35,8 @@ export default class StellarCoreConfigurationGenerator {
 	}
 
 	quorumSetToToml(quorumSet: QuorumSet) {
-		let alreadyAddedHomeDomains: Set<string> = new Set<string>();
-		let tomlConfig: TomlConfig = {
+		const alreadyAddedHomeDomains: Set<string> = new Set<string>();
+		const tomlConfig: TomlConfig = {
 			HOME_DOMAINS: [],
 			VALIDATORS: []
 		};
@@ -48,8 +48,8 @@ export default class StellarCoreConfigurationGenerator {
 	}
 
 	nodesToToml(nodes: Node[]) {
-		let alreadyAddedHomeDomains: Set<string> = new Set<string>();
-		let tomlConfig: TomlConfig = {
+		const alreadyAddedHomeDomains: Set<string> = new Set<string>();
+		const tomlConfig: TomlConfig = {
 			HOME_DOMAINS: [],
 			VALIDATORS: []
 		};
@@ -84,7 +84,7 @@ export default class StellarCoreConfigurationGenerator {
 		alreadyAddedHomeDomains: Set<string>,
 		tomlConfig: TomlConfig
 	) {
-		let validatorToml: Validator = {
+		const validatorToml: Validator = {
 			NAME: validatorNode.displayName!,
 			PUBLIC_KEY: validatorNode.publicKey!,
 			ADDRESS: validatorNode.key
@@ -95,7 +95,7 @@ export default class StellarCoreConfigurationGenerator {
 		if (validatorNode.homeDomain) {
 			let quality = Quality.MEDIUM_OR_LOW;
 			if (validatorNode.organizationId) {
-				let organization = this.network.getOrganizationById(
+				const organization = this.network.getOrganizationById(
 					validatorNode.organizationId
 				);
 				if (organization!.isTierOneOrganization) quality = Quality.HIGH;
