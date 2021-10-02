@@ -12,7 +12,7 @@ import {QuorumSlicesGenerator} from "./quorum-slices-generator";*/
  */
 //@ts-ignore
 export default {
-    /*hasQuorumIntersection(network: Network) {
+	/*hasQuorumIntersection(network: Network) {
         console.time("Quorum intersection");
         if (network.graph.networkTransitiveQuorumSet.size === 0) {
             console.log("No transitive quorumSet");
@@ -249,4 +249,5 @@ export default {
             yield [i, currentCombination];
         }
     }
-*/};
+*/
+};

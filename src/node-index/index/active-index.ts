@@ -1,7 +1,7 @@
-import {Node} from "../../node";
+import { Node } from '../../node';
 
 export class ActiveIndex {
-    static get(node:Node):number {
-        return node.statistics.active30DaysPercentage/100;
-    }
+	static get(node: Node): number {
+		return node.statistics.active30DaysPercentage / 100;
+	}
 }
