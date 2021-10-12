@@ -32,14 +32,14 @@ export class Network {
 	constructor(
 		public nodes: Array<Node> = [],
 		public organizations: Array<Organization> = [],
-		public crawlDate: Date = new Date(),
+		public time: Date = new Date(),
 		public latestLedger: string | null = null,
 		networkStatistics?: NetworkStatistics
 	) {
 		this.latestLedger = latestLedger;
 		this.nodes = nodes;
 		this.organizations = organizations;
-		this.crawlDate = crawlDate;
+		this.time = time;
 
 		this.nodesMap = this.getPublicKeyToNodeMap(nodes);
 		this.initializeOrganizationsMap();
@@ -164,7 +164,8 @@ export class Network {
 	}
 
 	getNodeByPublicKey(publicKey: PublicKey): Node {
-		if (this.nodesMap.has(publicKey)) return this.nodesMap.get(publicKey)!;
+		if (this.nodesMap.has(publicKey))
+			return this.nodesMap.get(publicKey) as Node;
 		else {
 			const unknownNode = new Node(publicKey);
 			unknownNode.unknown = true;
@@ -174,7 +175,8 @@ export class Network {
 	}
 
 	getOrganizationById(id: OrganizationId): Organization {
-		if (this.organizationsMap.has(id)) return this.organizationsMap.get(id)!;
+		if (this.organizationsMap.has(id))
+			return this.organizationsMap.get(id) as Organization;
 		else {
 			const unknownOrganization = new Organization(id, id);
 			unknownOrganization.unknown = true;
@@ -220,7 +222,7 @@ export class Network {
 
 			if (
 				!innerQSet.validators
-					.map((validator) => this.getNodeByPublicKey(validator)!)
+					.map((validator) => this.getNodeByPublicKey(validator))
 					.every(
 						(validator, index, validators) =>
 							validator.organizationId === validators[0].organizationId
@@ -229,7 +231,7 @@ export class Network {
 				return;
 			}
 
-			trustedOrganizations.push(this.getOrganizationById(organizationId)!);
+			trustedOrganizations.push(this.getOrganizationById(organizationId));
 			trustedOrganizations.push(...this.getTrustedOrganizations(innerQSet));
 		});
 
@@ -239,15 +241,15 @@ export class Network {
 	protected getPublicKeyToNodeMap(nodes: Node[]): Map<string, Node> {
 		return new Map(
 			nodes
-				.filter((node) => node.publicKey!)
-				.map((node) => [node.publicKey!, node])
+				.filter((node) => node.publicKey)
+				.map((node) => [node.publicKey, node])
 		);
 	}
 
 	getTrustedOrganizationsByOrganization(organization: Organization) {
 		const trustedOrganizations: Organization[] = [];
 		organization.validators.forEach((publicKey) => {
-			const validator = this.getNodeByPublicKey(publicKey)!;
+			const validator = this.getNodeByPublicKey(publicKey);
 			this.getTrustedOrganizations(validator.quorumSet).forEach((org) => {
 				if (org.id !== organization.id) trustedOrganizations.push(org);
 			});
@@ -348,12 +350,15 @@ export class Network {
 		if (!Array.isArray(networkDTO.nodes))
 			throw new Error('Node property must be array');
 
-		const nodes = networkDTO.nodes.map((node: any) => Node.fromJSON(node));
+		const nodes = networkDTO.nodes.map((node: Record<string, unknown>) =>
+			Node.fromJSON(node)
+		);
 
 		if (!Array.isArray(networkDTO.organizations))
 			throw new Error('organizations property must be array');
-		const organizations = networkDTO.organizations.map((organization: any) =>
-			Organization.fromJSON(organization)
+		const organizations = networkDTO.organizations.map(
+			(organization: Record<string, unknown>) =>
+				Organization.fromJSON(organization)
 		);
 
 		if (!isObject(networkDTO.statistics))
@@ -386,7 +391,7 @@ export class Network {
 		return {
 			id: this.id,
 			name: this.name,
-			time: this.crawlDate,
+			time: this.time,
 			latestLedger: this.latestLedger,
 			transitiveQuorumSet: Array.from(
 				this.nodesTrustGraph.networkTransitiveQuorumSet

@@ -5,7 +5,11 @@
     "time": {
       "format": "date-time",
       "type": "string",
-      "description": "time the network was crawled"
+      "description": "Network state at time x"
+    },
+    "latestLedger": {
+      "type": "string",
+      "description": "The latest ledger that was closed in the network at time x"
     },
     "statistics": {
       "$ref": "#/definitions/NetworkStatistics"
