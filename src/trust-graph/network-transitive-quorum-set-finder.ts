@@ -1,4 +1,4 @@
-import { TrustGraph, isVertex, VertexKey } from './trust-graph';
+import { isVertex, TrustGraph, VertexKey } from './trust-graph';
 import { StronglyConnectedComponent } from './strongly-connected-components-finder';
 
 export class NetworkTransitiveQuorumSetFinder {

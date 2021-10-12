@@ -1,14 +1,8 @@
-import { Network, OrganizationId, PublicKey } from '../network';
-import { Node } from '../node';
+import { Network } from '../network';
 import { QuorumSet } from '../quorum-set';
-import {
-	StronglyConnectedComponentsFinder,
-	StronglyConnectedComponent
-} from './strongly-connected-components-finder';
+import { StronglyConnectedComponentsFinder } from './strongly-connected-components-finder';
 import { NetworkTransitiveQuorumSetFinder } from './network-transitive-quorum-set-finder';
-import { TrustGraph, Edge, Vertex, isVertex } from './trust-graph';
-import { QuorumSetService } from '../quorum-set-service';
-import { isOrganization, Organization } from '../organization';
+import { Edge, isVertex, TrustGraph, Vertex } from './trust-graph';
 
 export class TrustGraphBuilder {
 	/*

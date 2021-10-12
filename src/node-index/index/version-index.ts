@@ -1,7 +1,7 @@
 import { Node } from './../../index';
 import * as semverCompare from 'semver-compare';
 import * as findVersions from 'find-versions';
-import { gt, diff } from 'semver';
+import { diff, gt } from 'semver';
 
 /**
  * Index for node type (full validator, basic validator or watcher node)

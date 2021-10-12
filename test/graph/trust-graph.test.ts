@@ -1,19 +1,19 @@
-import {Network, Node, QuorumSet} from '../../src';
-import {TrustGraphBuilder} from "../../src";
+import { Network, Node, QuorumSet } from '../../src';
+import { Vertex } from '../../lib';
 
-let nodeA = new Node('a');
+const nodeA = new Node('a');
 nodeA.active = true;
 nodeA.isValidating = true;
-let nodeB = new Node('b');
+const nodeB = new Node('b');
 nodeB.active = true;
 nodeB.isValidating = true;
-let nodeC = new Node('c');
+const nodeC = new Node('c');
 nodeC.active = true;
 nodeC.isValidating = true;
-let nodeD = new Node('d');
+const nodeD = new Node('d');
 nodeD.active = true;
 nodeD.isValidating = true;
-let nodeE = new Node('e');
+const nodeE = new Node('e');
 nodeE.active = true;
 nodeE.isValidating = true;
 
@@ -23,27 +23,32 @@ nodeB.quorumSet.validators.push('a');
 nodeB.quorumSet.threshold = 1;
 nodeC.quorumSet.validators.push('a');
 nodeC.quorumSet.threshold = 1;
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['a']));
-nodeD.quorumSet.innerQuorumSets.push(new QuorumSet( 1, ['e']));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet(1, ['a']));
+nodeD.quorumSet.innerQuorumSets.push(new QuorumSet(1, ['e']));
 nodeD.quorumSet.threshold = 1;
 nodeE.quorumSet.threshold = 0;
 
-let network = new Network([nodeA, nodeB, nodeC, nodeD, nodeE]);
-let trustGraphBuilder = new TrustGraphBuilder(network);
+const network = new Network([nodeA, nodeB, nodeC, nodeD, nodeE]);
 
 test('buildGraphFromNodes', () => {
-    let graph = network.nodesTrustGraph;
-    expect(graph.vertices.size).toEqual(5);
-    expect(graph.edges.size).toEqual(5);
-    expect(graph.getParents(graph.getVertex('a')!).size).toEqual(3);
-    expect(graph.getChildren(graph.getVertex('d')!).size).toEqual(2);
-    expect(graph.networkTransitiveQuorumSet).toEqual(new Set(['a', 'b']));
+	const graph = network.nodesTrustGraph;
+	expect(graph.vertices.size).toEqual(5);
+	expect(graph.edges.size).toEqual(5);
+	expect(graph.getParents(graph.getVertex('a') as Vertex).size).toEqual(3);
+	expect(graph.getChildren(graph.getVertex('d') as Vertex).size).toEqual(2);
+	expect(graph.networkTransitiveQuorumSet).toEqual(new Set(['a', 'b']));
 
-    expect(Array.from(graph.edges).filter(
-        edge => graph.isEdgePartOfStronglyConnectedComponent(edge)).length
-    ).toEqual(2);
+	expect(
+		Array.from(graph.edges).filter((edge) =>
+			graph.isEdgePartOfStronglyConnectedComponent(edge)
+		).length
+	).toEqual(2);
 });
 test('getTransitiveChildren', () => {
-    let vertexC = network.nodesTrustGraph.getVertex(nodeC.publicKey)!;
-    expect(Array.from(network.nodesTrustGraph.getTransitiveChildren(vertexC)).map(vertex => vertex.key)).toEqual(['a', 'b']);
-})
+	const vertexC = network.nodesTrustGraph.getVertex(nodeC.publicKey) as Vertex;
+	expect(
+		Array.from(network.nodesTrustGraph.getTransitiveChildren(vertexC)).map(
+			(vertex) => vertex.key
+		)
+	).toEqual(['a', 'b']);
+});

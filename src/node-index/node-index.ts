@@ -1,11 +1,11 @@
 import {
-	TypeIndex,
 	ActiveIndex,
-	Node,
-	VersionIndex,
-	TrustIndex,
 	AgeIndex,
-	Network
+	Network,
+	Node,
+	TrustIndex,
+	TypeIndex,
+	VersionIndex
 } from './../index';
 import { ValidatingIndex } from './index/validating-index';
 

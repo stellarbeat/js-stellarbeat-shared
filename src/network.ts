@@ -7,7 +7,7 @@ import {
 	TrustGraphBuilder
 } from './index';
 import NetworkStatistics from './network-statistics';
-import { isObject } from './typeguards';
+import { isObject, isString } from './typeguards';
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -16,12 +16,9 @@ export class Network {
 	protected _trustGraphBuilder: TrustGraphBuilder;
 	protected _nodesTrustGraph!: TrustGraph;
 	//todo: move organization trust graph to network and only calculate when requested
-	protected _crawlDate: Date;
 	protected _quorumSetService: QuorumSetService;
 	protected _networkStatistics: NetworkStatistics;
 
-	public nodes: Array<Node>;
-	public organizations: Array<Organization>;
 	public name?: string;
 	public id?: string;
 
@@ -29,22 +26,24 @@ export class Network {
 	//todo: this could become a property of a node, but seeing as the network is the aggregate that controls this property, we keep it here for now.
 	public blockedNodes: Set<PublicKey> = new Set();
 
-	//todo should be abstracted to a database
 	protected nodesMap: Map<PublicKey, Node>;
 	protected organizationsMap: Map<OrganizationId, Organization> = new Map();
 
 	constructor(
-		nodes: Array<Node>,
-		organizations: Array<Organization> = [],
-		crawlDate: Date = new Date(),
+		public nodes: Array<Node> = [],
+		public organizations: Array<Organization> = [],
+		public crawlDate: Date = new Date(),
+		public latestLedger: string | null = null,
 		networkStatistics?: NetworkStatistics
 	) {
+		this.latestLedger = latestLedger;
 		this.nodes = nodes;
 		this.organizations = organizations;
+		this.crawlDate = crawlDate;
+
 		this.nodesMap = this.getPublicKeyToNodeMap(nodes);
 		this.initializeOrganizationsMap();
 		this._quorumSetService = new QuorumSetService();
-		this._crawlDate = crawlDate;
 		this._trustGraphBuilder = new TrustGraphBuilder(this);
 		this.initializeNodesTrustGraph();
 		//this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
@@ -60,7 +59,7 @@ export class Network {
 		return this._networkStatistics;
 	}
 
-	updateNetworkStatistics(fbasAnalysisResult?: any) {
+	updateNetworkStatistics(fbasAnalysisResult?: unknown) {
 		this.networkStatistics.nrOfActiveWatchers = this.nodes.filter(
 			(node) => !node.isValidator && node.active
 		).length;
@@ -107,10 +106,6 @@ export class Network {
 		this.updateOrganizationSubQuorumAvailabilityStates();
 
 		this.updateNetworkStatistics();
-	}
-
-	get crawlDate(): Date {
-		return this._crawlDate;
 	}
 
 	/*
@@ -374,14 +369,25 @@ export class Network {
 			time = new Date();
 		}
 
-		return new Network(nodes, organizations, time, networkStatistics);
+		const latestLedger: string | null = isString(networkDTO.latestLedger)
+			? networkDTO.latestLedger
+			: null;
+
+		return new Network(
+			nodes,
+			organizations,
+			time,
+			latestLedger,
+			networkStatistics
+		);
 	}
 
 	toJSON(): Record<string, unknown> {
 		return {
 			id: this.id,
 			name: this.name,
-			time: this._crawlDate,
+			time: this.crawlDate,
+			latestLedger: this.latestLedger,
 			transitiveQuorumSet: Array.from(
 				this.nodesTrustGraph.networkTransitiveQuorumSet
 			),

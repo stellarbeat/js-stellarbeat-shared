@@ -1,21 +1,20 @@
-test('empty', ()=>{});
-import {QuorumSet, QuorumService, Node, Network} from '../src';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require('await-fs');
 
-let network!: Network;
-
+let nodesJSON: string;
 beforeAll(async () => {
- let nodesJSON = await fs.readFile('./test/data/nodes.json');
+	nodesJSON = await fs.readFile('./test/data/nodes.json');
 });
 
 test('hasQuorumIntersection', function () {
-  /*QuorumService.hasQuorumIntersection(
+	expect(nodesJSON).toBeDefined();
+	/*QuorumService.hasQuorumIntersection(
       network
   )*/
 });
 
 test('containsQuorum', function () {
-    /*let innerQuorumSet = new QuorumSet('hash', 2);
+	/*let innerQuorumSet = new QuorumSet('hash', 2);
     innerQuorumSet.validators.push(...['c', 'd']);
 
     let nodeA = new Node("a");

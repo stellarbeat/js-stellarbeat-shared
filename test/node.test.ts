@@ -1,67 +1,80 @@
-import {Node, Organization} from '../src'
+import { Node, Organization } from '../src';
 
-let node = new Node("GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK");
-node.name = "SDF validator 2";
-node.host = "core-live-b.stellar.org";
+const node = new Node(
+	'GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK'
+);
+node.name = 'SDF validator 2';
+node.host = 'core-live-b.stellar.org';
 node.ledgerVersion = null;
 node.networkId = null;
 node.overlayMinVersion = null;
 node.overlayVersion = null;
-node.geoData.countryName = "United States";
-node.geoData.countryCode = "US";
+node.geoData.countryName = 'United States';
+node.geoData.countryCode = 'US';
 node.geoData.latitude = 39.0853;
 node.geoData.longitude = -77.6452;
-node.versionStr = "v10.0.0";
-node.dateDiscovered = new Date("2018-04-28 14:39:01");
-node.dateUpdated = new Date("2018-10-12 11:17:39");
-node.quorumSetHashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
+node.versionStr = 'v10.0.0';
+node.dateDiscovered = new Date('2018-04-28 14:39:01');
+node.dateUpdated = new Date('2018-10-12 11:17:39');
+node.quorumSetHashKey = 'dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=';
 node.quorumSet.threshold = 2;
-let trustedNode = new Node("GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ");
+const trustedNode = new Node(
+	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'
+);
 trustedNode.unknown = true;
-trustedNode.dateDiscovered = new Date("2018-04-28 14:39:01");
-trustedNode.dateUpdated = new Date("2018-10-12 11:17:39");
-node.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ"];
+trustedNode.dateDiscovered = new Date('2018-04-28 14:39:01');
+trustedNode.dateUpdated = new Date('2018-10-12 11:17:39');
+node.quorumSet.validators = [
+	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'
+];
 node.quorumSet.innerQuorumSets = [];
 node.active = true;
 node.overLoaded = false;
 node.isFullValidator = true;
 node.homeDomain = 'my-domain';
 node.isValidating = false;
-let organization = new Organization('123', 'org');
-node.organizationId = '123';
+const organization = new Organization('123', 'org');
+node.organizationId = organization.id;
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
 
-let nodeObject:any = {};
-nodeObject.name = "SDF validator 2";
-nodeObject.host = "core-live-b.stellar.org";
+const nodeObject: Record<string, unknown> = {};
+nodeObject.name = 'SDF validator 2';
+nodeObject.host = 'core-live-b.stellar.org';
 nodeObject.index = 0;
-nodeObject.ip = "127.0.0.1";
+nodeObject.ip = '127.0.0.1';
 nodeObject.port = 11625;
-nodeObject.publicKey = "GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK";
-nodeObject.geoData = {};
-nodeObject.geoData.countryName = "United States";
-nodeObject.geoData.countryCode = "US";
-nodeObject.geoData.latitude = 39.0853;
-nodeObject.geoData.longitude = -77.6452;
-nodeObject.versionStr = "v10.0.0";
-nodeObject.statistics = {};
-nodeObject.statistics.active24HoursPercentage = 0;
-nodeObject.statistics.active30DaysPercentage = 0;
-nodeObject.statistics.validating24HoursPercentage = 0;
-nodeObject.statistics.validating30DaysPercentage = 0;
-nodeObject.statistics.overLoaded24HoursPercentage = 0;
-nodeObject.statistics.overLoaded30DaysPercentage = 0;
-nodeObject.dateDiscovered = "2018-04-28T12:39:01.000Z";
-nodeObject.dateUpdated = "2018-10-12T09:17:39.000Z";
-nodeObject.quorumSet = {};
-nodeObject.quorumSetHashKey = "dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=";
-nodeObject.quorumSet.threshold = 2;
-nodeObject.quorumSet.validators = ["GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ"];
-nodeObject.quorumSet.innerQuorumSets = [];
+nodeObject.publicKey =
+	'GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK';
+nodeObject.geoData = {
+	countryName: 'United States',
+	countryCode: 'US',
+	latitude: 39.0853,
+	longitude: -77.6452
+};
+nodeObject.versionStr = 'v10.0.0';
+nodeObject.statistics = {
+	active24HoursPercentage: 0,
+	active30DaysPercentage: 0,
+	validating24HoursPercentage: 0,
+	validating30DaysPercentage: 0,
+	overLoaded24HoursPercentage: 0,
+	overLoaded30DaysPercentage: 0,
+	has30DayStats: true,
+	has24HourStats: true
+};
+
+nodeObject.dateDiscovered = '2018-04-28T12:39:01.000Z';
+nodeObject.dateUpdated = '2018-10-12T09:17:39.000Z';
+nodeObject.quorumSetHashKey = 'dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=';
+nodeObject.quorumSet = {
+	threshold: 2,
+	validators: ['GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'],
+	innerQuorumSets: []
+};
 nodeObject.active = true;
 nodeObject.overLoaded = false;
 nodeObject.isFullValidator = true;
@@ -71,27 +84,27 @@ nodeObject.organizationId = '123';
 nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
-nodeObject.statistics.has30DayStats = true;
-nodeObject.statistics.has24HourStats = true;
+
 nodeObject.isValidator = true;
 nodeObject.activeInScp = false;
 nodeObject.ledgerVersion = null;
 nodeObject.networkId = null;
 nodeObject.overlayMinVersion = null;
 nodeObject.overlayVersion = null;
-let trustedNodeObject:any = {};
-trustedNodeObject.publicKey = 'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ';
+const trustedNodeObject: Record<string, unknown> = {};
+trustedNodeObject.publicKey =
+	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ';
 trustedNodeObject.unknown = true;
-trustedNodeObject.dateDiscovered = "2018-04-28 14:39:01";
-trustedNodeObject.dateUpdated = "2018-10-12 11:17:39";
+trustedNodeObject.dateDiscovered = '2018-04-28 14:39:01';
+trustedNodeObject.dateUpdated = '2018-10-12 11:17:39';
 
 test('nodeToJson', () => {
-    expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
+	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
 });
 test('JsonToNode', () => {
-    expect(Node.fromJSON((JSON.stringify(nodeObject)))).toEqual(node);
+	expect(Node.fromJSON(JSON.stringify(nodeObject))).toEqual(node);
 });
-let node3 = new Node("a");
+const node3 = new Node('a');
 test('testDefaultPort', () => {
-    expect(node3.port).toEqual(11625);
+	expect(node3.port).toEqual(11625);
 });

@@ -1,5 +1,6 @@
 import { Node } from '../node';
 import containsSlice from './containsSlice';
+
 /**
  * A quorum contains a quorum slice for every node in the quorum
  */
