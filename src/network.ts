@@ -262,7 +262,7 @@ export class Network {
          We mark validators that are not sending SCP externalize messages as missing.
          We mark watchers that are not live as missing.
          TODO: should only be missing when not participating in consensus.
-          When participating in consensus but not sending externalize messages, they could be blocked based on quorumset blocking status
+          When participating in consensus but not sending externalize messages, they could be blocked based on quorumSet blocking status
          */
 	isNodeMissing(node: Node) {
 		if (!node.isValidator)
@@ -285,7 +285,7 @@ export class Network {
 	}
 
 	/*
-    Everytime the network is modified for simulation purposes we check if validators can reach their quorumset thresholds.
+    Everytime the network is modified for simulation purposes we check if validators can reach their quorumSet thresholds.
     If not we mark them as 'blocked'.
      */
 	isValidatorBlocked(validator: Node) {
@@ -378,13 +378,19 @@ export class Network {
 			? networkDTO.latestLedger
 			: null;
 
-		return new Network(
+		const network = new Network(
 			nodes,
 			organizations,
 			time,
 			latestLedger,
 			networkStatistics
 		);
+
+		if (isString(networkDTO.id)) network.id = networkDTO.id;
+
+		if (isString(networkDTO.name)) network.name = networkDTO.name;
+
+		return network;
 	}
 
 	toJSON(): Record<string, unknown> {
