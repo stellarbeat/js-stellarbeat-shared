@@ -1,7 +1,8 @@
 import { Node } from './../../index';
 import * as semverCompare from 'semver-compare';
-import * as findVersions from 'find-versions';
 import { diff, gt } from 'semver';
+import semver = require('semver/preload');
+import { isString } from '../../typeguards';
 
 /**
  * Index for node type (full validator, basic validator or watcher node)
@@ -18,10 +19,18 @@ export class VersionIndex {
 	getHighestStellarCoreVersion(nodes: Node[]) {
 		const versions = nodes
 			.map((node) => node.versionStr)
-			.filter((version) => version !== null)
-			.filter((version) => version!.match(/[.-]rc/) === null)
-			.map((versionDirty) => findVersions(versionDirty!, { loose: false })[0])
-			.filter((version) => version !== undefined);
+			.filter((version) => isString(version))
+			.filter((version) => {
+				const match = (version as string).match(/.*-?rc[0-9]*$/);
+				return match === null;
+			})
+			.map((versionDirty) => {
+				return semver.clean(this.preClean(versionDirty as string), {
+					loose: false,
+					includePrerelease: false
+				});
+			})
+			.filter((version) => version !== null);
 		//release candidates get filtered out.
 
 		const sortedVersions = versions.sort(semverCompare);
@@ -30,7 +39,14 @@ export class VersionIndex {
 			return '0.0.0';
 		}
 
-		return versions[versions.length - 1];
+		return versions[versions.length - 1] as string;
+	}
+
+	protected preClean(version: string) {
+		version = version.replace(/\(.*\)/, '');
+		version = version.replace(/^.*?([0-9].*)/, '$1');
+
+		return version;
 	}
 
 	get(node: Node): number {
@@ -38,17 +54,22 @@ export class VersionIndex {
 			return 0;
 		}
 
-		const version = findVersions(node.versionStr, { loose: true })[0]; //get release candidates
-
-		if (version === undefined) {
+		const version = semver.clean(this.preClean(node.versionStr), {
+			loose: true,
+			includePrerelease: false
+		}); //get release candidates
+		console.log(version);
+		if (!version) {
 			return 0;
 		}
-
+		console.log(this._highestStellarCoreVersion);
 		if (gt(version, this._highestStellarCoreVersion)) {
 			//release candidates higher then current stable
 			return 1;
 		}
 
+		console.log(diff(version, this._highestStellarCoreVersion));
+		console.log('===');
 		switch (diff(version, this._highestStellarCoreVersion)) {
 			case undefined:
 				return 1;

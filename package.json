@@ -29,7 +29,6 @@
   "types": "lib/index.d.ts",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "find-versions": "^3.2.0",
     "latest-semver": "^3.0.0",
     "semver": "^7.3.5",
     "semver-compare": "^1.0.0",
@@ -54,6 +53,7 @@
     "prettier": "^2.4.1",
     "ts-jest": "^27.0.3",
     "typescript": "^4.4.3",
-    "typescript-json-schema": "^0.50.0"
+    "typescript-json-schema": "^0.50.0",
+    "lodash": "^4.17.21"
   }
 }

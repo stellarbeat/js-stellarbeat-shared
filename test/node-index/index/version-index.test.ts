@@ -1,4 +1,5 @@
 import { Node, VersionIndex } from '../../../src';
+import exp = require('constants');
 
 const node1 = new Node('a');
 node1.versionStr =
@@ -22,8 +23,12 @@ node8.versionStr =
 const node9 = new Node('i');
 node9.versionStr =
 	'stellar-core 17.0.0-rc1 (a6c4bf72984711e3da4ade849dfaec5ce1f8d489)';
+const node10 = new Node('j');
+node10.versionStr = '10.9.0-rc1';
+const node11 = new Node('k');
+node11.versionStr = '10.9.0-dirty';
 
-const nodes = [node1, node2, node3, node4, node5, node6, node7, node8];
+const nodes = [node1, node2, node3, node4, node5, node6, node7, node10];
 
 const versionIndex = new VersionIndex(nodes);
 
@@ -39,4 +44,6 @@ test('get', () => {
 	expect(versionIndex.get(node5)).toEqual(1); //todo what about release candidates?
 	expect(versionIndex.get(node6)).toEqual(0.3); //todo what about release candidates?
 	expect(versionIndex.get(node7)).toEqual(0);
+	expect(versionIndex.get(node10)).toEqual(0.8);
+	expect(versionIndex.get(node11)).toEqual(0.8);
 });
