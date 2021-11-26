@@ -29,7 +29,7 @@
   "types": "lib/index.d.ts",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "find-versions": "^4.0.0",
+    "find-versions": "^3.2.0",
     "latest-semver": "^3.0.0",
     "semver": "^7.3.5",
     "semver-compare": "^1.0.0",
