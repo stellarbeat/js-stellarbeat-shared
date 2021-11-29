@@ -58,18 +58,14 @@ export class VersionIndex {
 			loose: true,
 			includePrerelease: false
 		}); //get release candidates
-		console.log(version);
 		if (!version) {
 			return 0;
 		}
-		console.log(this._highestStellarCoreVersion);
 		if (gt(version, this._highestStellarCoreVersion)) {
 			//release candidates higher then current stable
 			return 1;
 		}
 
-		console.log(diff(version, this._highestStellarCoreVersion));
-		console.log('===');
 		switch (diff(version, this._highestStellarCoreVersion)) {
 			case undefined:
 				return 1;
