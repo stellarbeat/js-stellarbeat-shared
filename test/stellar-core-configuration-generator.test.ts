@@ -46,7 +46,7 @@ QUALITY = "MEDIUM_OR_LOW"
 NAME = "b"
 PUBLIC_KEY = "b"
 ADDRESS = "127.0.0.1:11625"
-HISTORY = "curl -sf myHistory.org -o {1}"
+HISTORY = "curl -sf myHistory.org/{0} -o {1}"
 HOME_DOMAIN = "highQuality.com"
 
 [[VALIDATORS]]
@@ -68,7 +68,7 @@ test('nodesToToml', () => {
 	nodeB.name = 'b';
 	nodeB.homeDomain = 'highQuality.com';
 	nodeB.organizationId = 'orgHighQuality';
-	nodeB.historyUrl = 'myHistory.org';
+	nodeB.historyUrl = 'myHistory.org/';
 	const orgHighQuality = new Organization('orgHighQuality', 'orgHighQuality');
 	orgHighQuality.has30DayStats = true;
 	orgHighQuality.subQuorum30DaysAvailability = 100;
@@ -95,7 +95,7 @@ QUALITY = "MEDIUM_OR_LOW"
 NAME = "b"
 PUBLIC_KEY = "b"
 ADDRESS = "127.0.0.1:11625"
-HISTORY = "curl -sf myHistory.org -o {1}"
+HISTORY = "curl -sf myHistory.org/{0} -o {1}"
 HOME_DOMAIN = "highQuality.com"
 
 [[VALIDATORS]]

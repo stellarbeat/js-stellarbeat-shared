@@ -89,8 +89,13 @@ export default class StellarCoreConfigurationGenerator {
 			PUBLIC_KEY: validatorNode.publicKey!,
 			ADDRESS: validatorNode.key
 		};
-		if (validatorNode.historyUrl)
-			validatorToml.HISTORY = `curl -sf ${validatorNode.historyUrl} -o {1}`;
+		if (validatorNode.historyUrl) {
+			let historyUrlWithTrailingSlash = validatorNode.historyUrl;
+			if (!historyUrlWithTrailingSlash.endsWith('/'))
+				historyUrlWithTrailingSlash += '/';
+
+			validatorToml.HISTORY = `curl -sf ${historyUrlWithTrailingSlash}{0} -o {1}`;
+		}
 
 		if (validatorNode.homeDomain) {
 			let quality = Quality.MEDIUM_OR_LOW;
