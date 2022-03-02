@@ -92,12 +92,12 @@ it('should detect blocked nodes on hydration and after recalculation', function 
 	const nodeA = new Node('A');
 	nodeA.active = true;
 	nodeA.isValidating = false;
-	nodeA.participatingInSCP = true;
+	nodeA.activeInScp = true;
 
 	const nodeB = new Node('B');
 	nodeB.active = true;
 	nodeB.isValidating = false;
-	nodeB.participatingInSCP = false;
+	nodeB.activeInScp = false;
 
 	nodeA.quorumSet.threshold = 1;
 	nodeA.quorumSet.validators.push('B');
@@ -117,7 +117,7 @@ it('should detect blocked nodes on hydration and after recalculation', function 
 	expect(network.blockedNodes).toEqual(new Set([]));
 
 	nodeA.isValidating = false;
-	nodeA.participatingInSCP = false;
+	nodeA.activeInScp = false;
 	nodeB.isValidating = true;
 	network.recalculateNetwork();
 	expect(network.blockedNodes).toEqual(new Set([nodeB.publicKey]));

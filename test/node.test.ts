@@ -97,7 +97,6 @@ trustedNodeObject.publicKey =
 trustedNodeObject.unknown = true;
 trustedNodeObject.dateDiscovered = '2018-04-28 14:39:01';
 trustedNodeObject.dateUpdated = '2018-10-12 11:17:39';
-nodeObject.participatingInSCP = true;
 
 test('nodeToJson', () => {
 	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
