@@ -53,7 +53,7 @@ export class QuorumSetService {
 
 			if (
 				blockedNodes.has(nodeToCheck.publicKey) ||
-				(!nodeToCheck.isValidating && !nodeToCheck.participatingInSCP)
+				(!nodeToCheck.isValidating && !nodeToCheck.activeInScp)
 			) {
 				continue; //already blocked or not validating, thus no change in situation that could cause other nodes to fail
 			}

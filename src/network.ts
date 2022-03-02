@@ -67,7 +67,7 @@ export class Network {
 					(node) =>
 						node.isValidator &&
 						!node.isValidating &&
-						node.participatingInSCP &&
+						node.activeInScp &&
 						!QuorumSetService.quorumSetCanReachThreshold(
 							node.quorumSet,
 							this,

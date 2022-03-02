@@ -40,7 +40,6 @@ node.historyUrl = 'https://my-history.net';
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
-node.participatingInSCP = true;
 
 const nodeObject: Record<string, unknown> = {};
 nodeObject.name = 'SDF validator 2';
