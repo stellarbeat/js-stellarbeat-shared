@@ -87,3 +87,38 @@ test('getTrustedOrganizationsByOrganization', () => {
 		otherOrganization
 	]);
 });
+
+it('should detect blocked nodes on hydration and after recalculation', function () {
+	const nodeA = new Node('A');
+	nodeA.active = true;
+	nodeA.isValidating = false;
+	nodeA.participatingInSCP = true;
+
+	const nodeB = new Node('B');
+	nodeB.active = true;
+	nodeB.isValidating = false;
+	nodeB.participatingInSCP = false;
+
+	nodeA.quorumSet.threshold = 1;
+	nodeA.quorumSet.validators.push('B');
+
+	nodeB.quorumSet.threshold = 1;
+	nodeB.quorumSet.validators.push('A');
+
+	const network = new Network([nodeB, nodeA]);
+	expect(network.blockedNodes).toEqual(new Set([nodeA.publicKey]));
+
+	network.recalculateNetwork();
+	expect(network.blockedNodes).toEqual(new Set([nodeA.publicKey]));
+
+	nodeA.isValidating = true;
+	nodeB.isValidating = true;
+	network.recalculateNetwork();
+	expect(network.blockedNodes).toEqual(new Set([]));
+
+	nodeA.isValidating = false;
+	nodeA.participatingInSCP = false;
+	nodeB.isValidating = true;
+	network.recalculateNetwork();
+	expect(network.blockedNodes).toEqual(new Set([nodeB.publicKey]));
+});

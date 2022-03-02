@@ -30,11 +30,15 @@ export class QuorumSetService {
 	}
 
 	/**
-	 * A blocked node is node that cannot reach its quorumset threshold (recursively)
+	 * Determine blocked nodes that cannot reach their quorumset thresholds (recursively) after validating status of
+	 * other nodes are changed
 	 * @param network
 	 * @param nodesTrustGraph
 	 */
-	public static getBlockedNodes(network: Network, nodesTrustGraph: TrustGraph) {
+	public static calculateBlockedNodes(
+		network: Network,
+		nodesTrustGraph: TrustGraph
+	) {
 		const nodesToCheck = network.nodes.filter((node) => node.isValidator);
 		const blockedNodes: Set<PublicKey> = new Set();
 		const inNodesToCheckQueue: Map<PublicKey, boolean> = new Map();
@@ -49,7 +53,7 @@ export class QuorumSetService {
 
 			if (
 				blockedNodes.has(nodeToCheck.publicKey) ||
-				!nodeToCheck.isValidating
+				(!nodeToCheck.isValidating && !nodeToCheck.participatingInSCP)
 			) {
 				continue; //already blocked or not validating, thus no change in situation that could cause other nodes to fail
 			}
@@ -66,6 +70,9 @@ export class QuorumSetService {
 
 			//node is failing
 			blockedNodes.add(nodeToCheck.publicKey);
+
+			if (!nodeToCheck.isValidating) continue;
+			//node was already not validating, so we don't need to check parents for impact of adding to blocked nodes
 
 			const vertexToCheck = nodesTrustGraph.getVertex(nodeToCheck.publicKey);
 			if (!vertexToCheck) continue; //this should not happen;
@@ -128,6 +135,7 @@ export class QuorumSetService {
 
 		return 'None';
 	}
+
 	public static getQuorumSetWarnings(quorumSet: QuorumSet, network: Network) {
 		if (QuorumSetService.quorumSetHasFailingValidators(quorumSet, network))
 			return 'Some validators are failing';

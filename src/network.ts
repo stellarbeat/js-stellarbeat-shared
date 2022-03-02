@@ -22,8 +22,8 @@ export class Network {
 	public name?: string;
 	public id?: string;
 
-	//a blocked node is a node that cannot reach its threshold.
-	//todo: this could become a property of a node, but seeing as the network is the aggregate that controls this property, we keep it here for now.
+	// a blocked node is a node that is participating in SCP but cannot validate because its quorumSet cannot
+	// reach its threshold.
 	public blockedNodes: Set<PublicKey> = new Set();
 
 	protected nodesMap: Map<PublicKey, Node>;
@@ -46,13 +46,36 @@ export class Network {
 		this._quorumSetService = new QuorumSetService();
 		this._trustGraphBuilder = new TrustGraphBuilder(this);
 		this.initializeNodesTrustGraph();
-		//this.blockedNodes = QuorumSetService.getBlockedNodes(this, this.nodesTrustGraph);
+		this.initializeBlockedNodes();
 
 		if (networkStatistics) this._networkStatistics = networkStatistics;
 		else {
 			this._networkStatistics = new NetworkStatistics();
 			this.updateNetworkStatistics();
 		}
+	}
+
+	/*
+	try to determine nodes that are blocked because of their quorumSet. They are participating in SCP, but don't reach consensus.
+	There is a chance that a node has a failing quourumSet and is participating in SCP but sending invalid messages on the network.
+	But this can only be solved by improving the 'participatingInSCP' detection in the crawler.
+	 */
+	protected initializeBlockedNodes() {
+		this.blockedNodes = new Set(
+			this.nodes
+				.filter(
+					(node) =>
+						node.isValidator &&
+						!node.isValidating &&
+						node.participatingInSCP &&
+						!QuorumSetService.quorumSetCanReachThreshold(
+							node.quorumSet,
+							this,
+							new Set()
+						)
+				)
+				.map((node) => node.publicKey)
+		);
 	}
 
 	get networkStatistics() {
@@ -99,7 +122,7 @@ export class Network {
 		this.initializeOrganizationsMap();
 
 		//determine if nodes and organizations are blocked due to the changes
-		this.blockedNodes = QuorumSetService.getBlockedNodes(
+		this.blockedNodes = QuorumSetService.calculateBlockedNodes(
 			this,
 			this.nodesTrustGraph
 		);
