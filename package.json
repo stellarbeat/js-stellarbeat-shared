@@ -30,6 +30,7 @@
   "dependencies": {
     "@iarna/toml": "^2.2.5",
     "latest-semver": "^3.0.0",
+    "neverthrow": "^4.3.1",
     "semver": "^7.3.5",
     "semver-compare": "^1.0.0",
     "to-semver": "^3.0.0"
