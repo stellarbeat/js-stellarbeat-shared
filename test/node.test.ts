@@ -40,6 +40,7 @@ node.historyUrl = 'https://my-history.net';
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
+node.historyArchiveGap = true;
 
 const nodeObject: Record<string, unknown> = {};
 nodeObject.name = 'SDF validator 2';
@@ -97,6 +98,7 @@ trustedNodeObject.publicKey =
 trustedNodeObject.unknown = true;
 trustedNodeObject.dateDiscovered = '2018-04-28 14:39:01';
 trustedNodeObject.dateUpdated = '2018-10-12 11:17:39';
+nodeObject.historyArchiveGap = true;
 
 test('nodeToJson', () => {
 	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);

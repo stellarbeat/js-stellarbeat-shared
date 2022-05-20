@@ -33,6 +33,7 @@ export class Node {
 	public isp: string | null = null;
 	public organizationId: string | null = null;
 	public unknown = false; //a node is unknown if it is not crawled or maybe archived
+	public historyArchiveGap = false;
 
 	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
@@ -90,7 +91,8 @@ export class Node {
 			organizationId: this.organizationId,
 			historyUrl: this.historyUrl,
 			alias: this.alias,
-			isp: this.isp
+			isp: this.isp,
+			historyArchiveGap: this.historyArchiveGap
 		};
 	}
 
