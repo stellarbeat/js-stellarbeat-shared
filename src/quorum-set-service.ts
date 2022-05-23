@@ -141,7 +141,7 @@ export class QuorumSetService {
 			return 'Some validators are failing';
 
 		if (QuorumSetService.quorumSetHasWarnings(quorumSet, network))
-			return 'Some history archives are out-of-date';
+			return 'History archive issue detected';
 	}
 
 	//checks one level of inner quorumSets
