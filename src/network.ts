@@ -287,7 +287,7 @@ export class Network {
          TODO: should only be missing when not participating in consensus.
           When participating in consensus but not sending externalize messages, they could be blocked based on quorumSet blocking status
          */
-	isNodeMissing(node: Node) {
+	isNodeMissing(node: Node): boolean {
 		if (!node.isValidator)
 			//watchers are marked missing when we cannot connect to them
 			return !node.active;
@@ -300,7 +300,7 @@ export class Network {
 	 * When a node is missing we mark it as failed.
 	 * If we modify the network for simulation purposes, we mark validators that are blocked as failed.
 	 */
-	isNodeFailing(node: Node) {
+	isNodeFailing(node: Node): boolean {
 		//if a node is blocked, we mark it as failed for simulation purposes
 		if (this.blockedNodes.has(node.publicKey)) return true;
 
@@ -311,19 +311,19 @@ export class Network {
     Everytime the network is modified for simulation purposes we check if validators can reach their quorumSet thresholds.
     If not we mark them as 'blocked'.
      */
-	isValidatorBlocked(validator: Node) {
+	isValidatorBlocked(validator: Node): boolean {
 		return this.blockedNodes.has(validator.publicKey);
 	}
 
-	someNodesHaveWarnings(nodes: Node[]) {
+	someNodesHaveWarnings(nodes: Node[]): boolean {
 		return nodes.some((node) => this.nodeHasWarnings(node));
 	}
 
-	nodeHasWarnings(node: Node) {
+	nodeHasWarnings(node: Node): boolean {
 		return this.isFullValidatorWithOutOfDateArchive(node) || this.historyArchiveGasGaps(node);
 	}
 
-	getNodeWarningReasons(node: Node) {
+	getNodeWarningReasons(node: Node): string {
 		if(this.historyArchiveGasGaps(node)){
 			return 'Gap detected in history archive';
 		}
@@ -334,12 +334,12 @@ export class Network {
 		return 'None';
 	}
 
-	isFullValidatorWithOutOfDateArchive(node: Node) {
-		return node.historyUrl && !node.isFullValidator;
+	isFullValidatorWithOutOfDateArchive(node: Node): boolean {
+		return node.historyUrl !== null && !node.isFullValidator;
 	}
 
-	historyArchiveGasGaps(node: Node){
-		return node.historyUrl && node.historyArchiveGap;
+	historyArchiveGasGaps(node: Node): boolean{
+		return node.historyUrl !== null && node.historyArchiveGap;
 	}
 
 	getNodeFailingReason(node: Node): { label: string; description: string } {
