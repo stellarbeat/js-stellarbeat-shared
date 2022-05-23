@@ -324,6 +324,10 @@ export class Network {
 	}
 
 	getNodeWarningReasons(node: Node) {
+		if(this.historyArchiveGasGaps(node)){
+			return 'Gap detected in history archive';
+		}
+
 		if (this.isFullValidatorWithOutOfDateArchive(node))
 			return 'History archive not up-to-date';
 
@@ -332,6 +336,10 @@ export class Network {
 
 	isFullValidatorWithOutOfDateArchive(node: Node) {
 		return node.historyUrl && !node.isFullValidator;
+	}
+
+	historyArchiveGasGaps(node: Node){
+		return node.historyUrl && node.historyArchiveGap;
 	}
 
 	getNodeFailingReason(node: Node): { label: string; description: string } {
