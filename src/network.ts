@@ -320,7 +320,7 @@ export class Network {
 	}
 
 	nodeHasWarnings(node: Node) {
-		return this.isFullValidatorWithOutOfDateArchive(node);
+		return this.isFullValidatorWithOutOfDateArchive(node) || this.historyArchiveGasGaps(node);
 	}
 
 	getNodeWarningReasons(node: Node) {
