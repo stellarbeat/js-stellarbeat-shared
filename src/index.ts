@@ -20,6 +20,7 @@ export { TrustGraphBuilder } from './trust-graph/trust-graph-builder';
 export { OrganizationSnapShot } from './organization-snap-shot';
 export { NodeSnapShot } from './node-snap-shot';
 export { NetworkReadRepository } from './network-read-repository';
+export { HistoryArchiveScan } from './history-archive-scan';
 export * from './quorum/containsSlice';
 export * from './quorum/isQuorum';
 export * from './quorum/detectQuorum';
