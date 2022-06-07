@@ -1,0 +1,36 @@
+{
+  "$id": "history-scan.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "startDate": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "endDate": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "latestVerifiedLedger": {
+      "type": "number"
+    },
+    "hasGap": {
+      "type": "boolean"
+    },
+    "gapUrl": {
+      "type": "string"
+    },
+    "gapCheckPoint": {
+      "type": "number"
+    }
+  },
+  "type": "object",
+  "required": [
+    "url",
+    "startDate",
+    "endDate",
+    "hasGap"
+  ]
+}

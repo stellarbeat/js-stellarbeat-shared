@@ -107,6 +107,9 @@
     },
     "versionStr": {
       "type": "string"
+    },
+    "historyArchiveGap": {
+      "type": "boolean"
     }
   },
   "type": "object",
