@@ -65,6 +65,7 @@ export class Network {
 			this.nodes
 				.filter(
 					(node) =>
+						node.active &&
 						node.isValidator &&
 						!node.isValidating &&
 						node.activeInScp &&
@@ -280,21 +281,6 @@ export class Network {
 		return Array.from(new Set(trustedOrganizations)); //remove doubles
 	}
 
-	/*
-         By crawling we know if nodes are watchers (never sent any SCP message) or validators (participating in SCP)
-         We mark validators that are not sending SCP externalize messages as missing.
-         We mark watchers that are not live as missing.
-         TODO: should only be missing when not participating in consensus.
-          When participating in consensus but not sending externalize messages, they could be blocked based on quorumSet blocking status
-         */
-	isNodeMissing(node: Node): boolean {
-		if (!node.isValidator)
-			//watchers are marked missing when we cannot connect to them
-			return !node.active;
-
-		return !node.isValidating;
-	}
-
 	/**
 	 * A node can fail for various reasons. See Fig. 5.   Venn diagram of node failures of the original SCP paper.
 	 * When a node is missing we mark it as failed.
@@ -304,7 +290,11 @@ export class Network {
 		//if a node is blocked, we mark it as failed for simulation purposes
 		if (this.blockedNodes.has(node.publicKey)) return true;
 
-		return this.isNodeMissing(node);
+		if (!node.isValidator)
+			//watchers are marked missing when we cannot connect to them
+			return !node.active;
+
+		return !node.isValidating;
 	}
 
 	/*
@@ -354,16 +344,17 @@ export class Network {
 				label: 'Failing',
 				description: 'Quorum set not yet detected by crawler'
 			};
-		if (node.isValidator && this.isNodeMissing(node))
-			return {
-				label: 'Failing',
-				description: 'Not validating in latest consensus rounds'
-			};
 
 		if (node.isValidator && this.isValidatorBlocked(node))
 			return {
 				label: 'Blocked',
 				description: 'Quorum set not reaching threshold'
+			};
+
+		if (this.isNodeFailing(node))
+			return {
+				label: 'Failing',
+				description: 'Not validating in latest consensus rounds'
 			};
 
 		return {
