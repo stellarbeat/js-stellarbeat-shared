@@ -16,14 +16,14 @@
     "latestVerifiedLedger": {
       "type": "number"
     },
-    "hasGap": {
+    "hasError": {
       "type": "boolean"
     },
-    "gapUrl": {
+    "errorUrl": {
       "type": "string"
     },
-    "gapCheckPoint": {
-      "type": "number"
+    "errorMessage": {
+      "type": "string"
     }
   },
   "type": "object",
@@ -31,6 +31,6 @@
     "url",
     "startDate",
     "endDate",
-    "hasGap"
+    "hasError"
   ]
 }
