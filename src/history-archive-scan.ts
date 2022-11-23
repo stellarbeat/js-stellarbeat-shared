@@ -6,9 +6,9 @@ export class HistoryArchiveScan {
 		public readonly startDate: Date,
 		public readonly endDate: Date,
 		public readonly latestVerifiedLedger: number,
-		public readonly hasGap: boolean,
-		public readonly gapUrl: string|null,
-		public readonly gapCheckPoint: number|null
+		public readonly hasError: boolean,
+		public readonly errorUrl: string|null,
+		public readonly errorMessage: string|null
 	) {}
 	static fromJSON(scanJSON: string | Record<string, unknown>): HistoryArchiveScan {
 		let scanDTO: Record<string, unknown>;
@@ -33,12 +33,10 @@ export class HistoryArchiveScan {
 		if(!isNumber(latestVerifiedLedger))
 			throw new Error('latest verified ledger missing');
 
-		const hasGap = scanDTO.hasGap === true;
+		const hasError = scanDTO.hasError === true;
+		const errorUrl = isString(scanDTO.errorUrl) ? scanDTO.errorUrl: null
+		const errorMessage = isString(scanDTO.errorMessage) ? scanDTO.errorMessage: null
 
-		const gapUrl = isString(scanDTO.gapUrl) ? scanDTO.gapUrl : null
-
-		const gapCheckPoint = isNumber(scanDTO.gapCheckPoint) ? scanDTO.gapCheckPoint : null;
-
-		return new HistoryArchiveScan(url, new Date(startDateString), new Date(endDateString), latestVerifiedLedger, hasGap, gapUrl, gapCheckPoint);
+		return new HistoryArchiveScan(url, new Date(startDateString), new Date(endDateString), latestVerifiedLedger, hasError, errorUrl, errorMessage);
 	}
 }
