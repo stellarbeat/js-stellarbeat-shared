@@ -108,7 +108,10 @@
     "versionStr": {
       "type": "string"
     },
-    "historyArchiveGap": {
+    "historyArchiveHasError": {
+      "type": "boolean"
+    },
+    "historyArchiveFullyVerified": {
       "type": "boolean"
     }
   },

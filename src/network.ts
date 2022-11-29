@@ -310,12 +310,12 @@ export class Network {
 	}
 
 	nodeHasWarnings(node: Node): boolean {
-		return this.isFullValidatorWithOutOfDateArchive(node) || this.historyArchiveGasGaps(node);
+		return this.isFullValidatorWithOutOfDateArchive(node) || this.historyArchiveHasError(node);
 	}
 
 	getNodeWarningReasons(node: Node): string {
-		if(this.historyArchiveGasGaps(node)){
-			return 'Gap detected in history archive';
+		if(this.historyArchiveHasError(node)){
+			return 'History archive issue detected';
 		}
 
 		if (this.isFullValidatorWithOutOfDateArchive(node))
@@ -328,8 +328,8 @@ export class Network {
 		return node.historyUrl !== null && !node.isFullValidator;
 	}
 
-	historyArchiveGasGaps(node: Node): boolean{
-		return node.historyUrl !== null && node.historyArchiveGap;
+	historyArchiveHasError(node: Node): boolean{
+		return node.historyUrl !== null && node.historyArchiveHasError;
 	}
 
 	getNodeFailingReason(node: Node): { label: string; description: string } {
