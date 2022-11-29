@@ -15,7 +15,7 @@
   "author": "pieterjan84@github",
   "license": "MIT",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.0.0"
   },
   "files": [
     ".env.dist",
@@ -31,14 +31,14 @@
     "@iarna/toml": "^2.2.5",
     "latest-semver": "^3.0.0",
     "neverthrow": "^4.3.1",
-    "semver": "^7.3.5",
+    "semver": "^7.3.8",
     "semver-compare": "^1.0.0",
     "to-semver": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.170",
-    "@types/node": "^15.12.4",
+    "@types/node": "^16.18.3",
     "@types/semver": "^7.3.6",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",

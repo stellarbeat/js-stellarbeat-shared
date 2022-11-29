@@ -26,8 +26,7 @@ export class VersionIndex {
 			})
 			.map((versionDirty) => {
 				return semver.clean(this.preClean(versionDirty as string), {
-					loose: false,
-					includePrerelease: false
+					loose: false
 				});
 			})
 			.filter((version) => version !== null);
@@ -55,8 +54,7 @@ export class VersionIndex {
 		}
 
 		const version = semver.clean(this.preClean(node.versionStr), {
-			loose: true,
-			includePrerelease: false
+			loose: true
 		}); //get release candidates
 		if (!version) {
 			return 0;
