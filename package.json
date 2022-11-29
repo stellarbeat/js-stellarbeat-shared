@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellar-domain",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Domain classes for stellarbeat. Code reuse between frontend and backend",
   "repository": {
     "type": "git",
