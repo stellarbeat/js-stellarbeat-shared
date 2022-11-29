@@ -8,6 +8,7 @@ it('should map from json', function () {
     const hasError = true;
     const errorUrl = 'https://history.stellarbeat.io/gap';
     const errorMessage = 'message';
+    const isSlow = true;
 
     const scanDTO = {
         url: url,
@@ -16,8 +17,9 @@ it('should map from json', function () {
         latestVerifiedLedger: latestVerifiedLedger,
         hasError: hasError,
         errorUrl: errorUrl,
-        errorMessage: errorMessage
+        errorMessage: errorMessage,
+        isSlow: isSlow
     }
 
-    expect(HistoryArchiveScan.fromJSON(scanDTO)).toEqual(new HistoryArchiveScan(url, new Date(startDate), new Date(endDate), latestVerifiedLedger, hasError, errorUrl, errorMessage ));
+    expect(HistoryArchiveScan.fromJSON(scanDTO)).toEqual(new HistoryArchiveScan(url, new Date(startDate), new Date(endDate), latestVerifiedLedger, hasError, errorUrl, errorMessage, isSlow));
 });

@@ -8,7 +8,8 @@ export class HistoryArchiveScan {
 		public readonly latestVerifiedLedger: number,
 		public readonly hasError: boolean,
 		public readonly errorUrl: string|null,
-		public readonly errorMessage: string|null
+		public readonly errorMessage: string|null,
+		public readonly isSLow: boolean
 	) {}
 	static fromJSON(scanJSON: string | Record<string, unknown>): HistoryArchiveScan {
 		let scanDTO: Record<string, unknown>;
@@ -37,6 +38,8 @@ export class HistoryArchiveScan {
 		const errorUrl = isString(scanDTO.errorUrl) ? scanDTO.errorUrl: null
 		const errorMessage = isString(scanDTO.errorMessage) ? scanDTO.errorMessage: null
 
-		return new HistoryArchiveScan(url, new Date(startDateString), new Date(endDateString), latestVerifiedLedger, hasError, errorUrl, errorMessage);
+		const isSlow = scanDTO.isSlow === true;
+
+		return new HistoryArchiveScan(url, new Date(startDateString), new Date(endDateString), latestVerifiedLedger, hasError, errorUrl, errorMessage, isSlow);
 	}
 }

@@ -110,9 +110,6 @@
     },
     "historyArchiveHasError": {
       "type": "boolean"
-    },
-    "historyArchiveFullyVerified": {
-      "type": "boolean"
     }
   },
   "type": "object",

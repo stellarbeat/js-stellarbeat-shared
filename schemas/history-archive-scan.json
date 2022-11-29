@@ -24,6 +24,9 @@
     },
     "errorMessage": {
       "type": "string"
+    },
+    "isSlow": {
+      "type": "boolean"
     }
   },
   "type": "object",
