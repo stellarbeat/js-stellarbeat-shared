@@ -21,5 +21,7 @@ it('should map from json', function () {
         isSlow: isSlow
     }
 
+    const scan = HistoryArchiveScan.fromJSON(scanDTO);
+    expect(scan.isSlow).toEqual(isSlow);
     expect(HistoryArchiveScan.fromJSON(scanDTO)).toEqual(new HistoryArchiveScan(url, new Date(startDate), new Date(endDate), latestVerifiedLedger, hasError, errorUrl, errorMessage, isSlow));
 });

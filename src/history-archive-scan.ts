@@ -9,7 +9,7 @@ export class HistoryArchiveScan {
 		public readonly hasError: boolean,
 		public readonly errorUrl: string|null,
 		public readonly errorMessage: string|null,
-		public readonly isSLow: boolean
+		public readonly isSlow: boolean
 	) {}
 	static fromJSON(scanJSON: string | Record<string, unknown>): HistoryArchiveScan {
 		let scanDTO: Record<string, unknown>;
