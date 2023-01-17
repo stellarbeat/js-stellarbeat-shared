@@ -1,6 +1,6 @@
-import { Node, Network } from '../../src';
-import { StronglyConnectedComponentsFinder } from '../../src/trust-graph/strongly-connected-components-finder';
-import { TrustGraphBuilder } from '../../src';
+import {Node, Network} from '../../src';
+import {StronglyConnectedComponentsFinder} from '../../src/trust-graph/strongly-connected-components-finder';
+import {TrustGraphBuilder} from '../../src';
 import * as _ from 'lodash';
 
 //https://www.youtube.com/watch?v=TyWtx7q2D7Y
@@ -67,64 +67,64 @@ node9.quorumSet.validators.push(node10.publicKey);
 node10.quorumSet.validators.push(node9.publicKey);
 
 const network = new Network([
-	node7,
-	node1,
-	node2,
-	node3,
-	node4,
-	node5,
-	node6,
-	node8,
-	node9,
-	node10
+    node7,
+    node1,
+    node2,
+    node3,
+    node4,
+    node5,
+    node6,
+    node8,
+    node9,
+    node10
 ]);
 const directedGraphManager = new TrustGraphBuilder(network);
 
 test('findTarjan', function () {
-	const graph = directedGraphManager.buildGraphFromNodes();
-	const dfs = new StronglyConnectedComponentsFinder();
-	const results = dfs.findTarjan(graph);
+    const graph = directedGraphManager.buildGraphFromNodes();
+    const dfs = new StronglyConnectedComponentsFinder();
+    const results = dfs.findTarjan(graph);
 
-	expect(results.length).toEqual(4);
+    expect(results.length).toEqual(4);
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['2', '3', '6'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['2', '3', '6'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['4', '7', '8'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['4', '7', '8'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['1', '5'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['1', '5'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['9', '10'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['9', '10'])))
+    ).toBeTruthy();
 });
 
 test('findTarjanFailingNodes', function () {
-	node7.isValidating = false;
-	node8.isValidating = false;
-	const graph = directedGraphManager.buildGraphFromNodes();
-	const dfs = new StronglyConnectedComponentsFinder();
-	const results = dfs.findTarjan(graph);
+    node7.isValidating = false;
+    node8.isValidating = false;
+    const graph = directedGraphManager.buildGraphFromNodes();
+    const dfs = new StronglyConnectedComponentsFinder();
+    const results = dfs.findTarjan(graph);
 
-	expect(results.length).toEqual(4); //failed nodes not filtered from scp
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['2', '3', '6'])))
-	).toBeTruthy();
+    expect(results.length).toEqual(4); //failed nodes not filtered from scp
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['2', '3', '6'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['4', '7', '8'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['4', '7', '8'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['1', '5'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['1', '5'])))
+    ).toBeTruthy();
 
-	expect(
-		results.find((scp) => _.isEqual(scp, new Set(['9', '10'])))
-	).toBeTruthy();
+    expect(
+        results.find((scp) => _.isEqual(scp, new Set(['9', '10'])))
+    ).toBeTruthy();
 });
