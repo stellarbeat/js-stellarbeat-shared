@@ -1,10 +1,10 @@
 {
-  "name": "@stellarbeat/js-stellar-domain",
+  "name": "@stellarbeat/js-stellarbeat-shared",
   "version": "4.1.2",
-  "description": "Domain classes for stellarbeat. Code reuse between frontend and backend",
+  "description": "Shared code between Stellarbeat frontend and backend",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stellarbeat/js-stellar-domain.git"
+    "url": "https://github.com/stellarbeat/js-stellarbeat-shared.git"
   },
   "scripts": {
     "preversion": "yarn run build",

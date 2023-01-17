@@ -1,7 +1,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-# js-stellar-domain
+# js-stellarbeat-shared
 
-Domain classes for stellarbeat
+Shared code between js-stellarbeat-frontend and js-stellarbeat-backend.
 
 install dependencies
 `yarn install`
