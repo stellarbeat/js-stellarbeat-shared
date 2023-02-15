@@ -1,4 +1,10 @@
-export class QuorumSet {
+export interface BaseQuorumSet {
+	threshold: number;
+	validators: Array<string>;
+	innerQuorumSets: Array<BaseQuorumSet>;
+}
+
+export class QuorumSet implements BaseQuorumSet {
 	public threshold: number;
 	public validators: Array<string>;
 	public innerQuorumSets: Array<QuorumSet>;
