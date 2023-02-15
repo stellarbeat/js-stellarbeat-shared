@@ -4,6 +4,10 @@
 
 Shared code between js-stellarbeat-frontend and js-stellarbeat-backend.
 
+DTO classes like Node, Organization and Network are defined here and can be hydrated from the backend API responses.
+
+Other code like the TrustGraph calculation is used in the backend to calculate and store stats for the live network, and is used in the frontend for simulation purposes.
+
 install dependencies
 `yarn install`
 
