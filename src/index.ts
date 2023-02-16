@@ -17,3 +17,9 @@ export {TransitiveQuorumSetFinder} from './quorum-set/transitive-quorum-set-find
 export * from './quorum/containsSlice';
 export * from './quorum/isQuorum';
 export * from './quorum/detectQuorum';
+export {NetworkV1, NetworkV1Schema} from './dto/network-v1';
+export {NodeV1, NodeV1Schema} from './dto/node-v1';
+export {OrganizationV1, OrganizationV1Schema} from './dto/organization-v1';
+export {HistoryArchiveScanV1, HistoryArchiveScanV1Schema} from './dto/history-archive-scan-v1';
+export {NodeSnapshotV1Schema, NodeSnapshotV1} from './dto/node-snapshot-v1'
+export {OrganizationSnapshotV1Schema, OrganizationSnapshotV1} from './dto/organization-snapshot-v1'
