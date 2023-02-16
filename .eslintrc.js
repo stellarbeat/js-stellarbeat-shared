@@ -14,5 +14,6 @@ module.exports = {
 	},
 	env: {
 		node: true
-	}
+	},
+	ignorePatterns: ['/*', '!/src']
 };
