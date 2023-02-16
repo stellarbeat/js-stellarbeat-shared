@@ -7,7 +7,10 @@ import {
 	TrustGraphBuilder
 } from './index';
 import NetworkStatistics from './network-statistics';
-import { isObject, isString } from './typeguards';
+import { isString } from './typeguards';
+import {NodeV1} from "./dto/node-v1";
+import {NetworkV1} from "./dto/network-v1";
+import {OrganizationV1} from "./dto/organization-v1";
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -363,54 +366,31 @@ export class Network {
 		};
 	}
 
-	static fromJSON(networkJSON: string | Record<string, unknown>): Network {
-		let networkDTO: Record<string, unknown>;
-		if (typeof networkJSON === 'string') {
-			networkDTO = JSON.parse(networkJSON);
-		} else networkDTO = networkJSON;
-
-		if (!Array.isArray(networkDTO.nodes))
-			throw new Error('Node property must be array');
-
-		const nodes = networkDTO.nodes.map((node: Record<string, unknown>) =>
-			Node.fromJSON(node)
+	static fromJSON(networkV1DTO: NetworkV1): Network {
+		const nodes: Node[] = networkV1DTO.nodes.map((node: NodeV1) =>
+			Node.fromNodeV1DTO(node)
 		);
 
-		if (!Array.isArray(networkDTO.organizations))
-			throw new Error('organizations property must be array');
-		const organizations = networkDTO.organizations.map(
-			(organization: Record<string, unknown>) =>
-				Organization.fromJSON(organization)
+		const organizations: Organization[] = networkV1DTO.organizations.map(
+			(organizationDTO: OrganizationV1) =>
+				Organization.fromOrganizationV1DTO(organizationDTO)
 		);
 
-		if (!isObject(networkDTO.statistics))
-			throw new Error('statistics property missing');
+		const networkStatistics = NetworkStatistics.fromJSON(networkV1DTO.statistics);
 
-		const networkStatistics = NetworkStatistics.fromJSON(networkDTO.statistics);
-
-		const timeValue = networkDTO.time;
-		let time: Date;
-		if (typeof timeValue === 'string') {
-			time = new Date(timeValue);
-		} else {
-			time = new Date();
-		}
-
-		const latestLedger: string | null = isString(networkDTO.latestLedger)
-			? networkDTO.latestLedger
-			: null;
+		const time = new Date(networkV1DTO.time);
 
 		const network = new Network(
 			nodes,
 			organizations,
 			time,
-			latestLedger,
+			networkV1DTO.latestLedger,
 			networkStatistics
 		);
 
-		if (isString(networkDTO.id)) network.id = networkDTO.id;
+		if (isString(networkV1DTO.id)) network.id = networkV1DTO.id;
 
-		if (isString(networkDTO.name)) network.name = networkDTO.name;
+		if (isString(networkV1DTO.name)) network.name = networkV1DTO.name;
 
 		return network;
 	}

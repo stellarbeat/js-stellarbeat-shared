@@ -1,3 +1,5 @@
+import {NodeGeoDataV1} from "./dto/node-v1";
+
 export class NodeGeoData {
 	public countryCode: string | null = null;
 	public countryName: string | null = null;
@@ -13,20 +15,12 @@ export class NodeGeoData {
 		};
 	}
 
-	static fromJSON(nodeGeo: string | Record<string, unknown>): NodeGeoData {
-		if (nodeGeo === undefined) {
-			return new NodeGeoData();
-		}
-		let nodeGeoObject;
-		if (typeof nodeGeo === 'string') {
-			nodeGeoObject = JSON.parse(nodeGeo);
-		} else nodeGeoObject = nodeGeo;
-
+	static fromNodeGeoDataV1(nodeGeoDataV1: NodeGeoDataV1): NodeGeoData {
 		const newNodeGeo = new NodeGeoData();
-		newNodeGeo.countryCode = nodeGeoObject.countryCode;
-		newNodeGeo.countryName = nodeGeoObject.countryName;
-		newNodeGeo.latitude = nodeGeoObject.latitude;
-		newNodeGeo.longitude = nodeGeoObject.longitude;
+		newNodeGeo.countryCode = nodeGeoDataV1.countryCode;
+		newNodeGeo.countryName = nodeGeoDataV1.countryName;
+		newNodeGeo.latitude = nodeGeoDataV1.latitude;
+		newNodeGeo.longitude = nodeGeoDataV1.longitude;
 
 		return newNodeGeo;
 	}

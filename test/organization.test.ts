@@ -1,7 +1,12 @@
 import { Organization } from '../src';
+import Ajv from "ajv";
+import * as addFormats from "ajv-formats";
+import {OrganizationV1Schema} from "../src/dto/organization-v1";
 
 describe('json', () => {
+	const dateDiscovered = new Date();
 	const organization = new Organization('1', 'Organization Name');
+	organization.homeDomain = 'homeDomain.com';
 	organization.dba = 'Organization DBA';
 	organization.url = 'https://www.domain.com';
 	organization.logo = 'https://www.domain.com/awesomelogo.jpg';
@@ -19,6 +24,7 @@ describe('json', () => {
 	organization.has24HourStats = false;
 	organization.has30DayStats = false;
 	organization.subQuorumAvailable = false;
+	organization.dateDiscovered = dateDiscovered;
 
 	const organizationObject: Record<string, unknown> = {};
 	organizationObject.name = 'Organization Name';
@@ -41,15 +47,27 @@ describe('json', () => {
 	organizationObject.has24HourStats = false;
 	organizationObject.has30DayStats = false;
 	organizationObject.subQuorumAvailable = false;
-	organizationObject.homeDomain = null;
+	organizationObject.homeDomain = 'homeDomain.com';
 	organizationObject.horizonUrl = null;
+	organizationObject.dateDiscovered = dateDiscovered.toISOString();
+
+
 	test('OrgToJson', () => {
 		expect(JSON.parse(JSON.stringify(organization))).toEqual(
 			organizationObject
 		);
 	});
 	test('JsonToOrg', () => {
-		expect(Organization.fromJSON(JSON.stringify(organization))).toEqual(
+		const ajv = new Ajv();
+		addFormats.default(ajv);
+		const validate  = ajv.compile(OrganizationV1Schema);
+		const valid = validate(organizationObject);
+		console.log(validate.errors)
+		expect(valid).toBeTruthy();
+		if (!valid) {
+			return
+		}
+		expect(Organization.fromOrganizationV1DTO(organizationObject)).toEqual(
 			organization
 		);
 	});

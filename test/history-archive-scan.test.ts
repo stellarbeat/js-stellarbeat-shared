@@ -1,4 +1,4 @@
-import {HistoryArchiveScan} from "../src/history-archive-scan";
+import {HistoryArchiveScan} from "../src";
 
 it('should map from json', function () {
     const url = 'https://history.stellarbeat.io';
@@ -21,7 +21,7 @@ it('should map from json', function () {
         isSlow: isSlow
     }
 
-    const scan = HistoryArchiveScan.fromJSON(scanDTO);
+    const scan = HistoryArchiveScan.fromHistoryArchiveScanV1(scanDTO);
     expect(scan.isSlow).toEqual(isSlow);
-    expect(HistoryArchiveScan.fromJSON(scanDTO)).toEqual(new HistoryArchiveScan(url, new Date(startDate), new Date(endDate), latestVerifiedLedger, hasError, errorUrl, errorMessage, isSlow));
+    expect(HistoryArchiveScan.fromHistoryArchiveScanV1(scanDTO)).toEqual(new HistoryArchiveScan(url, new Date(startDate), new Date(endDate), latestVerifiedLedger, hasError, errorUrl, errorMessage, isSlow));
 });

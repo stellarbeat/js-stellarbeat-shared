@@ -1,4 +1,7 @@
 import { Node, Organization } from '../src';
+import Ajv from "ajv";
+import * as addFormats from "ajv-formats";
+import {NodeV1Schema} from "../src/dto/node-v1";
 
 const node = new Node(
 	'GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK'
@@ -6,9 +9,7 @@ const node = new Node(
 node.name = 'SDF validator 2';
 node.host = 'core-live-b.stellar.org';
 node.ledgerVersion = null;
-node.networkId = null;
-node.overlayMinVersion = null;
-node.overlayVersion = null;
+node.activeInScp = true;
 node.geoData.countryName = 'United States';
 node.geoData.countryCode = 'US';
 node.geoData.latitude = 39.0853;
@@ -18,29 +19,24 @@ node.dateDiscovered = new Date('2018-04-28 14:39:01');
 node.dateUpdated = new Date('2018-10-12 11:17:39');
 node.quorumSetHashKey = 'dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=';
 node.quorumSet.threshold = 2;
-const trustedNode = new Node(
-	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'
-);
-trustedNode.unknown = true;
-trustedNode.dateDiscovered = new Date('2018-04-28 14:39:01');
-trustedNode.dateUpdated = new Date('2018-10-12 11:17:39');
-node.quorumSet.validators = [
-	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'
-];
 node.quorumSet.innerQuorumSets = [];
+node.quorumSet.validators = ['GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'];
 node.active = true;
-node.overLoaded = false;
+node.overLoaded = true;
 node.isFullValidator = true;
 node.homeDomain = 'my-domain';
-node.isValidating = false;
-const organization = new Organization('123', 'org');
-node.organizationId = organization.id;
+node.isValidating = true;
+
+node.organizationId = '123';
 node.alias = 'my-alias';
 node.historyUrl = 'https://my-history.net';
 node.isp = 'amazon.com Inc.';
 node.statistics.has30DayStats = true;
 node.statistics.has24HourStats = true;
 node.historyArchiveHasError = true;
+node.ledgerVersion = 1;
+node.overlayMinVersion = 2;
+node.overlayVersion = 3;
 
 const nodeObject: Record<string, unknown> = {};
 nodeObject.name = 'SDF validator 2';
@@ -77,34 +73,36 @@ nodeObject.quorumSet = {
 	innerQuorumSets: []
 };
 nodeObject.active = true;
-nodeObject.overLoaded = false;
+nodeObject.overLoaded = true;
 nodeObject.isFullValidator = true;
 nodeObject.homeDomain = 'my-domain';
-nodeObject.isValidating = false;
+nodeObject.isValidating = true;
 nodeObject.organizationId = '123';
 nodeObject.alias = 'my-alias';
 nodeObject.historyUrl = 'https://my-history.net';
 nodeObject.isp = 'amazon.com Inc.';
 
 nodeObject.isValidator = true;
-nodeObject.activeInScp = false;
-nodeObject.ledgerVersion = null;
-nodeObject.networkId = null;
-nodeObject.overlayMinVersion = null;
-nodeObject.overlayVersion = null;
-const trustedNodeObject: Record<string, unknown> = {};
-trustedNodeObject.publicKey =
-	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ';
-trustedNodeObject.unknown = true;
-trustedNodeObject.dateDiscovered = '2018-04-28 14:39:01';
-trustedNodeObject.dateUpdated = '2018-10-12 11:17:39';
+nodeObject.activeInScp = true;
+nodeObject.ledgerVersion = 1;
+nodeObject.overlayMinVersion = 2;
+nodeObject.overlayVersion = 3;
 nodeObject.historyArchiveHasError = true;
 
 test('nodeToJson', () => {
 	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
 });
+
 test('JsonToNode', () => {
-	expect(Node.fromJSON(JSON.stringify(nodeObject))).toEqual(node);
+	const ajv = new Ajv();
+	addFormats.default(ajv);
+	const validate  = ajv.compile(NodeV1Schema);
+	const valid = validate(nodeObject);
+	expect(valid).toBeTruthy();
+	if (!valid) {
+		return
+	}
+	expect(Node.fromNodeV1DTO(nodeObject)).toEqual(node);
 });
 const node3 = new Node('a');
 test('testDefaultPort', () => {

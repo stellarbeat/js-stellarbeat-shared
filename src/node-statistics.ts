@@ -1,3 +1,5 @@
+import {NodeStatisticsV1} from "./dto/node-v1";
+
 export class NodeStatistics {
 	public active30DaysPercentage = 0;
 	public overLoaded30DaysPercentage = 0;
@@ -21,42 +23,25 @@ export class NodeStatistics {
 		};
 	}
 
-	static fromJSON(
-		nodeStatistics: string | Record<string, unknown>
+	static fromNodeStatisticsV1(
+		nodeStatisticsV1: NodeStatisticsV1
 	): NodeStatistics {
-		if (nodeStatistics === undefined) {
-			return new NodeStatistics();
-		}
-
-		let nodeStatisticsObject;
-		if (typeof nodeStatistics === 'string') {
-			nodeStatisticsObject = JSON.parse(nodeStatistics);
-		} else nodeStatisticsObject = nodeStatistics;
-
 		const newNodeStatistics = new NodeStatistics();
 
-		if (nodeStatisticsObject.active30DaysPercentage)
 			newNodeStatistics.active30DaysPercentage =
-				nodeStatisticsObject.active30DaysPercentage;
-		if (nodeStatisticsObject.overLoaded30DaysPercentage)
+				nodeStatisticsV1.active30DaysPercentage;
 			newNodeStatistics.overLoaded30DaysPercentage =
-				nodeStatisticsObject.overLoaded30DaysPercentage;
-		if (nodeStatisticsObject.validating30DaysPercentage)
+				nodeStatisticsV1.overLoaded30DaysPercentage;
 			newNodeStatistics.validating30DaysPercentage =
-				nodeStatisticsObject.validating30DaysPercentage;
-		if (nodeStatisticsObject.active24HoursPercentage)
+				nodeStatisticsV1.validating30DaysPercentage;
 			newNodeStatistics.active24HoursPercentage =
-				nodeStatisticsObject.active24HoursPercentage;
-		if (nodeStatisticsObject.overLoaded24HoursPercentage)
+				nodeStatisticsV1.active24HoursPercentage;
 			newNodeStatistics.overLoaded24HoursPercentage =
-				nodeStatisticsObject.overLoaded24HoursPercentage;
-		if (nodeStatisticsObject.validating24HoursPercentage)
+				nodeStatisticsV1.overLoaded24HoursPercentage;
 			newNodeStatistics.validating24HoursPercentage =
-				nodeStatisticsObject.validating24HoursPercentage;
-		if (nodeStatisticsObject.has30DayStats !== undefined)
-			newNodeStatistics.has30DayStats = nodeStatisticsObject.has30DayStats;
-		if (nodeStatisticsObject.has24HourStats !== undefined)
-			newNodeStatistics.has24HourStats = nodeStatisticsObject.has24HourStats;
+				nodeStatisticsV1.validating24HoursPercentage;
+			newNodeStatistics.has30DayStats = nodeStatisticsV1.has30DayStats;
+			newNodeStatistics.has24HourStats = nodeStatisticsV1.has24HourStats;
 
 		return newNodeStatistics;
 	}

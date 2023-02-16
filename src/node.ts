@@ -1,8 +1,8 @@
-import { NodeGeoData } from './node-geo-data';
-import { NodeStatistics } from './node-statistics';
-import { QuorumSet } from './quorum-set';
-import PropertyMapper from './PropertyMapper';
-import { isObject, isString } from './typeguards';
+import {NodeGeoData} from './node-geo-data';
+import {NodeStatistics} from './node-statistics';
+import {QuorumSet} from './quorum-set';
+import {NodeV1} from "./dto/node-v1";
+import PropertyMapper from "./PropertyMapper";
 
 export class Node {
 	public ip: string;
@@ -13,7 +13,6 @@ export class Node {
 	public ledgerVersion: number | null = null;
 	public overlayVersion: number | null = null;
 	public overlayMinVersion: number | null = null;
-	public networkId: string | null = null;
 	public versionStr: string | null = null;
 	public quorumSet: QuorumSet = new QuorumSet();
 	public quorumSetHashKey: string | null = null;
@@ -72,7 +71,6 @@ export class Node {
 			ledgerVersion: this.ledgerVersion,
 			overlayVersion: this.overlayVersion,
 			overlayMinVersion: this.overlayMinVersion,
-			networkId: this.networkId,
 			versionStr: this.versionStr,
 			active: this.active,
 			activeInScp: this.activeInScp,
@@ -100,28 +98,19 @@ export class Node {
 		return `Node (key: ${this.key}, publicKey: ${this.publicKey})`;
 	}
 
-	static fromJSON(nodeJSON: string | Record<string, unknown>): Node {
-		let nodeDTO: Record<string, unknown>;
-		if (typeof nodeJSON === 'string') {
-			nodeDTO = JSON.parse(nodeJSON);
-		} else nodeDTO = nodeJSON;
+	static fromNodeV1DTO(nodeV1DTO: NodeV1): Node {
+		const node = new Node(nodeV1DTO.publicKey);
 
-		if (!isString(nodeDTO.publicKey)) {
-			throw new Error('nodeDTO missing public key');
-		}
+		if (nodeV1DTO.geoData !== null)
+			node.geoData = NodeGeoData.fromNodeGeoDataV1(nodeV1DTO.geoData);
 
-		const node = new Node(nodeDTO.publicKey);
+		if (nodeV1DTO.statistics !== null)
+			node.statistics = NodeStatistics.fromNodeStatisticsV1(nodeV1DTO.statistics);
 
-		if (isObject(nodeDTO.geoData))
-			node.geoData = NodeGeoData.fromJSON(nodeDTO.geoData);
+		if (nodeV1DTO.quorumSet !== null)
+			node.quorumSet = QuorumSet.fromBaseQuorumSet(nodeV1DTO.quorumSet);
 
-		if (isObject(nodeDTO.statistics))
-			node.statistics = NodeStatistics.fromJSON(nodeDTO.statistics);
-
-		if (isObject(nodeDTO.quorumSet))
-			node.quorumSet = QuorumSet.fromJSON(nodeDTO.quorumSet);
-
-		PropertyMapper.mapProperties(nodeDTO, node, [
+		PropertyMapper.mapProperties(nodeV1DTO, node, [
 			'publicKey',
 			'isValidator',
 			'geoData',
@@ -130,10 +119,9 @@ export class Node {
 			'dateDiscovered',
 			'dateUpdated'
 		]);
-		if (isString(nodeDTO.dateDiscovered))
-			node.dateDiscovered = new Date(nodeDTO.dateDiscovered);
-		if (isString(nodeDTO.dateUpdated))
-			node.dateUpdated = new Date(nodeDTO.dateUpdated);
+
+		node.dateDiscovered = new Date(nodeV1DTO.dateDiscovered);
+		node.dateUpdated = new Date(nodeV1DTO.dateUpdated);
 
 		return node;
 	}

@@ -1,5 +1,5 @@
 import { Node } from './node';
-import { isObject, isString } from './typeguards';
+import {NodeSnapshotV1} from "./dto/node-snapshot-v1";
 
 export class NodeSnapShot {
 	public startDate: Date;
@@ -20,23 +20,13 @@ export class NodeSnapShot {
 		};
 	}
 
-	static fromJSON(
-		nodeSnapShot: string | Record<string, unknown>
+	static fromNodeSnapshotV1(
+		nodeSnapshotV1DTO: NodeSnapshotV1
 	): NodeSnapShot {
-		let snapShotObject: Record<string, unknown>;
-		if (typeof nodeSnapShot === 'string') {
-			snapShotObject = JSON.parse(nodeSnapShot);
-		} else snapShotObject = nodeSnapShot;
-
-		if (!isString(snapShotObject.startDate))
-			throw new Error('StartDate missing');
-		if (!isString(snapShotObject.endDate)) throw new Error('EndDate missing');
-		if (!isObject(snapShotObject.node)) throw new Error('Node missing');
-
 		return new NodeSnapShot(
-			new Date(snapShotObject.startDate),
-			new Date(snapShotObject.endDate),
-			Node.fromJSON(snapShotObject.node)
+			new Date(nodeSnapshotV1DTO.startDate),
+			new Date(nodeSnapshotV1DTO.endDate),
+			Node.fromNodeV1DTO(nodeSnapshotV1DTO.node)
 		);
 	}
 }

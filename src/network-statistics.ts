@@ -1,3 +1,6 @@
+import {NetworkStatisticsV1} from "./dto/network-v1";
+import PropertyMapper from "./PropertyMapper";
+
 export default class NetworkStatistics {
 	time: Date = new Date();
 	nrOfActiveWatchers = 0;
@@ -24,24 +27,14 @@ export default class NetworkStatistics {
 	hasSymmetricTopTier = false;
 
 	static fromJSON(
-		networkStats: string | Record<string, unknown>
+		networkStatsObject: NetworkStatisticsV1
 	): NetworkStatistics {
-		let networkStatsObject: Record<string, unknown>;
-		if (typeof networkStats === 'string') {
-			networkStatsObject = JSON.parse(networkStats);
-		} else networkStatsObject = networkStats;
+		const networkStatistics = new NetworkStatistics();
+		PropertyMapper.mapProperties(networkStatsObject, networkStatistics, [
+			'time'
+		]);
+		networkStatistics.time = new Date(networkStatsObject.time);
 
-		const newNetworkStatistics = new NetworkStatistics();
-		for (const [key, value] of Object.entries(networkStatsObject)) {
-			if (key === 'time') {
-				//@ts-ignore
-				newNetworkStatistics.time = new Date(value);
-			} else {
-				//@ts-ignore
-				newNetworkStatistics[key] = value;
-			}
-		}
-
-		return newNetworkStatistics;
+		return networkStatistics;
 	}
 }

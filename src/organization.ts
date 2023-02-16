@@ -1,6 +1,7 @@
-import { OrganizationId, PublicKey } from './network';
+import {OrganizationId, PublicKey} from './network';
 import PropertyMapper from './PropertyMapper';
-import { isString } from './typeguards';
+import {isString} from './typeguards';
+import {OrganizationV1} from "./dto/organization-v1";
 
 export function isOrganization(
 	organization: Organization | undefined
@@ -9,29 +10,29 @@ export function isOrganization(
 }
 
 export class Organization {
-	public readonly id: OrganizationId;
-	public name: string;
-	public dba: string | null = null;
-	public url: string | null = null;
-	public horizonUrl: string | null = null;
-	public logo: string | null = null;
-	public description: string | null = null;
-	public physicalAddress: string | null = null;
-	public phoneNumber: string | null = null;
-	public keybase: string | null = null;
-	public twitter: string | null = null;
-	public github: string | null = null;
-	public officialEmail: string | null = null;
-	public validators: PublicKey[] = [];
-	public subQuorumAvailable = false;
-	public has30DayStats = false;
-	public has24HourStats = false;
-	public subQuorum24HoursAvailability = 0;
-	public subQuorum30DaysAvailability = 0;
+	readonly id: OrganizationId;
+	name: string;
+	dba: string | null = null;
+	url: string | null = null;
+	horizonUrl: string | null = null;
+	logo: string | null = null;
+	description: string | null = null;
+	physicalAddress: string | null = null;
+	phoneNumber: string | null = null;
+	keybase: string | null = null;
+	twitter: string | null = null;
+	github: string | null = null;
+	officialEmail: string | null = null;
+	validators: PublicKey[] = [];
+	subQuorumAvailable = false;
+	has30DayStats = false;
+	has24HourStats = false;
+	subQuorum24HoursAvailability = 0;
+	subQuorum30DaysAvailability = 0;
 	public unknown = false;
-	public homeDomain: string | null = null; //todo: not nullable
+	homeDomain: string | null = null; //todo: not nullable
 
-	public dateDiscovered?: Date;
+	dateDiscovered?: Date;
 
 	constructor(id: string, name: string) {
 		this.id = id;
@@ -82,37 +83,23 @@ export class Organization {
 		};
 	}
 
-	static fromJSON(
-		organizationJSON: string | Record<string, unknown>
+	static fromOrganizationV1DTO(
+		organizationV1DTO: OrganizationV1
 	): Organization {
-		let organizationDTO: Record<string, unknown>;
-		if (typeof organizationJSON === 'string') {
-			organizationDTO = JSON.parse(organizationJSON);
-		} else organizationDTO = organizationJSON;
-
-		if (!isString(organizationDTO.id)) {
-			throw new Error('organizationDTO missing id');
-		}
-		if (!isString(organizationDTO.name)) {
-			throw new Error('organizationDTO missing name');
-		}
 
 		const organization = new Organization(
-			organizationDTO.id,
-			organizationDTO.name
+			organizationV1DTO.id,
+			organizationV1DTO.name ?? organizationV1DTO.id
 		);
 
-		PropertyMapper.mapProperties(organizationDTO, organization, [
+		PropertyMapper.mapProperties(organizationV1DTO, organization, [
 			'id',
 			'name',
 			'dateDiscovered',
-			'dateUpdated',
 			'isTierOneOrganization'
 		]);
 
-		if (isString(organizationDTO.dateDiscovered)) {
-			organization.dateDiscovered = new Date(organizationDTO.dateDiscovered);
-		}
+		organization.dateDiscovered = new Date(organizationV1DTO.dateDiscovered);
 
 		return organization;
 	}

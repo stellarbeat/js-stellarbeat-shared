@@ -39,24 +39,13 @@ export class QuorumSet implements BaseQuorumSet {
 		};
 	}
 
-	static fromJSON(quorumSet: any): QuorumSet {
-		let quorumSetObject;
-		if (typeof quorumSet === 'string') {
-			quorumSetObject = JSON.parse(quorumSet);
-		} else quorumSetObject = quorumSet;
-		if (!quorumSetObject) {
-			return new QuorumSet();
-		}
-		let innerQuorumSets = [];
-		if (quorumSetObject.innerQuorumSets) {
-			innerQuorumSets = quorumSetObject.innerQuorumSets.map(
-				(innerQuorumSet: QuorumSet) => this.fromJSON(innerQuorumSet)
-			);
-		}
+	static fromBaseQuorumSet(quorumSetObject: BaseQuorumSet): QuorumSet {
 		return new QuorumSet(
 			quorumSetObject.threshold,
 			quorumSetObject.validators,
-			innerQuorumSets
+			quorumSetObject.innerQuorumSets.map(
+				(innerQuorumSet) => this.fromBaseQuorumSet(innerQuorumSet)
+			)
 		);
 	}
 }

@@ -1,5 +1,5 @@
 import { Organization } from './organization';
-import { isObject } from './typeguards';
+import {OrganizationSnapshotV1} from "./dto/organization-snapshot-v1";
 
 export class OrganizationSnapShot {
 	public startDate: Date;
@@ -20,24 +20,13 @@ export class OrganizationSnapShot {
 		};
 	}
 
-	static fromJSON(
-		organizationSnapShot: string | Record<string, unknown>
+	static fromOrganizationSnapShotV1DTO(
+		snapShotObject: OrganizationSnapshotV1
 	): OrganizationSnapShot {
-		let snapShotObject: Record<string, unknown>;
-		if (typeof organizationSnapShot === 'string') {
-			snapShotObject = JSON.parse(organizationSnapShot);
-		} else snapShotObject = organizationSnapShot;
-
-		if (
-			typeof snapShotObject.startDate === 'string' &&
-			typeof snapShotObject.endDate === 'string' &&
-			isObject(snapShotObject.organization)
-		) {
-			return new OrganizationSnapShot(
+		return new OrganizationSnapShot(
 				new Date(snapShotObject.startDate),
 				new Date(snapShotObject.endDate),
-				Organization.fromJSON(snapShotObject.organization)
+				Organization.fromOrganizationV1DTO(snapShotObject.organization)
 			);
-		} else throw new Error('EndDate, startDate or organization missing');
 	}
 }
