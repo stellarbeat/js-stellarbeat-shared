@@ -22,4 +22,4 @@ addFormats(ajv);
 let moduleCode = standaloneCode(ajv)
 
 // Now you can write the module code to file
-fs.writeFileSync(path.join(__dirname, "./lib/dto/validate.js"), moduleCode)
+fs.writeFileSync(path.join(__dirname, "./lib/dto/generated/validators.js"), moduleCode)

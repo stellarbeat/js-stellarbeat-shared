@@ -9,9 +9,8 @@
   "scripts": {
     "preversion": "yarn run build",
     "prepare": "yarn run build",
-    "build": "node_modules/typescript/bin/tsc  --declaration; yarn compile-schemas; yarn generate-schema-types",
+    "build": "node_modules/typescript/bin/tsc  --declaration; yarn compile-schemas",
     "compile-schemas": "ajv compile -s \"schemas/*(network).json\" -r \"schemas/*(node|organization).json\" -o lib/network-schema.js -c ajv-formats --code-optimize=true --code-lines; node generate-dto-validate-functions.js",
-    "generate-schema-types": "tsc -allowJs --declaration --emitDeclarationOnly lib/dto/validate.js --outDir lib/dto",
     "test": "jest"
   },
   "author": "pieterjan84@github",
