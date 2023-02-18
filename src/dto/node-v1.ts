@@ -26,10 +26,10 @@ export interface NodeV1 {
     publicKey: string;
     name: string | null;
     host: string | null;
-    ledgerVersion: number;
-    overlayVersion: number;
-    overlayMinVersion: number;
-    versionStr: string;
+    ledgerVersion: number | null
+    overlayVersion: number | null;
+    overlayMinVersion: number | null;
+    versionStr: string | null;
     quorumSet: BaseQuorumSet | null;
     quorumSetHashKey: string | null;
     active: boolean;
@@ -111,9 +111,9 @@ export const NodeV1Schema: JSONSchemaType<NodeV1> = {
         "isp": nullable({
             "type": "string"
         }),
-        "ledgerVersion": {
+        "ledgerVersion": nullable({
             "type": "number"
-        },
+        }),
         "name": nullable({type: 'string'}),
         "organizationId": nullable({
             "type": "string"
@@ -122,12 +122,12 @@ export const NodeV1Schema: JSONSchemaType<NodeV1> = {
             "type": "boolean",
             "description": "When node disconnects with err_load"
         },
-        "overlayMinVersion": {
+        "overlayMinVersion": nullable({
             "type": "number"
-        },
-        "overlayVersion": {
+        }),
+        "overlayVersion": nullable({
             "type": "number"
-        },
+        }),
         "port": {
             "type": "number"
         },
@@ -139,9 +139,9 @@ export const NodeV1Schema: JSONSchemaType<NodeV1> = {
         "statistics": {
             "$ref": "#/definitions/NodeStatisticsV1"
         },
-        "versionStr": {
+        "versionStr": nullable({
             "type": "string"
-        },
+        }),
         "historyArchiveHasError": {
             "type": "boolean"
         }
