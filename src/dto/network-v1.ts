@@ -1,6 +1,7 @@
 import {JSONSchemaType} from "ajv";
 import {NodeV1} from "./node-v1";
 import {OrganizationV1} from "./organization-v1";
+import {BaseQuorumSet} from "../quorum-set";
 
 export interface NetworkStatisticsV1 {
     time: string;
@@ -38,6 +39,11 @@ export interface NetworkV1 {
     organizations: OrganizationV1[];
     transitiveQuorumSet: string[];
     scc: string[][];
+    overlayMinVersion?: number;
+    overlayVersion?: number;
+    maxLedgerVersion?: number;
+    stellarCoreVersion?: string;
+    quorumSetConfiguration?: BaseQuorumSet;
 }
 
 export const NetworkV1Schema: JSONSchemaType<NetworkV1> = {
@@ -96,7 +102,29 @@ export const NetworkV1Schema: JSONSchemaType<NetworkV1> = {
             },
             type: "array",
             description: "Strongly connected components in the trust graph"
-        }
+        },
+        overlayMinVersion: {
+            type: "number",
+            description: "Minimum overlay version required to connect to the network",
+            nullable: true
+        },
+        overlayVersion: {
+            type: "number",
+            description: "Overlay version of the network",
+            nullable: true
+        },
+        maxLedgerVersion: {
+            type: "number",
+            description: "Maximum ledger version of the network",
+            nullable: true
+        },
+        stellarCoreVersion: {
+            type: "string",
+            description: "Latest Stellar core version running on the nodes of the network",
+            nullable: true
+        },
+        quorumSetConfiguration:
+            {"$ref": "#/definitions/BaseQuorumSet"},
     },
     type: "object",
     required: [
@@ -112,6 +140,30 @@ export const NetworkV1Schema: JSONSchemaType<NetworkV1> = {
     ],
 
     definitions: {
+        "BaseQuorumSet": {
+            "properties": {
+                "innerQuorumSets": {
+                    type: "array",
+                    items: {$ref: '#/definitions/BaseQuorumSet', type: 'object', required: []}
+                },
+                "threshold": {
+                    "type": "number"
+                },
+                "validators": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object",
+            nullable: true,
+            "required": [
+                "threshold",
+                "validators",
+                "innerQuorumSets"
+            ]
+        },
         NetworkStatisticsV1: {
             properties: {
                 "hasQuorumIntersection": {

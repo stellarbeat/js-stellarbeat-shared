@@ -56,7 +56,7 @@ export class Organization {
 		);
 	}
 
-	public toJSON(): Record<string, unknown> {
+	public toJSON(): OrganizationV1 {
 		return {
 			id: this.id,
 			name: this.name,
@@ -77,9 +77,9 @@ export class Organization {
 			subQuorum30DaysAvailability: this.subQuorum30DaysAvailability,
 			has30DayStats: this.has30DayStats,
 			has24HourStats: this.has24HourStats,
-			dateDiscovered: this.dateDiscovered,
+			dateDiscovered: this.dateDiscovered?.toISOString() ?? new Date().toISOString(),
 			isTierOneOrganization: this.isTierOneOrganization,
-			homeDomain: this.homeDomain
+			homeDomain: this.homeDomain ?? 'unknown'
 		};
 	}
 

@@ -1,4 +1,5 @@
 import {
+	BaseQuorumSet,
 	Node,
 	Organization,
 	QuorumSet,
@@ -7,7 +8,7 @@ import {
 	TrustGraphBuilder
 } from './index';
 import NetworkStatistics from './network-statistics';
-import { isString } from './typeguards';
+import {isNumber, isString} from './typeguards';
 import {NodeV1} from "./dto/node-v1";
 import {NetworkV1} from "./dto/network-v1";
 import {OrganizationV1} from "./dto/organization-v1";
@@ -24,6 +25,11 @@ export class Network {
 
 	public name?: string;
 	public id?: string;
+	public overlayMinVersion?: number;
+	public overlayVersion?: number;
+	public maxLedgerVersion?: number;
+	public stellarCoreVersion?: string;
+	public quorumSetConfiguration?: BaseQuorumSet;
 
 	// a blocked node is a node that is participating in SCP but cannot validate because its quorumSet cannot
 	// reach its threshold.
@@ -389,8 +395,12 @@ export class Network {
 		);
 
 		if (isString(networkV1DTO.id)) network.id = networkV1DTO.id;
-
 		if (isString(networkV1DTO.name)) network.name = networkV1DTO.name;
+		if(isNumber(networkV1DTO.maxLedgerVersion)) network.maxLedgerVersion= networkV1DTO.maxLedgerVersion;
+		if(isNumber(networkV1DTO.overlayMinVersion)) network.overlayMinVersion= networkV1DTO.overlayMinVersion;
+		if(isNumber(networkV1DTO.overlayVersion)) network.overlayVersion= networkV1DTO.overlayVersion;
+		if(isString(networkV1DTO.stellarCoreVersion)) network.stellarCoreVersion= networkV1DTO.stellarCoreVersion;
+		if(networkV1DTO.quorumSetConfiguration) network.quorumSetConfiguration= networkV1DTO.quorumSetConfiguration;
 
 		return network;
 	}

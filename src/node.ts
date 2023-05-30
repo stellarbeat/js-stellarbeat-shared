@@ -61,7 +61,7 @@ export class Node {
 		return this.isValidating || this.quorumSet.hasValidators();
 	}
 
-	toJSON(): Record<string, unknown> {
+	toJSON(): NodeV1 {
 		return {
 			ip: this.ip,
 			port: this.port,
@@ -79,8 +79,8 @@ export class Node {
 			quorumSetHashKey: this.quorumSetHashKey,
 			geoData: this.geoData,
 			statistics: this.statistics,
-			dateDiscovered: this.dateDiscovered,
-			dateUpdated: this.dateUpdated,
+			dateDiscovered: this.dateDiscovered.toISOString(),
+			dateUpdated: this.dateUpdated.toISOString(),
 			isFullValidator: this.isFullValidator,
 			isValidating: this.isValidating,
 			isValidator: this.isValidator,
