@@ -1,6 +1,6 @@
 {
   "name": "@stellarbeat/js-stellarbeat-shared",
-  "version": "6.0.0-4",
+  "version": "6.0.0-5",
   "description": "Shared code between Stellarbeat frontend and backend",
   "repository": {
     "type": "git",
