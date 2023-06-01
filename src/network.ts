@@ -25,6 +25,7 @@ export class Network {
 
 	public name?: string;
 	public id?: string;
+	public passPhrase?: string;
 	public overlayMinVersion?: number;
 	public overlayVersion?: number;
 	public maxLedgerVersion?: number;
@@ -394,8 +395,10 @@ export class Network {
 			networkStatistics
 		);
 
-		if (isString(networkV1DTO.id)) network.id = networkV1DTO.id;
-		if (isString(networkV1DTO.name)) network.name = networkV1DTO.name;
+		network.id = networkV1DTO.id;
+		network.name = networkV1DTO.name;
+		network.passPhrase = networkV1DTO.passPhrase;
+
 		if(isNumber(networkV1DTO.maxLedgerVersion)) network.maxLedgerVersion= networkV1DTO.maxLedgerVersion;
 		if(isNumber(networkV1DTO.overlayMinVersion)) network.overlayMinVersion= networkV1DTO.overlayMinVersion;
 		if(isNumber(networkV1DTO.overlayVersion)) network.overlayVersion= networkV1DTO.overlayVersion;

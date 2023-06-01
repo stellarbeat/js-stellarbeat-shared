@@ -129,6 +129,7 @@ test('fromJSON', () => {
         organizations: [organization.toJSON(), otherOrganization.toJSON()],
         name: 'test',
         id: 'id',
+        passPhrase: 'passPhrase',
         quorumSetConfiguration: {
             threshold: 1,
             innerQuorumSets: [
@@ -213,4 +214,5 @@ test('fromJSON', () => {
     expect(network.networkStatistics.topTierOrgsSize).toBe(17);
     expect(network.networkStatistics.topTierSize).toBe(18);
     expect(network.networkStatistics.transitiveQuorumSetSize).toBe(19);
+    expect(network.passPhrase).toBe('passPhrase');
 });

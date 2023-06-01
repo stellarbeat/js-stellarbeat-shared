@@ -35,6 +35,7 @@ export interface NetworkV1 {
     statistics: NetworkStatisticsV1;
     id: string;
     name: string;
+    passPhrase: string;
     nodes: Array<NodeV1>;
     organizations: OrganizationV1[];
     transitiveQuorumSet: string[];
@@ -65,6 +66,11 @@ export const NetworkV1Schema: JSONSchemaType<NetworkV1> = {
         id: {
             type: "string",
             description: "Network ID",
+            default: "Public Global Stellar Network ; September 2015"
+        },
+        passPhrase: {
+            type: "string",
+            description: "Network passphrase",
             default: "Public Global Stellar Network ; September 2015"
         },
         name: {
