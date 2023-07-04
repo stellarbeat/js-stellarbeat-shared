@@ -1,7 +1,6 @@
 import { QuorumSet } from './quorum-set';
 import { TrustGraph } from './trust-graph/trust-graph';
 import { Network, PublicKey } from './network';
-import { Node } from './node';
 
 export class QuorumSetService {
 	/*
@@ -102,66 +101,6 @@ export class QuorumSetService {
 				return quorumSet.validators
 					.map((validator) => network.getNodeByPublicKey(validator)!)
 					.some((validator) => network.isNodeFailing(validator));
-			})
-		);
-	}
-
-	//textual information on possible dangers for the given quorumset
-	public static quorumSetHasDangers(
-		node: Node,
-		quorumSet: QuorumSet,
-		network: Network
-	) {
-		if (!quorumSet.hasValidators())
-			return 'Quorumset not yet detected by crawler';
-
-		if (network.isQuorumSetBlocked(node, quorumSet))
-			//todo: think about correct location of this function
-			return 'Quorumset not reaching threshold';
-
-		return 'None';
-	}
-
-	public static getQuorumSetDangers(
-		node: Node,
-		quorumSet: QuorumSet,
-		network: Network
-	) {
-		if (!quorumSet.hasValidators())
-			return 'Quorum set not yet detected by crawler';
-
-		if (network.isQuorumSetBlocked(node, quorumSet))
-			return 'Quorum set not reaching threshold';
-
-		return 'None';
-	}
-
-	public static getQuorumSetWarnings(quorumSet: QuorumSet, network: Network) {
-		if (QuorumSetService.quorumSetHasFailingValidators(quorumSet, network))
-			return 'Some validators are failing';
-
-		if (QuorumSetService.quorumSetHasWarnings(quorumSet, network))
-			return 'History archive issue detected';
-	}
-
-	//checks one level of inner quorumSets
-	public static quorumSetHasWarnings(quorumSet: QuorumSet, network: Network) {
-		return (
-			quorumSet.validators
-				.map((validator) => network.getNodeByPublicKey(validator))
-				.some(
-					(validator) =>
-						network.nodeHasWarnings(validator) ||
-						network.isNodeFailing(validator)
-				) ||
-			quorumSet.innerQuorumSets.some((quorumSet) => {
-				return quorumSet.validators
-					.map((validator) => network.getNodeByPublicKey(validator))
-					.some(
-						(validator) =>
-							network.nodeHasWarnings(validator) ||
-							network.isNodeFailing(validator)
-					);
 			})
 		);
 	}
