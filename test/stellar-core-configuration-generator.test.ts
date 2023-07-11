@@ -12,6 +12,7 @@ test('quorumSetToToml', () => {
 	const nodeB = new Node('b');
 	nodeB.name = 'b';
 	nodeB.homeDomain = 'highQuality.com';
+	nodeB.host = 'localhost:11625';
 	nodeB.organizationId = 'orgHighQuality';
 	nodeB.historyUrl = 'myHistory.org';
 	const orgHighQuality = new Organization('orgHighQuality', 'orgHighQuality');
@@ -45,7 +46,7 @@ QUALITY = "MEDIUM_OR_LOW"
 [[VALIDATORS]]
 NAME = "b"
 PUBLIC_KEY = "b"
-ADDRESS = "127.0.0.1:11625"
+ADDRESS = "localhost:11625"
 HISTORY = "curl -sf myHistory.org/{0} -o {1}"
 HOME_DOMAIN = "highQuality.com"
 

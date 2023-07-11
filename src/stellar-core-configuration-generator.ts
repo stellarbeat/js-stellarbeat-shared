@@ -87,7 +87,7 @@ export default class StellarCoreConfigurationGenerator {
 		const validatorToml: Validator = {
 			NAME: validatorNode.displayName!,
 			PUBLIC_KEY: validatorNode.publicKey!,
-			ADDRESS: validatorNode.key
+			ADDRESS: validatorNode.host ?? validatorNode.key
 		};
 		if (validatorNode.historyUrl) {
 			let historyUrlWithTrailingSlash = validatorNode.historyUrl;
