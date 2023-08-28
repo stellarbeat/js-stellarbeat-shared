@@ -34,7 +34,7 @@
     "ajv": "^8.12.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.5",
+    "@types/jest": "^29.5.4",
     "@types/lodash": "^4.14.191",
     "@types/node": "^16.18.11",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
@@ -44,11 +44,11 @@
     "await-fs": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.4.0",
-    "jest": "^29.3.1",
+    "jest": "^29.6.4",
     "lodash": "^4.17.21",
     "np": "7.6.3",
     "prettier": "^2.5.1",
-    "ts-jest": "^29.0.5",
+    "ts-jest": "^29.1.1",
     "typescript": "^4.4.3",
     "typescript-json-schema": "^0.50.0"
   }
