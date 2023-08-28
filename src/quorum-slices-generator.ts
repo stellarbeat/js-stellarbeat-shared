@@ -15,22 +15,22 @@ export class QuorumSlicesGenerator {
 
 		return this.getCombinationsOfSizeK(
 			quorumSet.threshold,
-			([] as any).concat(quorumSet.validators).concat(quorumSet.innerQuorumSets)
+			([] as Array<string|QuorumSet>).concat(quorumSet.validators).concat(quorumSet.innerQuorumSets)
 		);
 	}
 
 	getCombinationsOfSizeK(
 		k: number,
-		nodesOrQSets: Array<string> | Array<QuorumSet>
+		nodesOrQSets: Array<string|QuorumSet>
 	) {
-		const combinations: any[] = [];
+		const combinations: Array<Array<string>> = [];
 		for (let i = 0; i < nodesOrQSets.length; i++) {
-			let prefixes = [];
+			let prefixes: string[][] = [];
 
 			if (nodesOrQSets[i] instanceof QuorumSet) {
 				prefixes = this.getSlices(nodesOrQSets[i] as QuorumSet);
 			} else {
-				prefixes = [[nodesOrQSets[i]]];
+				prefixes = [[nodesOrQSets[i] as string]];
 			}
 
 			if (k === 1) {

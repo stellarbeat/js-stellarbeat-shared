@@ -1,6 +1,5 @@
 import {OrganizationId, PublicKey} from './network';
 import PropertyMapper from './PropertyMapper';
-import {isString} from './typeguards';
 import {OrganizationV1} from "./dto/organization-v1";
 
 export function isOrganization(
