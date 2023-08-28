@@ -30,8 +30,8 @@
   "types": "lib/index.d.ts",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "neverthrow": "^6.0.0",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "neverthrow": "^6.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",
