@@ -23,7 +23,8 @@ export interface OrganizationV1 {
     subQuorum30DaysAvailability: number;
     homeDomain: string;
     dateDiscovered: string;
-    isTierOneOrganization: boolean
+    isTierOneOrganization: boolean;
+    tomlState: string;
 }
 
 export const OrganizationV1Schema: JSONSchemaType<OrganizationV1> = {
@@ -94,6 +95,9 @@ export const OrganizationV1Schema: JSONSchemaType<OrganizationV1> = {
         "url": nullable({
             "type": "string"
         }),
+        "tomlState": {
+            type: "string",
+        },
         "validators": {
             "items": {
                 "type": "string"
@@ -124,7 +128,8 @@ export const OrganizationV1Schema: JSONSchemaType<OrganizationV1> = {
         "physicalAddress",
         "twitter",
         "url",
-        "homeDomain"
+        "homeDomain",
+        "tomlState"
     ]
 }
 

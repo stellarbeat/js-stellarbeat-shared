@@ -50,6 +50,7 @@ describe('json', () => {
 	organizationObject.homeDomain = 'homeDomain.com';
 	organizationObject.horizonUrl = null;
 	organizationObject.dateDiscovered = dateDiscovered.toISOString();
+	organizationObject.tomlState = 'Unknown'
 
 
 	test('OrgToJson', () => {
@@ -62,7 +63,6 @@ describe('json', () => {
 		addFormats.default(ajv);
 		const validate  = ajv.compile(OrganizationV1Schema);
 		const valid = validate(organizationObject);
-		console.log(validate.errors)
 		expect(valid).toBeTruthy();
 		if (!valid) {
 			return

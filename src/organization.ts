@@ -30,6 +30,7 @@ export class Organization {
 	subQuorum30DaysAvailability = 0;
 	public unknown = false;
 	homeDomain: string | null = null; //todo: not nullable
+	tomlState = 'Unknown'
 
 	dateDiscovered?: Date;
 
@@ -78,7 +79,8 @@ export class Organization {
 			has24HourStats: this.has24HourStats,
 			dateDiscovered: this.dateDiscovered?.toISOString() ?? new Date().toISOString(),
 			isTierOneOrganization: this.isTierOneOrganization,
-			homeDomain: this.homeDomain ?? 'unknown'
+			homeDomain: this.homeDomain ?? 'unknown',
+			tomlState: this.tomlState
 		};
 	}
 
