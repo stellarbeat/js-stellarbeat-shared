@@ -49,6 +49,7 @@ export interface NodeV1 {
     organizationId: string | null;
     historyArchiveHasError: boolean;
     isValidator: boolean;
+    connectivityError: boolean;
 }
 
 export const NodeV1Schema: JSONSchemaType<NodeV1> = {
@@ -143,6 +144,9 @@ export const NodeV1Schema: JSONSchemaType<NodeV1> = {
             "type": "string"
         }),
         "historyArchiveHasError": {
+            "type": "boolean"
+        },
+        "connectivityError": {
             "type": "boolean"
         }
     },

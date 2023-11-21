@@ -33,6 +33,7 @@ export class Node {
 	public organizationId: string | null = null;
 	public unknown = false; //a node is unknown if it is not crawled or maybe archived
 	public historyArchiveHasError = false;
+	public connectivityError = false;
 
 	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
@@ -90,7 +91,8 @@ export class Node {
 			historyUrl: this.historyUrl,
 			alias: this.alias,
 			isp: this.isp,
-			historyArchiveHasError: this.historyArchiveHasError
+			historyArchiveHasError: this.historyArchiveHasError,
+			connectivityError: this.connectivityError
 		};
 	}
 
