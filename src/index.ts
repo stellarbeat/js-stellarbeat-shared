@@ -23,3 +23,4 @@ export {OrganizationV1, OrganizationV1Schema} from './dto/organization-v1';
 export {HistoryArchiveScanV1, HistoryArchiveScanV1Schema} from './dto/history-archive-scan-v1';
 export {NodeSnapshotV1Schema, NodeSnapshotV1} from './dto/node-snapshot-v1'
 export {OrganizationSnapshotV1Schema, OrganizationSnapshotV1} from './dto/organization-snapshot-v1'
+export {SemanticVersionComparer} from './semantic-version-comparer';
