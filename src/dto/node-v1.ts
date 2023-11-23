@@ -50,6 +50,7 @@ export interface NodeV1 {
     historyArchiveHasError: boolean;
     isValidator: boolean;
     connectivityError: boolean;
+    stellarCoreVersionBehind: boolean;
 }
 
 export const NodeV1Schema: JSONSchemaType<NodeV1> = {
@@ -147,6 +148,9 @@ export const NodeV1Schema: JSONSchemaType<NodeV1> = {
             "type": "boolean"
         },
         "connectivityError": {
+            "type": "boolean"
+        },
+        "stellarCoreVersionBehind": {
             "type": "boolean"
         }
     },

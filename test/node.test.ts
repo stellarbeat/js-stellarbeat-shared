@@ -38,6 +38,7 @@ node.ledgerVersion = 1;
 node.overlayMinVersion = 2;
 node.overlayVersion = 3;
 node.connectivityError = true;
+node.stellarCoreVersionBehind = true;
 
 const nodeObject: Record<string, unknown> = {};
 nodeObject.name = 'SDF validator 2';
@@ -90,6 +91,7 @@ nodeObject.overlayMinVersion = 2;
 nodeObject.overlayVersion = 3;
 nodeObject.historyArchiveHasError = true;
 nodeObject.connectivityError = true;
+nodeObject.stellarCoreVersionBehind = true;
 
 test('nodeToJson', () => {
 	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);

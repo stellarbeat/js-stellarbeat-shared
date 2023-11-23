@@ -34,6 +34,7 @@ export class Node {
 	public unknown = false; //a node is unknown if it is not crawled or maybe archived
 	public historyArchiveHasError = false;
 	public connectivityError = false;
+	public stellarCoreVersionBehind = false;
 
 	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
@@ -92,7 +93,8 @@ export class Node {
 			alias: this.alias,
 			isp: this.isp,
 			historyArchiveHasError: this.historyArchiveHasError,
-			connectivityError: this.connectivityError
+			connectivityError: this.connectivityError,
+			stellarCoreVersionBehind: this.stellarCoreVersionBehind
 		};
 	}
 
