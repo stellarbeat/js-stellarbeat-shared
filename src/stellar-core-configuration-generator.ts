@@ -1,6 +1,5 @@
 import { Network } from './network';
 import { Node } from './node';
-import { stringify } from '@iarna/toml';
 import { QuorumSet } from './quorum-set';
 
 enum Quality {
@@ -43,8 +42,39 @@ export default class StellarCoreConfigurationGenerator {
 
 		this.processQuorumSet(quorumSet, tomlConfig, alreadyAddedHomeDomains);
 
-		//@ts-ignore library doesn't handle undefined values correctly
-		return stringify(tomlConfig);
+		return this.stringifyToml(tomlConfig);
+	}
+
+	private stringifyToml(tomlConfig: TomlConfig) {
+		let tomlString = '';
+
+		tomlConfig.HOME_DOMAINS.forEach((homeDomain) => {
+			tomlString += `[[HOME_DOMAINS]]\nHOME_DOMAIN = "${homeDomain.HOME_DOMAIN}"\nQUALITY = "${homeDomain.QUALITY}"\n\n`;
+		});
+
+		tomlConfig.VALIDATORS.forEach((validator, index) => {
+			tomlString += `[[VALIDATORS]]\n`;
+			tomlString += `NAME = "${validator.NAME}"\n`;
+			tomlString += `PUBLIC_KEY = "${validator.PUBLIC_KEY}"\n`;
+			if (validator.ADDRESS) {
+				tomlString += `ADDRESS = "${validator.ADDRESS}"\n`;
+			}
+			if (validator.HISTORY) {
+				tomlString += `HISTORY = "${validator.HISTORY}"\n`;
+			}
+			if (validator.HOME_DOMAIN) {
+				tomlString += `HOME_DOMAIN = "${validator.HOME_DOMAIN}"\n`;
+			}
+			if (validator.QUALITY) {
+				tomlString += `QUALITY = "${validator.QUALITY}"\n`;
+			}
+			// Don't add a newline after the last validator
+			if (index !== tomlConfig.VALIDATORS.length - 1) {
+				tomlString += '\n';
+			}
+		});
+
+		return tomlString;
 	}
 
 	nodesToToml(nodes: Node[]) {
@@ -57,8 +87,7 @@ export default class StellarCoreConfigurationGenerator {
 			this.processValidator(node, alreadyAddedHomeDomains, tomlConfig)
 		);
 
-		//@ts-ignore library doesn't handle undefined values correctly
-		return stringify(tomlConfig);
+		return this.stringifyToml(tomlConfig);
 	}
 
 	protected processQuorumSet(
