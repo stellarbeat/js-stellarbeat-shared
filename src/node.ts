@@ -1,8 +1,8 @@
-import {NodeGeoData} from './node-geo-data';
-import {NodeStatistics} from './node-statistics';
-import {QuorumSet} from './quorum-set';
-import {NodeV1} from "./dto/node-v1";
-import PropertyMapper from "./PropertyMapper";
+import { NodeGeoData } from './node-geo-data';
+import { NodeStatistics } from './node-statistics';
+import { QuorumSet } from './quorum-set';
+import { NodeV1 } from './dto/node-v1';
+import PropertyMapper from './PropertyMapper';
 
 export class Node {
 	public ip: string;
@@ -35,6 +35,7 @@ export class Node {
 	public historyArchiveHasError = false;
 	public connectivityError = false;
 	public stellarCoreVersionBehind = false;
+	public lag = 0;
 
 	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
@@ -49,7 +50,9 @@ export class Node {
 
 		if (this.publicKey)
 			return (
-				this.publicKey.substr(0, 10) + '...' + this.publicKey.substr(50, 100)
+				this.publicKey.substring(0, 10) +
+				'...' +
+				this.publicKey.substring(50, 150)
 			);
 
 		return '';
@@ -109,7 +112,9 @@ export class Node {
 			node.geoData = NodeGeoData.fromNodeGeoDataV1(nodeV1DTO.geoData);
 
 		if (nodeV1DTO.statistics !== null)
-			node.statistics = NodeStatistics.fromNodeStatisticsV1(nodeV1DTO.statistics);
+			node.statistics = NodeStatistics.fromNodeStatisticsV1(
+				nodeV1DTO.statistics
+			);
 
 		if (nodeV1DTO.quorumSet !== null)
 			node.quorumSet = QuorumSet.fromBaseQuorumSet(nodeV1DTO.quorumSet);

@@ -8,10 +8,10 @@ import {
 	TrustGraphBuilder
 } from './index';
 import NetworkStatistics from './network-statistics';
-import {isNumber, isString} from './typeguards';
-import {NodeV1} from "./dto/node-v1";
-import {NetworkV1} from "./dto/network-v1";
-import {OrganizationV1} from "./dto/organization-v1";
+import { isNumber, isString } from './typeguards';
+import { NodeV1 } from './dto/node-v1';
+import { NetworkV1 } from './dto/network-v1';
+import { OrganizationV1 } from './dto/organization-v1';
 
 export type OrganizationId = string;
 export type PublicKey = string;
@@ -320,11 +320,14 @@ export class Network {
 	}
 
 	nodeHasWarnings(node: Node): boolean {
-		return this.isFullValidatorWithOutOfDateArchive(node) || this.historyArchiveHasError(node);
+		return (
+			this.isFullValidatorWithOutOfDateArchive(node) ||
+			this.historyArchiveHasError(node)
+		);
 	}
 
 	getNodeWarningReasons(node: Node): string {
-		if(this.historyArchiveHasError(node)){
+		if (this.historyArchiveHasError(node)) {
 			return 'History archive issue detected';
 		}
 
@@ -338,7 +341,7 @@ export class Network {
 		return node.historyUrl !== null && !node.isFullValidator;
 	}
 
-	historyArchiveHasError(node: Node): boolean{
+	historyArchiveHasError(node: Node): boolean {
 		return node.historyUrl !== null && node.historyArchiveHasError;
 	}
 
@@ -383,7 +386,9 @@ export class Network {
 				Organization.fromOrganizationV1DTO(organizationDTO)
 		);
 
-		const networkStatistics = NetworkStatistics.fromJSON(networkV1DTO.statistics);
+		const networkStatistics = NetworkStatistics.fromJSON(
+			networkV1DTO.statistics
+		);
 
 		const time = new Date(networkV1DTO.time);
 
@@ -399,11 +404,16 @@ export class Network {
 		network.name = networkV1DTO.name;
 		network.passPhrase = networkV1DTO.passPhrase;
 
-		if(isNumber(networkV1DTO.maxLedgerVersion)) network.maxLedgerVersion= networkV1DTO.maxLedgerVersion;
-		if(isNumber(networkV1DTO.overlayMinVersion)) network.overlayMinVersion= networkV1DTO.overlayMinVersion;
-		if(isNumber(networkV1DTO.overlayVersion)) network.overlayVersion= networkV1DTO.overlayVersion;
-		if(isString(networkV1DTO.stellarCoreVersion)) network.stellarCoreVersion= networkV1DTO.stellarCoreVersion;
-		if(networkV1DTO.quorumSetConfiguration) network.quorumSetConfiguration= networkV1DTO.quorumSetConfiguration;
+		if (isNumber(networkV1DTO.maxLedgerVersion))
+			network.maxLedgerVersion = networkV1DTO.maxLedgerVersion;
+		if (isNumber(networkV1DTO.overlayMinVersion))
+			network.overlayMinVersion = networkV1DTO.overlayMinVersion;
+		if (isNumber(networkV1DTO.overlayVersion))
+			network.overlayVersion = networkV1DTO.overlayVersion;
+		if (isString(networkV1DTO.stellarCoreVersion))
+			network.stellarCoreVersion = networkV1DTO.stellarCoreVersion;
+		if (networkV1DTO.quorumSetConfiguration)
+			network.quorumSetConfiguration = networkV1DTO.quorumSetConfiguration;
 
 		return network;
 	}
