@@ -35,7 +35,7 @@ export class Node {
 	public historyArchiveHasError = false;
 	public connectivityError = false;
 	public stellarCoreVersionBehind = false;
-	public lag = 0;
+	public lag: number | null = null;
 
 	constructor(publicKey: string, ip = '127.0.0.1', port = 11625) {
 		this.ip = ip;
@@ -97,7 +97,8 @@ export class Node {
 			isp: this.isp,
 			historyArchiveHasError: this.historyArchiveHasError,
 			connectivityError: this.connectivityError,
-			stellarCoreVersionBehind: this.stellarCoreVersionBehind
+			stellarCoreVersionBehind: this.stellarCoreVersionBehind,
+			lag: this.lag
 		};
 	}
 

@@ -1,7 +1,7 @@
 import { Node, Organization } from '../src';
-import Ajv from "ajv";
-import * as addFormats from "ajv-formats";
-import {NodeV1Schema} from "../src/dto/node-v1";
+import Ajv from 'ajv';
+import * as addFormats from 'ajv-formats';
+import { NodeV1Schema } from '../src/dto/node-v1';
 
 const node = new Node(
 	'GCM6QMP3DLRPTAZW2UZPCPX2LF3SXWXKPMP3GKFZBDSF3QZGV2G5QSTK'
@@ -20,7 +20,9 @@ node.dateUpdated = new Date('2018-10-12 11:17:39');
 node.quorumSetHashKey = 'dbROBZB26KK3PELCVOi5CDds2zSvTK5GOPTqVXBMw8=';
 node.quorumSet.threshold = 2;
 node.quorumSet.innerQuorumSets = [];
-node.quorumSet.validators = ['GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'];
+node.quorumSet.validators = [
+	'GABMKJM6I25XI4K7U6XWMULOUQIQ27BCTMLS6BYYSOWKTBUXVRJSXHYQ'
+];
 node.active = true;
 node.overLoaded = true;
 node.isFullValidator = true;
@@ -39,6 +41,7 @@ node.overlayMinVersion = 2;
 node.overlayVersion = 3;
 node.connectivityError = true;
 node.stellarCoreVersionBehind = true;
+node.lag = 30;
 
 const nodeObject: Record<string, unknown> = {};
 nodeObject.name = 'SDF validator 2';
@@ -92,6 +95,7 @@ nodeObject.overlayVersion = 3;
 nodeObject.historyArchiveHasError = true;
 nodeObject.connectivityError = true;
 nodeObject.stellarCoreVersionBehind = true;
+nodeObject.lag = 30;
 
 test('nodeToJson', () => {
 	expect(JSON.parse(JSON.stringify(node))).toEqual(nodeObject);
@@ -100,11 +104,11 @@ test('nodeToJson', () => {
 test('JsonToNode', () => {
 	const ajv = new Ajv();
 	addFormats.default(ajv);
-	const validate  = ajv.compile(NodeV1Schema);
+	const validate = ajv.compile(NodeV1Schema);
 	const valid = validate(nodeObject);
 	expect(valid).toBeTruthy();
 	if (!valid) {
-		return
+		return;
 	}
 	expect(Node.fromNodeV1DTO(nodeObject)).toEqual(node);
 });
